@@ -9,7 +9,7 @@ def options():
   
   parser = arg.ArgumentParser(description='Analyzes the couplings obtained from G09 EET calculations.')
    
-  #Optional arguments
+  # Optional arguments
   # Threshold
   parser.add_argument('-t', '--thresh', default = '0.65', help = 'Threshold under which couplings will be ignored.')
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     suspect_data[coupling] = []  
     with open(os.path.join(coupling, '%s.log' % coupling), 'r') as f:
       for line in f:
-        if 'Coulomb term' in line:
+        if 'Coulomb term' in line:  # TO DO: add an option to choose the term to read
           coup = float(line.split()[col])
           if abs(coup) > thresh:
             suspect_data[coupling].append(coup)  
