@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-#Import standard Python modules
+# Import standard Python modules
 import re, itertools, os
 from difflib import SequenceMatcher
 
-#Import personal modules
+# Import personal modules
 import DFT_methods as dft
 from elements import ELEMENTS
 import util as u
@@ -57,7 +57,7 @@ class input_file:
     else:
       options = u.dict_compare(default, options)
       
-    #Needed in case another option dictionary is passed to the function    
+    # Needed in case another option dictionary is passed to the function    
     options['name'] = self.name    
     
     return options
@@ -166,8 +166,8 @@ class input_file:
   def get_funct(self):
     '''Returns the functional.'''
     
-    #The order of the keywords is not fixed. This function parses the keywords
-    #and compares it to the available functionals in G09.
+    # The order of the keywords is not fixed. This function parses the keywords
+    # and compares it to the available functionals in G09.
     if self.keywords:
       for keyword in self.keywords.split():
         if keyword.lower() in map(str.lower, list(itertools.chain.from_iterable(dft.functionals.values()))):
@@ -182,10 +182,10 @@ class input_file:
   def get_basis(self):
     '''Returns the basis set.'''
         
-    #The order of the keywords is not fixed. This function parses the keywords
-    #and compares it to the available basis sets in G09. Since slight modifications
-    #in the names can occur due to diffuse or polarized functions, a 65% similarity
-    #threshold is used to determine whether a keyword is a basis set.
+    # The order of the keywords is not fixed. This function parses the keywords
+    # and compares it to the available basis sets in G09. Since slight modifications
+    # in the names can occur due to diffuse or polarized functions, a 65% similarity
+    # threshold is used to determine whether a keyword is a basis set.
     stop = False
     if self.keywords:
       for keyword in self.keywords.split():
@@ -205,10 +205,10 @@ class input_file:
   def get_job(self):
     '''Returns the job-related keywords.'''
     
-    #Once the functional and the basis set are determined, the job-related
-    #keywords are obtained as keywords except functional and basis set.
+    # Once the functional and the basis set are determined, the job-related
+    # keywords are obtained as keywords except functional and basis set.
     if self.keywords:
-      keywords = self.keywords.split()[1:]
+      keywords = self.keywords.split()[1:] # Starting from 1 to get rid of the starting '#' or '#p'
       job = [x for x in keywords if x != self.funct and x != self.basis]
 
     return ' '.join(job)    
@@ -231,7 +231,7 @@ class input_file:
   def get_charge(self):
     '''Returns the charge.'''
     
-    #Pattern describing the charge-multiplicity line
+    # Pattern describing the charge-multiplicity line
     pattern = re.compile('([0-9]\s[0-9])')    
     
     with open(self.file, 'r') as f:
@@ -250,7 +250,7 @@ class input_file:
   def get_mult(self):
     '''Returns the multiplicity.'''
     
-    #Pattern describing the charge-multiplicity line
+    # Pattern describing the charge-multiplicity line
     pattern = re.compile('([0-9]\s[0-9])')    
     
     with open(self.file, 'r') as f:
@@ -272,7 +272,7 @@ class input_file:
     structure = []    
     opt = 0    
     
-    #Pattern describing the charge-multiplicity line
+    # Pattern describing the charge-multiplicity line
     pattern = re.compile('([0-9]\s[0-9])')
 
     with open(self.file, 'r') as f:
@@ -297,10 +297,11 @@ class input_file:
   def get_add_opts(self):
     '''Returns additional options.'''
     
-    #Usually additional options are just a blank line. In many cases, though,
-    #it's useful to reti\rieve it (additional functions in the basis set, solvation
-    #spheres etc).
-    #Pattern describing the charge-multiplicity line
+    # Usually additional options are just a blank line. In many cases, though,
+    # it's useful to retrieve it (additional functions in the basis set, solvation
+    # spheres etc).
+
+    # Pattern describing the charge-multiplicity line
     pattern = re.compile('([0-9]\s[0-9])')
 
     opt = 0
@@ -379,12 +380,12 @@ class input_file:
 # G09 output file
 #================
 #
-#Cannot inherit from G09 input class since methods are slightly different
-#due to small differences in the information format.
-#Methods to retrieve basic information about the file are the same, corrected
-#because of the format differences.
-#Additional methods depending on the job performed are written in child classes
-#to be defined afterwards
+# Cannot inherit from G09 input class since methods are slightly different
+# due to small differences in the information format.
+# Methods to retrieve basic information about the file are the same, corrected
+# because of the format differences.
+# Additional methods depending on the job performed are written in child classes
+# to be defined afterwards
 
    
 class output_file:
@@ -442,9 +443,9 @@ class output_file:
   def get_types(self):
     '''Sets a label for the performed G09 job.'''
    
-    #This function is actually not used yet.
-    #The idea is to determinf what kind of job was run
-    #and create an instance of a child class based on it.
+    # This function is actually not used yet.
+    # The idea is to determinf what kind of job was run
+    # and create an instance of a child class based on it.
     keywords_split = re.split('[ =()]', self.job)
     job_types = [dft.job_types[keyword] for keyword in keywords_split if dft.job_types.has_key(keyword)]
     
@@ -514,8 +515,8 @@ class output_file:
   def get_keywords(self):
     '''Returns the full string of keywords.'''
     
-    #Annoying syntax with switch because G09 splits the keywords on more lines
-    #if they are too many
+    # Annoying syntax with switch because G09 splits the keywords on more lines
+    # if they are too many
     previous = None
     switch = 0
     temp = []
@@ -542,8 +543,8 @@ class output_file:
   def get_funct(self):
     '''Returns the functional.'''
     
-    #The order of the keywords is not fixed. This function parses the keywords
-    #and compares it to the available functionals in G09.
+    # The order of the keywords is not fixed. This function parses the keywords
+    # and compares it to the available functionals in G09.
     if self.keywords:
       for keyword in self.keywords.split():
         if keyword.lower() in map(str.lower, list(itertools.chain.from_iterable(dft.functionals.values()))):
@@ -558,10 +559,10 @@ class output_file:
   def get_basis(self):
     '''Returns the basis set.'''
         
-    #The order of the keywords is not fixed. This function parses the keywords
-    #and compares it to the available basis sets in G09. Since slight modifications
-    #in the names can occur due to diffuse or polarized functions, a 65% similarity
-    #threshold is used to determine whether a keyword is a basis set.
+    # The order of the keywords is not fixed. This function parses the keywords
+    # and compares it to the available basis sets in G09. Since slight modifications
+    # in the names can occur due to diffuse or polarized functions, a 65% similarity
+    # threshold is used to determine whether a keyword is a basis set.
     stop = False
     if self.keywords:
       for keyword in self.keywords.split():
@@ -581,8 +582,8 @@ class output_file:
   def get_job(self):
     '''Returns the job-related keywords.'''
     
-    #Once the functional and the basis set are determined, the job-related
-    #keywords are obtained as keywords except functional and basis set.
+    # Once the functional and the basis set are determined, the job-related
+    # keywords are obtained as keywords except functional and basis set.
     if self.keywords:
       keywords = self.keywords.split()[1:]
       job = [x for x in keywords if x != self.funct and x != self.basis]
@@ -730,8 +731,8 @@ class output_file:
 # G09 optimization output file
 #==============================
 #
-#Inherits from G09 output class. This class should contain methods specific
-#to extract data from G09 optimizations.
+# Inherits from G09 output class. This class should contain methods specific
+# to extract data from G09 optimizations.
 
     
 class opt_output_file(output_file):
@@ -745,7 +746,7 @@ class opt_output_file(output_file):
   def get_opt_structure(self):
     '''Returns the optimized structure.'''
     
-#Example:
+# Example:
 #      
 #                         Standard orientation:
 # ---------------------------------------------------------------------
@@ -761,9 +762,9 @@ class opt_output_file(output_file):
         if "Optimization completed" in line:
           opt = 1
         
-        #It could be Standard or Input orientation, depending on nosymm keyword        
+        # It could be Standard or Input orientation, depending on nosymm keyword        
         if "orientation:" in line and opt == 1:
-          #Skip the head-of-table lines (4 lines)
+          # Skip the head-of-table lines (4 lines)
           next(f)
           next(f)
           next(f)
@@ -826,8 +827,8 @@ class opt_output_file(output_file):
 # G09 td output file
 #==============================
 #
-#Inherits from G09 output class. This class should contain methods specific
-#to extract data from G09 td calculations.
+# Inherits from G09 output class. This class should contain methods specific
+# to extract data from G09 td calculations.
 
     
 class td_output_file(output_file):
@@ -850,7 +851,7 @@ class td_output_file(output_file):
     
         if "Excited State  " in line:
     
-    #Example:
+    # Example:
     #
     #      Excited State   1:      Singlet-?Sym    4.8743 eV  254.36 nm  f=0.0151  <S**2>=0.000
           
@@ -880,7 +881,7 @@ class td_output_file(output_file):
     
         if "R(velocity)" in line:
     
-    #Example:
+    # Example:
     #      
     #      state          XX          YY          ZZ    R(velocity)    E-M Angle
     #         1      -143.5843   -117.0927    -17.9532    -92.8767      136.17
@@ -891,7 +892,7 @@ class td_output_file(output_file):
     
         if "R(length)" in line:
     
-    #Example:
+    # Example:
     #      
     #       state          XX          YY          ZZ     R(length)
     #         1      -133.6881     23.8640   -170.4743    -93.4328
@@ -902,8 +903,8 @@ class td_output_file(output_file):
   
     return rot_vel, rot_len
   
-#Implement functions to extract transition dipoles
-#It is easy, but now I feel lazy
+# Implement functions to extract transition dipoles
+# It is easy, but now I feel lazy
   
   def get_results(self):
     '''Returns the results of the excited states calculation.'''
@@ -934,7 +935,7 @@ class td_output_file(output_file):
     f.close()
     
 
-#To be implemented    
+# To be implemented    
 #  def write_spectra(self):
 #    '''Writes convoluted spectra in a file for plotting.'''
 #    pass
@@ -946,8 +947,8 @@ class td_output_file(output_file):
 ## G09 ? output file
 ##==============================
 ##
-##Inherits from G09 output class. This class should contain methods specific
-##to extract data from G09 ? calculations.     
+## Inherits from G09 output class. This class should contain methods specific
+## to extract data from G09 ? calculations.     
 #class boh_output_file(output_file):
 #  '''A class describing G09 optimization logfiles.'''
 #  
