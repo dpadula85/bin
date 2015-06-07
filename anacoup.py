@@ -23,9 +23,9 @@ def options():
 
 
 # Define a function to check whether an iterable is empty or not
-def empty(seq):
+def empty(iterable):
   try:
-    return all(map(empty, seq))
+    return all(map(empty, iterable))
   except TypeError:
     return False
 
@@ -63,8 +63,8 @@ if __name__ == '__main__':
   if empty(suspect_data.values()):
     print('No couplings higher than %f %s have been found.' % (thresh, unit))
   else:
-    print('Couplings higher than %f %s have been printed in strange_coup.dat' % (thresh, unit))
-    with open('strange_coup.dat', 'w') as data:
+    print('Couplings higher than %f %s have been printed in coup_analysis.dat' % (thresh, unit))
+    with open('coup_analysis.dat', 'w') as data:
       for k, v in suspect_data.iteritems():
         if v:
           data.write('%s\n\n' % k)
