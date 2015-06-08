@@ -41,16 +41,16 @@ def options():
   
   #Section of options for G09 - ***DEFAULT OPTIONS ARE SET HERE***
   #This will be called in the main program
-  parser.add_argument('-n', '--nproc', default = '16', help = 'Number of processors.')
-  parser.add_argument('-m', '--mem', default = '24', help = 'Memory in GB.')
+  parser.add_argument('-n', '--nproc', default = 16, type=int, help = 'Number of processors.')
+  parser.add_argument('-m', '--mem', default = 24, type=int, help = 'Memory in GB.')
   parser.add_argument('-chk', '--chk', help = 'Name of the checkpoint file without extension.')
   parser.add_argument('-j', '--job', nargs = '*', default = ['td=(nstates=32)'], required = False, help = '''Job type.
   This does not work combined with --coup option.''')
   
   parser.add_argument('-f', '--funct', default = 'cam-b3lyp', help = 'Functional.')
   parser.add_argument('-b', '--basis', default = '6-31+G(d)', help = 'Basis set.')
-  parser.add_argument('-c', '--charge', default = '0', help = 'Charge.')
-  parser.add_argument('-mt', '--mult', default = '1', help = 'Multiplicity.')  
+  parser.add_argument('-c', '--charge', default = 0, type=int, help = 'Charge.')
+  parser.add_argument('-mt', '--mult', default = 1, type=int, help = 'Multiplicity.')  
   
   #Print help if no arguments are received  
   if len(sys.argv) == 1:
@@ -58,15 +58,7 @@ def options():
     sys.exit()
   
   args = parser.parse_args()
-  
-  args.nproc = int(args.nproc)
-  args.mem = int(args.mem)
-  args.chk = str(args.chk)
   args.job = ' '.join(args.job)
-  args.funct = str(args.funct)
-  args.basis = str(args.basis)
-  args.charge = int(args.charge)
-  args.mult = int(args.mult)
 
   G09_opts = { 'name'            : '',
                'nproc'           : args.nproc,

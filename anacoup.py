@@ -11,13 +11,12 @@ def options():
    
   # Optional arguments
   # Threshold
-  parser.add_argument('-t', '--thresh', default = '0.65', help = 'Threshold under which couplings will be ignored.')
+  parser.add_argument('-t', '--thresh', default = 0.65, type=float, help = 'Threshold under which couplings will be ignored.')
 
   # Unit 
   parser.add_argument('-u', '--unit', default = 'eV', choices=['eV', 'cm'], help = 'Unit of the Threshold.')
   
   args = parser.parse_args()
-  args.thresh = float(args.thresh)
 
   return args
 
