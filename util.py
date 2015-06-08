@@ -5,7 +5,7 @@
 #units
 
 
-energy_conversion = {'au'       : 2,
+energy_conversion = {'au'       : 1,
                      'eV'       : 27.21138505,
                      'wn'       : 219474.63,
                      'kj/mol'   : 2625.5,
