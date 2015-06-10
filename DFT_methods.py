@@ -61,22 +61,22 @@ job_types = {'opt'              : 'opt',
 
 if __name__ == '__main__':
   
-  print
-  print '''DFT Functionals implemented in G09.\nSource: http://www.gaussian.com/g_tech/g_ur/k_dft.htm'''
-  print
-  for key, value in functionals.iteritems():
-    print '%s : \n' % key
-    for funct in value:
-      print funct,
-    print '\n\n'
-  print
-  print
-  print '''Basis sets implemented in G09.\nSource: http://www.gaussian.com/g_tech/g_ur/m_basis_sets.htm'''
-  print
-  for key, value in basis.iteritems():
-    print '%s : \n' % key
-    for basis_set in value:
-      print basis_set,
-    print '\n\n'
-  print 'Diffuse and polarized functions can be added.'
-  print
+    print
+    print '''DFT Functionals implemented in G09.\nSource: http://www.gaussian.com/g_tech/g_ur/k_dft.htm'''
+    print
+    for key, value in functionals.iteritems():
+        print '%s : \n' % key
+        for funct in value:
+            print funct,
+        print '\n\n'
+    print
+    print
+    print '''Basis sets implemented in G09.\nSource: http://www.gaussian.com/g_tech/g_ur/m_basis_sets.htm'''
+    print
+    for key, value in basis.iteritems():
+        print '%s : \n' % key
+        for basis_set in value:
+            print basis_set,
+        print '\n\n'
+    print 'Diffuse and polarized functions can be added.'
+    print
