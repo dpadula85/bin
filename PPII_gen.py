@@ -29,7 +29,7 @@ res = [AA] * nres
 
 for phi in arange(phi_min, phi_max + 1, step):
     for psi in arange(psi_min, psi_max + 1, step):
-        seq_file = open('seq_%s_%s.txt' % (int(abs(phi)), int(abs(psi))), 'w')
-        for i in range(len(res)):
-            seq_file.write('%s\t%5.1f\t%5.1f\n' % (res[i], phi, psi))
-        seq_file.close()
+        with open('seq_%s_%s.txt' % (int(abs(phi)), int(abs(psi))), 'w') as seq_file:
+            for i in range(len(res)):
+                seq_file.write('%s\t%5.1f\t%5.1f\n' % (res[i], phi, psi))
+            seq_file.close()
