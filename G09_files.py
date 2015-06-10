@@ -27,9 +27,9 @@ class input_file:
         self.file = os.path.join(self.path, self.name)
 
         if not os.path.exists(infile) or os.stat(infile).st_size == 0:
-            open(infile, 'w')
             self.options = self.set_options(opts_dict)
-            self.write_job()
+            with open(infile, 'w'):
+                self.write_job()
 
         if os.path.exists(infile) and os.stat(infile).st_size > 0:
             self.options = self.get_options()
@@ -101,8 +101,8 @@ class input_file:
     def __str__(self):
         '''Prints a string containing the whole file.'''
 
-        f = open(self.file, 'r').read()
-        print(f)
+        with open(self.file, 'r') as f:
+            print(f.read())
 
 
     def get_nproc(self):
