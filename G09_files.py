@@ -38,21 +38,21 @@ class input_file:
     def set_options(self, options=None):
         '''Default options for creation of a new file.'''
 
-        default = { 'name'            : self.name,
-                    'nproc'           : 16,
-                    'mem'             : 24,
-                    'mem_unit'        : 'GB',
-                    'chk'             : self.name,
-                    'funct'           : 'b3lyp',
-                    'basis'           : '6-31g*',
-                    'job'             : 'td=(nstates=16)',
-                    'title'           : '%s td' % self.name ,
-                    'charge'          : 0,
-                    'mult'            : 1,
-                    'structure'       : [['O',  0.000000,  0.000000,  0.000000],
-                                         ['H',  0.758602,  0.000000,  0.504284],
-                                         ['H',  0.758602,  0.000000,  -0.504284]],
-                    'add_opts'        : '\n'}
+        default = { 'name'      : self.name,
+                    'nproc'     : 16,
+                    'mem'       : 24,
+                    'mem_unit'  : 'GB',
+                    'chk'       : self.name,
+                    'funct'     : 'b3lyp',
+                    'basis'     : '6-31g*',
+                    'job'       : 'td=(nstates=16)',
+                    'title'     : '%s td' % self.name ,
+                    'charge'    : 0,
+                    'mult'      : 1,
+                    'structure' : [['O',  0.000000,  0.000000,  0.000000],
+                                   ['H',  0.758602,  0.000000,  0.504284],
+                                   ['H',  0.758602,  0.000000,  -0.504284]],
+                    'add_opts'  : '\n' }
 
         if not options:
             options = default
@@ -81,19 +81,19 @@ class input_file:
         self.add_opts = self.get_add_opts()
         self.natoms = len(self.structure)
 
-        options = { 'name'            : self.name,
-                    'nproc'           : self.nproc,
-                    'mem'             : self.mem,
-                    'mem_unit'        : self.mem_unit,
-                    'chk'             : self.chk,
-                    'funct'           : self.funct,
-                    'basis'           : self.basis,
-                    'job'             : self.job,
-                    'title'           : self.title,
-                    'charge'          : self.charge,
-                    'mult'            : self.mult,
-                    'structure'       : self.structure,
-                    'add_opts'        : self.add_opts}
+        options = { 'name'      : self.name,
+                    'nproc'     : self.nproc,
+                    'mem'       : self.mem,
+                    'mem_unit'  : self.mem_unit,
+                    'chk'       : self.chk,
+                    'funct'     : self.funct,
+                    'basis'     : self.basis,
+                    'job'       : self.job,
+                    'title'     : self.title,
+                    'charge'    : self.charge,
+                    'mult'      : self.mult,
+                    'structure' : self.structure,
+                    'add_opts'  : self.add_opts }
 
         return options
 
@@ -427,19 +427,19 @@ class output_file:
         self.natoms = len(self.structure)
         self.types = self.get_types()
 
-        options = { 'name'            : self.name,
-                    'nproc'           : self.nproc,
-                    'mem'             : self.mem,
-                    'mem_unit'        : self.mem_unit,
-                    'chk'             : self.chk,
-                    'funct'           : self.funct,
-                    'basis'           : self.basis,
-                    'job'             : self.job,
-                    'title'           : self.title,
-                    'charge'          : self.charge,
-                    'mult'            : self.mult,
-                    'structure'       : self.structure,
-                    'add_opts'        : self.add_opts}
+        options = { 'name'      : self.name,
+                    'nproc'     : self.nproc,
+                    'mem'       : self.mem,
+                    'mem_unit'  : self.mem_unit,
+                    'chk'       : self.chk,
+                    'funct'     : self.funct,
+                    'basis'     : self.basis,
+                    'job'       : self.job,
+                    'title'     : self.title,
+                    'charge'    : self.charge,
+                    'mult'      : self.mult,
+                    'structure' : self.structure,
+                    'add_opts'  : self.add_opts}
 
         return options
 
@@ -713,19 +713,19 @@ class output_file:
         if not job and 'opt' in self.types:
             self.job = 'td=(nstates=16) nosymm'
 
-        options = { 'name'            : self.name,
-                    'nproc'           : self.nproc,
-                    'mem'             : self.mem,
-                    'mem_unit'        : self.mem_unit,
-                    'chk'             : self.chk,
-                    'funct'           : self.funct,
-                    'basis'           : self.basis,
-                    'job'             : self.job,
-                    'title'           : self.title,
-                    'charge'          : self.charge,
-                    'mult'            : self.mult,
-                    'structure'       : self.structure,
-                    'add_opts'        : self.add_opts}
+        options = { 'name'      : self.name,
+                    'nproc'     : self.nproc,
+                    'mem'       : self.mem,
+                    'mem_unit'  : self.mem_unit,
+                    'chk'       : self.chk,
+                    'funct'     : self.funct,
+                    'basis'     : self.basis,
+                    'job'       : self.job,
+                    'title'     : self.title,
+                    'charge'    : self.charge,
+                    'mult'      : self.mult,
+                    'structure' : self.structure,
+                    'add_opts'  : self.add_opts}
 
         return options
 

@@ -63,19 +63,19 @@ def options():
     args = parser.parse_args()
     args.job = ' '.join(args.job)
 
-    G09_opts = { 'name'            : '',
-                 'nproc'           : args.nproc,
-                 'mem'             : args.mem,
-                 'mem_unit'        : 'GB',
-                 'chk'             : args.chk,
-                 'funct'           : args.funct,
-                 'basis'           : args.basis,
-                 'job'             : args.job,
-                 'title'           : 'Title card',
-                 'charge'          : args.charge,
-                 'mult'            : args.mult,
-                 'structure'       : [],
-                 'add_opts'        : '\n'}
+    G09_opts = { 'name'      : '',
+                 'nproc'     : args.nproc,
+                 'mem'       : args.mem,
+                 'mem_unit'  : 'GB',
+                 'chk'       : args.chk,
+                 'funct'     : args.funct,
+                 'basis'     : args.basis,
+                 'job'       : args.job,
+                 'title'     : 'Title card',
+                 'charge'    : args.charge,
+                 'mult'      : args.mult,
+                 'structure' : [],
+                 'add_opts'  : '\n'}
 
     return args, G09_opts
 
