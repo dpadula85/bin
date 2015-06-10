@@ -221,7 +221,7 @@ class input_file:
 
         with open(self.file, 'r') as f:
             for line in f:
-                if line.strip() == '':
+                if not line.strip():
                     title = next(f).strip()
                     break
                 else:
@@ -284,7 +284,7 @@ class input_file:
                 if pattern.match(line):
                     opt = 1
 
-                if line.strip() == "":
+                if not line.strip():
                     opt = 0
 
                 if opt == 1 and not pattern.match(line):
@@ -320,7 +320,7 @@ class input_file:
                 if opt == 1:
                     switch = 1
 
-                if line.strip() == "":
+                if not line.strip():
                     opt = 0
 
                 if opt == 0 and switch == 1:
@@ -666,7 +666,7 @@ class output_file:
                 if "multiplicity" in line.lower():
                     opt = 1
 
-                if line.strip() == "":
+                if not line.strip():
                     opt = 0
 
                 if opt == 1 and not "multiplicity" in line.lower():
