@@ -28,8 +28,7 @@ class input_file:
 
         if not os.path.exists(infile) or os.stat(infile).st_size == 0:
             self.options = self.set_options(opts_dict)
-            with open(infile, 'w'):
-                self.write_job()
+            self.write_job()
 
         if os.path.exists(infile) and os.stat(infile).st_size > 0:
             self.options = self.get_options()
