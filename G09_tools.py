@@ -88,7 +88,7 @@ if __name__ == '__main__':
   args, G09_opts = options()
 
   #Analyze each option
-  if args.opt == True:
+  if args.opt:
         
     for f_inp in args.f_inp:
       
@@ -98,7 +98,7 @@ if __name__ == '__main__':
       G09_files.input_file('%s_new.com' % f.name.split('.')[0], G09_opts)
       
 
-  if args.stick == True:
+  if args.stick:
     
     for f_inp in args.f_inp:
       

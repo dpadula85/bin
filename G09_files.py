@@ -194,7 +194,7 @@ class input_file:
             basis = keyword
             stop = True
             break
-        if stop == True:
+        if stop:
           break
         else:
           basis = ''
@@ -571,7 +571,7 @@ class output_file:
             basis = keyword
             stop = True
             break
-        if stop == True:
+        if stop:
           break
         else:
           basis = ''
