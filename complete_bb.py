@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
-#This Script adds the side chains of aminoacids to the protein analysis obtained with proteincut.py
-#for EXAT calculations.
-#In a dictionary, one defines the correspondence between the originary residues and their
-#side chains.
-#The script then looks for all the couplings in which the originary residues are involved
-#and creates similar couplings in which the originary residues have been substituted by
-#their side chain.
-#Finally, couplings between the originary residues and their own side chain are generated.
+#This Script adds the side chains of aminoacids to the protein analysis
+#obtained with proteincut.py for EXAT calculations.
+#In a dictionary, one defines the correspondence between the originary
+#residues and their side chains.
+#The script then looks for all the couplings in which the originary
+#residues are involved and creates similar couplings in which the
+#originary residues have been substituted by their side chain.
+#Finally, couplings between the originary residues and their own side
+#chain are generated.
 
 #import standard Python modules
 import os
@@ -34,11 +35,13 @@ for coupling in couplings:
     chrom1 = re.split('[_.]', coupling)[1]
     chrom2 = re.split('[_.]', coupling)[2]
 
-    #if any of the bb residues in the dictionary is involved, check which one and create a new folder
-    #substituting the bb residue structure with the corresponding side chain.
+    #if any of the bb residues in the dictionary is involved, check which one
+    #and create a new folder substituting the bb residue structure with the
+    #corresponding side chain.
     if any([chrom1 in trps.keys(), chrom2 in trps.keys()]):
 
-        #Get the options from the coupling file to create a new one with same options
+        #Get the options from the coupling file to create a new one with
+        #the same options
         coup = G09_files.input_file(os.path.join(coupling, '%s.com' % coupling))
         G09_opts = coup.options
 
@@ -46,8 +49,8 @@ for coupling in couplings:
 
             chrom1 = trps[chrom1]
 
-            #f1 is associated with chrom2 because chrom1 is now one of the artificially added
-            #residues, thus having higher index than chrom2.
+            #f1 is associated with chrom2 because chrom1 is now one of the
+            #artificially adde dresidues, thus having higher index than chrom2.
             f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
             f2 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
             G09_opts['structure'] = f1.structure + f2.structure

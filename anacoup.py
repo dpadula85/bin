@@ -9,14 +9,17 @@ import argparse as arg
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='Analyzes the couplings obtained from G09 EET calculations.')
+    parser = arg.ArgumentParser(description='''
+    Analyzes the couplings obtained from G09 EET calculations.''')
 
     # Optional arguments
     # Threshold
-    parser.add_argument('-t', '--thresh', default=0.65, type=float, help='Threshold under which couplings will be ignored.')
+    parser.add_argument('-t', '--thresh', default=0.65, type=float, help='''
+    Threshold under which couplings will be ignored.''')
 
     # Unit
-    parser.add_argument('-u', '--unit', default='eV', choices=['eV', 'cm'], help='Unit of the Threshold.')
+    parser.add_argument('-u', '--unit', default='eV', choices=['eV', 'cm'], help='''
+    Unit of the Threshold.''')
 
     args = parser.parse_args()
 
@@ -46,27 +49,32 @@ if __name__ == '__main__':
     if unit == 'cm':
         col = 10
 
-    # Couplings defined as the folders whose name equals 'V_' followed by some digits
+    # Couplings defined as the folders whose name equals
+    #'V_' followed by some digits
     couplings = sorted(filter(lambda x: re.match('V_\d+', x), os.listdir(os.getcwd())))
 
     # Initialize a dictionary to store couplings higher than the threshold.
-    # The key will be the name of the coupling, the value will be a list containing
-    # the couplings higher than the threshold.
+    # The key will be the name of the coupling, the value will be a list
+    # containing the couplings higher than the threshold.
     suspect_data = {}
 
     for coupling in couplings:
         suspect_data[coupling] = []
         with open(os.path.join(coupling, '%s.log' % coupling), 'r') as f:
             for line in f:
-                if 'Coulomb term' in line:  # TO DO: add an option to choose the term to read
+                if 'Coulomb term' in line:
                     coup = float(line.split()[col])
                     if abs(coup) > thresh:
                         suspect_data[coupling].append(coup)
 
     if empty(suspect_data.values()):
-        print('No couplings higher than %f %s have been found.' % (thresh, unit))
+        print('''
+        No couplings higher than %f %s have been found.''' % (thresh, unit))
     else:
-        print('Couplings higher than %f %s have been saved in coup_analysis.dat' % (thresh, unit))
+        print('''
+        Couplings higher than %f %s have been saved
+        in coup_analysis.dat''' % (thresh, unit))
+
         with open('coup_analysis.dat', 'w') as data:
             for k, v in suspect_data.iteritems():
                 if v:
