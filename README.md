@@ -5,4 +5,4 @@ Symlinks have been ignored by adding the output of
 
 find . -type l
 
-to .gitignore
+to .git/info/exclude
