@@ -496,7 +496,7 @@ class output_file:
 
         with open(self.file, 'r') as f:
             for line in f:
-                if 'mem' in line.lower():
+                if '%mem' in line.lower():
                     mem_str = line.split('=')[-1].strip()
                     mem, unit = re.search('([0-9]+)([A-Z]+)', mem_str).groups()
                     break
@@ -880,7 +880,7 @@ class td_output_file(output_file):
                     f_osc = line.split()[-2].split('=')[-1]
                     oscillators.append(float(f_osc))
 
-        return len(energies), energies, wavelengths, oscillators
+        return energies, wavelengths, oscillators
 
 
     def get_es_rot(self):
@@ -954,12 +954,12 @@ class td_output_file(output_file):
 
 
 
-##==============================
-## G09 ? output file
-##==============================
-##
-## Inherits from G09 output class. This class should contain methods specific
-## to extract data from G09 ? calculations.
+#==============================
+# G09 ? output file
+#==============================
+#
+# Inherits from G09 output class. This class should contain methods specific
+# to extract data from G09 ? calculations.
 #class boh_output_file(output_file):
 #  '''A class describing G09 optimization logfiles.'''
 #
