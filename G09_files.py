@@ -916,8 +916,77 @@ class td_output_file(output_file):
 
         return rot_vel, rot_len
 
-# Implement functions to extract transition dipoles
-# It is easy, but now I feel lazy
+    
+    def get_mu(self):
+        '''Extracts transition electric dipoles.'''
+
+        mu_vel = []
+        mu_len = []
+
+        with open(self.file, 'r') as f:
+            for line in f:
+        
+                if "excited state transition electric dipole" in line:
+
+# Example:
+#
+# Ground to excited state transition electric dipole moments (Au):
+#       state          X           Y           Z        Dip. S.      Osc.
+#         1        -0.8862      0.3776     -0.1925      0.9651      0.1142
+
+                    next(f)
+                    for i in range(self.nstates):
+                        curr_line = next(f)
+                        mu_len_x = float(curr_line.split()[1])
+                        mu_len_y = float(curr_line.split()[2])
+                        mu_len_z = float(curr_line.split()[3])
+                        mu_len.append([mu_len_x, mu_len_y, mu_len_z])
+
+                if "excited state transition velocity dipole" in line:
+
+# Example:
+#
+# Ground to excited state transition velocity dipole moments (Au):
+#       state          X           Y           Z        Dip. S.      Osc.
+#         1         0.1548     -0.0673      0.0468      0.0307      0.1152
+
+                    next(f)
+                    for i in range(self.nstates):
+                        curr_line = next(f)
+                        mu_vel_x = float(curr_line.split()[1])
+                        mu_vel_y = float(curr_line.split()[2])
+                        mu_vel_z = float(curr_line.split()[3])
+                        mu_vel.append([mu_vel_x, mu_vel_y, mu_vel_z])
+
+        return mu_vel, mu_len
+
+
+    def get_mag(self):
+        '''Extracts transition magnetic dipoles.'''
+
+        m = []
+
+        with open(self.file, 'r') as f:
+            for line in f:
+        
+                if "excited state transition magnetic dipole" in line:
+
+# Example:
+#
+# Ground to excited state transition magnetic dipole moments (Au):
+#       state          X           Y           Z  
+#         1         5.9417      4.8361    -12.7233
+
+                    next(f)
+                    for i in range(self.nstates):
+                        curr_line = next(f)
+                        m_x = float(curr_line.split()[1])
+                        m_y = float(curr_line.split()[2])
+                        m_z = float(curr_line.split()[3])
+                        m.append([m_x, m_y, m_z])
+
+        return m
+
 
     def get_results(self):
         '''Returns the results of the excited states calculation.'''
@@ -925,13 +994,18 @@ class td_output_file(output_file):
         self.es_energies, self. es_wavelengths, self.f_osc = self.get_es_prop()
         self.nstates = len(self.es_energies)
         self.r_vel, self.r_len = self.get_es_rot()
+        self.mu_vel, self.mu_len = self.get_mu()
+        self.m = self.get_mag()
 
-        results = { 'numer of states'         : self.nstates,
-                    'excitation energies'     : self.es_energies,
-                    'excitation wavelenghts'  : self.es_wavelengths,
-                    'oscillator strengths'    : self.f_osc,
-                    'vel. rotatory strengths' : self.r_vel,
-                    'len. rotatory strengths' : self.r_len}
+        results = { 'numer of states'               : self.nstates,
+                    'excitation energies'           : self.es_energies,
+                    'excitation wavelenghts'        : self.es_wavelengths,
+                    'oscillator strengths'          : self.f_osc,
+                    'vel. rotatory strengths'       : self.r_vel,
+                    'len. rotatory strengths'       : self.r_len,
+                    'vel. transition electric dip.' : self.mu_vel,
+                    'len. transition electric dip.' : self.mu_len,
+                    'transition magnetic dip.'      : self.m}
 
         return results
 
@@ -940,14 +1014,16 @@ class td_output_file(output_file):
         '''Writes Excited States data in a file for stick spectra plotting.'''
 
         with open('%s_stick.txt' % self.file.split('.')[0], 'w') as f:
-            f.write('%5s\t%6s\t%6s\t%6s\t%10s\t%10s\n' % ('State', 'E(eV)', 'l(nm)', 'f', 'R vel.', 'R len.'))
+            f.write('%5s\t%6s\t%6s\t%6s\t%10s\t%10s\n' % \
+            ('State', 'E(eV)', 'l(nm)', 'f', 'R vel.', 'R len.'))
 
             for i in range(self.nstates):
-                f.write('%5d\t%5.4f\t%5.2f\t%2.4f\t%10.4f\t%10.4f\n' % (i + 1, self.es_energies[i], self.es_wavelengths[i], self.f_osc[i], self.r_vel[i], self.r_len[i]))
+                f.write('%5d\t%5.4f\t%5.2f\t%2.4f\t%10.4f\t%10.4f\n' % \
+                (i + 1, self.es_energies[i], self.es_wavelengths[i], self.f_osc[i], self.r_vel[i], self.r_len[i]))
 
 
 # To be implemented
-#  def write_spectra(self):
+#  def write_spectra(self, lineshape, bandwidth):
 #    '''Writes convoluted spectra in a file for plotting.'''
 #    pass
 
