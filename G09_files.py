@@ -126,7 +126,7 @@ class input_file:
             for line in f:
                 if 'mem' in line:
                     mem_str = line.split('=')[-1].strip()
-                    mem, unit = re.search('([0-9]+)([A-Z]+)', mem_str).groups()
+                    mem, unit = re.search('(\d+)([a-zA-Z]+)', mem_str).groups()
                     break
                 else:
                     mem, unit = None, ''
@@ -498,7 +498,7 @@ class output_file:
             for line in f:
                 if '%mem' in line.lower():
                     mem_str = line.split('=')[-1].strip()
-                    mem, unit = re.search('([0-9]+)([A-Z]+)', mem_str).groups()
+                    mem, unit = re.search('(\d+)([a-zA-Z]+)', mem_str).groups()
                     break
                 else:
                     mem, unit = None, ''
