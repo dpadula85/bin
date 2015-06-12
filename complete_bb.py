@@ -48,58 +48,21 @@ for coupling in couplings:
         if chrom1 in trps.keys() and trps[chrom1] != chrom2:
 
             chrom1 = trps[chrom1]
-            G09_files.gen_coup(chrom2, chrom1)
-
-            #f1 is associated with chrom2 because chrom1 is now one of the
-            #artificially adde dresidues, thus having higher index than chrom2.
-            #f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
-            #f2 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
-            #G09_opts['structure'] = f1.structure + f2.structure
-            #G09_opts['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-            #G09_opts['title'] = 'coupling %s - %s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-            #f_coup = G09_files.input_file('V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0]), G09_opts)
-
-            #Create V_chrom1.chrom2 directory and move the .com file in it
-            #coup_dir = 'V_%s.%s' % (chrom2, chrom1)
-            #os.makedirs(coup_dir)
-            #shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
+            G09_files.gen_coup(chrom2, chrom1, G09_opts)
 
         if chrom2 in trps.keys() and trps[chrom2] != chrom1:
 
             chrom2 = trps[chrom2]
-            G09_files.gen_coup(chrom1, chrom2)
-
-            #f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
-            #f2 = G09_files.input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
-            #G09_opts['structure'] = f1.structure + f2.structure
-            #G09_opts['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-            #G09_opts['title'] = 'coupling %s - %s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-            #f_coup = G09_files.input_file('V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0]), G09_opts)
-
-            #Create V_chrom1.chrom2 directory and move the .com file in it
-            #coup_dir = 'V_%s.%s' % (chrom1, chrom2)
-            #os.makedirs(coup_dir)
-            #shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
-
+            G09_files.gen_coup(chrom1, chrom2, G09_opts)
 
 #Create the couplings between the originary residue and its side chain.
 for bb_res, ind_res in trps.iteritems():
 
     chrom1, chrom2 = bb_res, ind_res
-    G09_files.gen_coup(chrom1, chrom2)
 
-    #f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
-    #f2 = G09_files.input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
-    #G09_opts = f1.options
-    #G09_opts['funct'] = 'cam-b3lyp'
-    #G09_opts['job'] = 'td nosymm eet=coup IOp(2/12=3)'
-    #G09_opts['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-    #G09_opts['title'] = 'coupling %s - %s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-    #G09_opts['structure'] = f1.structure + f2.structure
-    #G09_opts['add_opts'] = '\n'
-    #f_coup = G09_files.input_file('V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0]), G09_opts)
-
-    #Create V_chrom1.chrom2 directory and move the .com file in it
-    #coup_dir = 'V_%s.%s' % (chrom1, chrom2)
-    #os.makedirs(coup_dir)
-    #shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
+    f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
+    G09_opts = f1.options
+    G09_opts['funct'] = 'cam-b3lyp'
+    G09_opts['job'] = 'td nosymm eet=coup IOp(2/12=3)'
+    G09_opts['add_opts'] = '\n'
+    G09_files.gen_coup(chrom1, chrom2, G09_opts)

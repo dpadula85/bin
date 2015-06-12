@@ -970,28 +970,32 @@ class td_output_file(output_file):
 #    output_file.__init__(self, outfile)
 
 
-#Given two chromophores, generate the file for the coupling calculation
+#===============================
+# Generate Coupling Calculation 
+#===============================
+#
+# This function should be called in the directory containing the directories
+# of the two chromophores, which in turn contain the G09 input files of the
+# eet=prop calculation
+#
 def gen_coup(chrom1, chrom2, opts_dict=None):
-    '''Generate the coupling between chrom1 and chrom2 with options stored in opts_dict.'''
+    '''Generate the coupling between chrom1 and chrom2 with options
+    stored in opts_dict.'''
 
     f1 = input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
     f2 = input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
 
-    # Default options for coupling calculations
-    default = {}
-    default['name'] = 'V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0])
-    default['funct'] = f1.funct 
-    default['job'] = 'td eet=coup IOp(2/12=3) nosymm'
-    default['structure'] = f1.structure + f2.structure
-    default['basis'] = f1.basis
-    default['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
-    default['title'] = 'coupling %s - %s' % (f1.name.split('.')[0], f2.name.split('.')[0])
+    # Change the options for the generation of the new file
+    opts_dict['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
+    opts_dict['title'] = 'coupling %s - %s' % (f1.name.split('.')[0], f2.name.split('.')[0])
+    opts_dict['structure'] = f1.structure + f2.structure
 
-    if not opts_dict:
-        opts_dict = default 
-
-    if opts_dict:
-        opts_dict = u.dict_compare(default, opts_dict)
+    # If the options dictionary does not refer to another coupling calculation
+    # use the default options listed below for the new coupling calculation
+    if not 'eet=coup' in opts_dict['job']:
+        opts_dict['basis'] = f1.basis
+        opts_dict['funct'] = f1.funct 
+        opts_dict['job'] = 'td eet=coup IOp(2/12=3) nosymm'
 
     f_coup = input_file('V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0]), opts_dict)
 
