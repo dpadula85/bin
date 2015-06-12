@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 
 # This Script adds the side chains of aminoacids to the protein analysis
 # obtained with proteincut.py for EXAT calculations.

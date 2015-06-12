@@ -18,9 +18,10 @@ import util as u
 # ================
 #
 
-class input_file:
-    '''A class describing G09 input files.'''
 
+class input_file:
+
+    '''A class describing G09 input files.'''
 
     def __init__(self, infile, opts_dict=None):
 
@@ -35,25 +36,24 @@ class input_file:
         if os.path.exists(infile) and os.stat(infile).st_size > 0:
             self.options = self.get_options()
 
-
     def set_options(self, options=None):
         '''Default options for creation of a new file.'''
 
-        default = { 'name'      : self.name,
-                    'nproc'     : 16,
-                    'mem'       : 24,
-                    'mem_unit'  : 'GB',
-                    'chk'       : self.name,
-                    'funct'     : 'b3lyp',
-                    'basis'     : '6-31g*',
-                    'job'       : 'td=(nstates=16)',
-                    'title'     : '%s td' % self.name ,
-                    'charge'    : 0,
-                    'mult'      : 1,
-                    'structure' : [['O', 0.000000, 0.000000, 0.000000],
-                                   ['H', 0.758602, 0.000000, 0.504284],
-                                   ['H', 0.758602, 0.000000, -0.504284]],
-                    'add_opts'  : '\n' }
+        default = {'name': self.name,
+                   'nproc': 16,
+                   'mem': 24,
+                   'mem_unit': 'GB',
+                   'chk': self.name,
+                   'funct': 'b3lyp',
+                   'basis': '6-31g*',
+                   'job': 'td=(nstates=16)',
+                   'title': '%s td' % self.name,
+                   'charge': 0,
+                   'mult': 1,
+                   'structure': [['O', 0.000000, 0.000000, 0.000000],
+                                 ['H', 0.758602, 0.000000, 0.504284],
+                                 ['H', 0.758602, 0.000000, -0.504284]],
+                   'add_opts': '\n'}
 
         if not options:
             options = default
@@ -64,7 +64,6 @@ class input_file:
         options['name'] = self.name
 
         return options
-
 
     def get_options(self):
 
@@ -82,29 +81,27 @@ class input_file:
         self.add_opts = self.get_add_opts()
         self.natoms = len(self.structure)
 
-        options = { 'name'      : self.name,
-                    'nproc'     : self.nproc,
-                    'mem'       : self.mem,
-                    'mem_unit'  : self.mem_unit,
-                    'chk'       : self.chk,
-                    'funct'     : self.funct,
-                    'basis'     : self.basis,
-                    'job'       : self.job,
-                    'title'     : self.title,
-                    'charge'    : self.charge,
-                    'mult'      : self.mult,
-                    'structure' : self.structure,
-                    'add_opts'  : self.add_opts }
+        options = {'name': self.name,
+                   'nproc': self.nproc,
+                   'mem': self.mem,
+                   'mem_unit': self.mem_unit,
+                   'chk': self.chk,
+                   'funct': self.funct,
+                   'basis': self.basis,
+                   'job': self.job,
+                   'title': self.title,
+                   'charge': self.charge,
+                   'mult': self.mult,
+                   'structure': self.structure,
+                   'add_opts': self.add_opts}
 
         return options
-
 
     def __str__(self):
         '''Prints a string containing the whole file.'''
 
         with open(self.file, 'r') as f:
             print(f.read())
-
 
     def get_nproc(self):
         '''Returns the number of processors.'''
@@ -118,7 +115,6 @@ class input_file:
                     nproc = None
 
         return nproc
-
 
     def get_mem(self):
         '''Returns the memory and its unit.'''
@@ -137,7 +133,6 @@ class input_file:
 
         return mem, unit
 
-
     def get_chk(self):
         '''Returns the name of the checkpoint file without extension.'''
 
@@ -152,7 +147,6 @@ class input_file:
 
         return chk
 
-
     def get_keywords(self):
         '''Returns the full string of keywords.'''
 
@@ -165,7 +159,6 @@ class input_file:
                     keywords = ''
 
         return keywords
-
 
     def get_funct(self):
         '''Returns the functional.'''
@@ -184,7 +177,6 @@ class input_file:
                     funct = ''
 
         return funct
-
 
     def get_basis(self):
         '''Returns the basis set.'''
@@ -213,7 +205,6 @@ class input_file:
 
         return basis
 
-
     def get_job(self):
         '''Returns the job-related keywords.'''
 
@@ -228,7 +219,6 @@ class input_file:
 
         return ' '.join(job)
 
-
     def get_title(self):
         '''Returns the title.'''
 
@@ -241,7 +231,6 @@ class input_file:
                     title = ''
 
         return title
-
 
     def get_charge(self):
         '''Returns the charge.'''
@@ -262,7 +251,6 @@ class input_file:
 
         return charge
 
-
     def get_mult(self):
         '''Returns the multiplicity.'''
 
@@ -281,7 +269,6 @@ class input_file:
             mult = int(mult)
 
         return mult
-
 
     def get_structure(self):
         '''Returns the structure.'''
@@ -309,7 +296,6 @@ class input_file:
                     structure.append([atom, atom_x, atom_y, atom_z])
 
         return structure
-
 
     def get_add_opts(self):
         '''Returns additional options.'''
@@ -341,7 +327,6 @@ class input_file:
 
         return add_opts
 
-
     def get_com(self):
         '''Returns the coordinates of the center of mass.'''
 
@@ -364,7 +349,6 @@ class input_file:
 
         return (x_com, y_com, z_com)
 
-
     def write_job(self, opts_dict=None):
         '''Writes a G09 input for the next calculation. Options for the new
         job can be specified, otherwise default options will be used.'''
@@ -382,13 +366,13 @@ class input_file:
 
             if opts_dict['mem']:
                 f.write('%%mem=%d%s\n' %
-                    (opts_dict['mem'], opts_dict['mem_unit']))
+                        (opts_dict['mem'], opts_dict['mem_unit']))
 
             if opts_dict['chk']:
                 f.write('%%chk=%s.chk\n' % opts_dict['chk'])
 
             f.write('#p %s %s %s\n' %
-            (opts_dict['funct'], opts_dict['basis'], opts_dict['job']))
+                    (opts_dict['funct'], opts_dict['basis'], opts_dict['job']))
 
             f.write('\n')
             f.write('%s\n' % opts_dict['title'])
@@ -397,7 +381,7 @@ class input_file:
 
             for atom in opts_dict['structure']:
                 f.write('%2s\t%12.8f\t%12.8f\t%12.8f\n' %
-                (atom[0], atom[1], atom[2], atom[3]))
+                        (atom[0], atom[1], atom[2], atom[3]))
 
             for opt in opts_dict['add_opts']:
                 f.write(opt)
@@ -415,7 +399,9 @@ class input_file:
 # to be defined afterwards
 #
 
+
 class output_file:
+
     '''A class describing G09 logfiles.'''
 
     def __init__(self, outfile):
@@ -424,7 +410,6 @@ class output_file:
         self.path = os.path.split(outfile)[0]
         self.file = os.path.join(self.path, self.name)
         self.options = self.get_options()
-
 
     def get_options(self):
 
@@ -443,29 +428,27 @@ class output_file:
         self.natoms = len(self.structure)
         self.types = self.get_types()
 
-        options = { 'name'      : self.name,
-                    'nproc'     : self.nproc,
-                    'mem'       : self.mem,
-                    'mem_unit'  : self.mem_unit,
-                    'chk'       : self.chk,
-                    'funct'     : self.funct,
-                    'basis'     : self.basis,
-                    'job'       : self.job,
-                    'title'     : self.title,
-                    'charge'    : self.charge,
-                    'mult'      : self.mult,
-                    'structure' : self.structure,
-                    'add_opts'  : self.add_opts}
+        options = {'name': self.name,
+                   'nproc': self.nproc,
+                   'mem': self.mem,
+                   'mem_unit': self.mem_unit,
+                   'chk': self.chk,
+                   'funct': self.funct,
+                   'basis': self.basis,
+                   'job': self.job,
+                   'title': self.title,
+                   'charge': self.charge,
+                   'mult': self.mult,
+                   'structure': self.structure,
+                   'add_opts': self.add_opts}
 
         return options
-
 
     def __str__(self):
         '''Prints a string containing the whole file.'''
 
         with open(self.file, 'r') as f:
             print(f.read())
-
 
     def get_types(self):
         '''Sets a label for the performed G09 job.'''
@@ -476,10 +459,9 @@ class output_file:
 
         keywords_split = re.split('[ =()]', self.job)
         job_types = [dft.job_types[keyword]
-        for keyword in keywords_split if keyword in dft.job_types.keys()]
+                     for keyword in keywords_split if keyword in dft.job_types.keys()]
 
         return job_types
-
 
     def get_end(self):
         '''Checks if the G09 job terminated correctly.'''
@@ -494,7 +476,6 @@ class output_file:
 
         return status
 
-
     def get_nproc(self):
         '''Returns the number of processors.'''
 
@@ -507,7 +488,6 @@ class output_file:
                     nproc = None
 
         return nproc
-
 
     def get_mem(self):
         '''Returns the memory and its unit.'''
@@ -526,7 +506,6 @@ class output_file:
 
         return mem, unit
 
-
     def get_chk(self):
         '''Returns the name of the checkpoint file without extension.'''
 
@@ -540,7 +519,6 @@ class output_file:
                     chk = ''
 
         return chk
-
 
     def get_keywords(self):
         '''Returns the full string of keywords.'''
@@ -572,7 +550,6 @@ class output_file:
 
         return keywords
 
-
     def get_funct(self):
         '''Returns the functional.'''
 
@@ -590,7 +567,6 @@ class output_file:
                     funct = ''
 
         return funct
-
 
     def get_basis(self):
         '''Returns the basis set.'''
@@ -619,7 +595,6 @@ class output_file:
 
         return basis
 
-
     def get_job(self):
         '''Returns the job-related keywords.'''
 
@@ -631,7 +606,6 @@ class output_file:
             job = [x for x in keywords if x != self.funct and x != self.basis]
 
         return ' '.join(job)
-
 
     def get_title(self):
         '''Returns the title.'''
@@ -649,7 +623,6 @@ class output_file:
 
         return title
 
-
     def get_charge(self):
         '''Returns the charge.'''
 
@@ -666,7 +639,6 @@ class output_file:
 
         return charge
 
-
     def get_mult(self):
         '''Returns the multiplicity.'''
 
@@ -682,7 +654,6 @@ class output_file:
             mult = int(mult)
 
         return mult
-
 
     def get_initial_structure(self):
         '''Returns the structure written in the corresponding input.'''
@@ -708,7 +679,6 @@ class output_file:
 
         return structure
 
-
     def get_com(self):
         '''Returns the coordinates of the center of mass.'''
 
@@ -731,7 +701,6 @@ class output_file:
 
         return (x_com, y_com, z_com)
 
-
     def set_options(self, job=None):
         '''Sets the default options for a G09 job.'''
 
@@ -741,22 +710,21 @@ class output_file:
         if not job and 'opt' in self.types:
             self.job = 'td=(nstates=16) nosymm'
 
-        options = { 'name'      : self.name,
-                    'nproc'     : self.nproc,
-                    'mem'       : self.mem,
-                    'mem_unit'  : self.mem_unit,
-                    'chk'       : self.chk,
-                    'funct'     : self.funct,
-                    'basis'     : self.basis,
-                    'job'       : self.job,
-                    'title'     : self.title,
-                    'charge'    : self.charge,
-                    'mult'      : self.mult,
-                    'structure' : self.structure,
-                    'add_opts'  : self.add_opts}
+        options = {'name': self.name,
+                   'nproc': self.nproc,
+                   'mem': self.mem,
+                   'mem_unit': self.mem_unit,
+                   'chk': self.chk,
+                   'funct': self.funct,
+                   'basis': self.basis,
+                   'job': self.job,
+                   'title': self.title,
+                   'charge': self.charge,
+                   'mult': self.mult,
+                   'structure': self.structure,
+                   'add_opts': self.add_opts}
 
         return options
-
 
     def write_next_job(self, opts_dict=None):
         '''Writes a G09 input for the next calculation. Options for the new
@@ -779,13 +747,14 @@ class output_file:
 # to extract data from G09 optimizations.
 #
 
+
 class opt_output_file(output_file):
+
     '''A class describing G09 optimization logfiles.'''
 
     def __init__(self, outfile):
         output_file.__init__(self, outfile)
         self.results = self.get_results()
-
 
     def get_opt_structure(self):
         '''Returns the optimized structure.'''
@@ -826,7 +795,6 @@ class opt_output_file(output_file):
 
         return structure
 
-
     def get_opt_en(self):
         '''Returns the energy of the optimized structure.'''
 
@@ -837,7 +805,6 @@ class opt_output_file(output_file):
 
         return energy
 
-
     def get_results(self):
         '''Returns the results of the optimization.'''
 
@@ -845,12 +812,11 @@ class opt_output_file(output_file):
         self.energy = self.get_opt_en()
         self.energy_unit = 'au'
 
-        results = { 'optimized structure' : self.structure,
-                    'optimized energy'    : self.energy,
-                    'energy unit'         : self.energy_unit}
+        results = {'optimized structure': self.structure,
+                   'optimized energy': self.energy,
+                   'energy unit': self.energy_unit}
 
         return results
-
 
     def en_convert(self, new_u):
         '''Converts the energy of the optimized structure to another unit.'''
@@ -860,7 +826,7 @@ class opt_output_file(output_file):
         factor1 = u.energy_conversion[u1]
         factor2 = u.energy_conversion[u2]
 
-        new_energy = self.energy * factor2/factor1
+        new_energy = self.energy * factor2 / factor1
 
         self.energy_unit = u2
         self.energy = new_energy
@@ -876,13 +842,14 @@ class opt_output_file(output_file):
 # to extract data from G09 td calculations.
 #
 
+
 class td_output_file(output_file):
+
     '''A class describing G09 td logfiles.'''
 
     def __init__(self, outfile):
         output_file.__init__(self, outfile)
         self.results = self.get_results()
-
 
     def get_es_prop(self):
         '''Extracts excitation energies and wavelengths.'''
@@ -896,9 +863,10 @@ class td_output_file(output_file):
 
                 if "Excited State  " in line:
 
-# Example:
-#
-#      Excited State   1:      Singlet-?Sym    4.8743 eV  254.36 nm  f=0.0151  <S**2>=0.000
+                    # Example:
+                    #
+                    # Excited State   1:      Singlet-?Sym    4.8743 eV  254.36
+                    # nm  f=0.0151  <S**2>=0.000
 
                     energy = line.split()[4]
                     energies.append(float(energy))
@@ -911,7 +879,6 @@ class td_output_file(output_file):
 
         return energies, wavelengths, oscillators
 
-
     def get_es_rot(self):
         '''Extracts rotatory strenghts.'''
 
@@ -923,10 +890,11 @@ class td_output_file(output_file):
 
                 if "R(velocity)" in line:
 
-# Example:
-#
-#      state          XX          YY          ZZ    R(velocity)    E-M Angle
-#         1      -143.5843   -117.0927    -17.9532    -92.8767      136.17
+                    # Example:
+                    #
+                    #      state          XX          YY          ZZ    R(velocity)    E-M Angle
+                    # 1      -143.5843   -117.0927    -17.9532    -92.8767
+                    # 136.17
 
                     for i in range(self.nstates):
                         r_vel = next(f).split()[-2]
@@ -934,17 +902,16 @@ class td_output_file(output_file):
 
                 if "R(length)" in line:
 
-# Example:
-#
-#       state          XX          YY          ZZ     R(length)
-#         1      -133.6881     23.8640   -170.4743    -93.4328
+                    # Example:
+                    #
+                    #       state          XX          YY          ZZ     R(length)
+                    # 1      -133.6881     23.8640   -170.4743    -93.4328
 
                     for i in range(self.nstates):
                         r_len = next(f).split()[-1]
                         rot_len.append(float(r_len))
 
         return rot_vel, rot_len
-
 
     def get_mu(self):
         '''Extracts transition electric dipoles.'''
@@ -957,11 +924,12 @@ class td_output_file(output_file):
 
                 if "excited state transition electric dipole" in line:
 
-# Example:
-#
-# Ground to excited state transition electric dipole moments (Au):
-#       state          X           Y           Z        Dip. S.      Osc.
-#         1        -0.8862      0.3776     -0.1925      0.9651      0.1142
+                    # Example:
+                    #
+                    # Ground to excited state transition electric dipole moments (Au):
+                    #       state          X           Y           Z        Dip. S.      Osc.
+                    # 1        -0.8862      0.3776     -0.1925      0.9651
+                    # 0.1142
 
                     next(f)
                     for i in range(self.nstates):
@@ -973,11 +941,12 @@ class td_output_file(output_file):
 
                 if "excited state transition velocity dipole" in line:
 
-# Example:
-#
-# Ground to excited state transition velocity dipole moments (Au):
-#       state          X           Y           Z        Dip. S.      Osc.
-#         1         0.1548     -0.0673      0.0468      0.0307      0.1152
+                    # Example:
+                    #
+                    # Ground to excited state transition velocity dipole moments (Au):
+                    #       state          X           Y           Z        Dip. S.      Osc.
+                    # 1         0.1548     -0.0673      0.0468      0.0307
+                    # 0.1152
 
                     next(f)
                     for i in range(self.nstates):
@@ -989,7 +958,6 @@ class td_output_file(output_file):
 
         return mu_vel, mu_len
 
-
     def get_mag(self):
         '''Extracts transition magnetic dipoles.'''
 
@@ -1000,11 +968,11 @@ class td_output_file(output_file):
 
                 if "excited state transition magnetic dipole" in line:
 
-# Example:
-#
-# Ground to excited state transition magnetic dipole moments (Au):
-#       state          X           Y           Z
-#         1         5.9417      4.8361    -12.7233
+                    # Example:
+                    #
+                    # Ground to excited state transition magnetic dipole moments (Au):
+                    #       state          X           Y           Z
+                    #         1         5.9417      4.8361    -12.7233
 
                     next(f)
                     for i in range(self.nstates):
@@ -1016,7 +984,6 @@ class td_output_file(output_file):
 
         return m
 
-
     def get_results(self):
         '''Returns the results of the excited states calculation.'''
 
@@ -1026,29 +993,28 @@ class td_output_file(output_file):
         self.mu_vel, self.mu_len = self.get_mu()
         self.m = self.get_mag()
 
-        results = { 'numer of states'               : self.nstates,
-                    'excitation energies'           : self.es_energies,
-                    'excitation wavelenghts'        : self.es_wavelengths,
-                    'oscillator strengths'          : self.f_osc,
-                    'vel. rotatory strengths'       : self.r_vel,
-                    'len. rotatory strengths'       : self.r_len,
-                    'vel. transition electric dip.' : self.mu_vel,
-                    'len. transition electric dip.' : self.mu_len,
-                    'transition magnetic dip.'      : self.m}
+        results = {'numer of states': self.nstates,
+                   'excitation energies': self.es_energies,
+                   'excitation wavelenghts': self.es_wavelengths,
+                   'oscillator strengths': self.f_osc,
+                   'vel. rotatory strengths': self.r_vel,
+                   'len. rotatory strengths': self.r_len,
+                   'vel. transition electric dip.': self.mu_vel,
+                   'len. transition electric dip.': self.mu_len,
+                   'transition magnetic dip.': self.m}
 
         return results
-
 
     def write_stick(self):
         '''Writes Excited States data in a file for stick spectra plotting.'''
 
         with open('%s_stick.txt' % self.file.split('.')[0], 'w') as f:
             f.write('%5s\t%6s\t%6s\t%6s\t%10s\t%10s\n' %
-            ('State', 'E(eV)', 'l(nm)', 'f', 'R vel.', 'R len.'))
+                    ('State', 'E(eV)', 'l(nm)', 'f', 'R vel.', 'R len.'))
 
             for i in range(self.nstates):
                 f.write('%5d\t%5.4f\t%5.2f\t%2.4f\t%10.4f\t%10.4f\n' %
-                (i + 1, self.es_energies[i], self.es_wavelengths[i], self.f_osc[i], self.r_vel[i], self.r_len[i]))
+                        (i + 1, self.es_energies[i], self.es_wavelengths[i], self.f_osc[i], self.r_vel[i], self.r_len[i]))
 
 #
 # To be implemented
@@ -1079,6 +1045,7 @@ class td_output_file(output_file):
 # eet=prop calculation
 #
 
+
 def gen_coup(chrom1, chrom2, opts_dict=None):
     '''Generate the coupling between chrom1 and chrom2 with options
     stored in opts_dict.'''
@@ -1097,13 +1064,13 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
 
     # If the options dictionary does not refer to another coupling calculation
     # use the default options listed below for the new coupling calculation
-    if not 'eet=coup' in opts_dict['job']:
+    if 'eet=coup' not in opts_dict['job']:
         opts_dict['basis'] = f1.basis
         opts_dict['funct'] = f1.funct
         opts_dict['job'] = 'td eet=coup IOp(2/12=3) nosymm'
 
     f_coup = input_file('V_%s.%s.com' %
-        (f1.name.split('.')[0], f2.name.split('.')[0]), opts_dict)
+                        (f1.name.split('.')[0], f2.name.split('.')[0]), opts_dict)
 
     # Create V_chrom1.chrom2 directory and move the .com file in it
     coup_dir = 'V_%s.%s' % (chrom1, chrom2)
