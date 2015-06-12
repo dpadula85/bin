@@ -121,12 +121,13 @@ if __name__ == '__main__':
             calclist = open('calclist.in', 'w')
             calclist.write('1 1 0 0\n')
 
+            G09_opts['funct'] = 'b3lyp'
+            G09_opts['job'] = 'integral(ultrafine) td eet=coup IOp(2/12=3) nosymm'
+
             for chrom1 in dirs[:]:
                 for chrom2 in filter(lambda x: x != chrom1, dirs):
 
-                    # Any change in the calculation method
-                    # should be done in G09_files module
-                    G09_files.gen_coup(chrom1, chrom2)
+                    G09_files.gen_coup(chrom1, chrom2, G09_opts)
 
                 #Remove chrom1 to avoid equivalent couple chrom2.chrom1
                 calclist.write('RES: %s\n' % chrom1)

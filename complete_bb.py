@@ -65,4 +65,5 @@ for bb_res, ind_res in trps.iteritems():
     G09_opts['funct'] = 'cam-b3lyp'
     G09_opts['job'] = 'td nosymm eet=coup IOp(2/12=3)'
     G09_opts['add_opts'] = '\n'
+
     G09_files.gen_coup(chrom1, chrom2, G09_opts)
