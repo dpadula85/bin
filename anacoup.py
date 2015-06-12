@@ -34,9 +34,9 @@ def empty(iterable):
         return False
 
 
-#=========================
+# =========================
 # The Program Starts Here
-#=========================
+# =========================
 
 if __name__ == '__main__':
 
@@ -50,8 +50,9 @@ if __name__ == '__main__':
         col = 10
 
     # Couplings defined as the folders whose name equals
-    #'V_' followed by some digits
-    couplings = sorted(filter(lambda x: re.match('V_\d+', x), os.listdir(os.getcwd())))
+    # 'V_' followed by some digits
+    couplings = sorted(
+        filter(lambda x: re.match('V_\d+', x), os.listdir(os.getcwd())))
 
     # Initialize a dictionary to store couplings higher than the threshold.
     # The key will be the name of the coupling, the value will be a list
