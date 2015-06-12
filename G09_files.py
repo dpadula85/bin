@@ -459,7 +459,8 @@ class output_file:
 
         keywords_split = re.split('[ =()]', self.job)
         job_types = [dft.job_types[keyword]
-                     for keyword in keywords_split if keyword in dft.job_types.keys()]
+                     for keyword in keywords_split
+                     if keyword in dft.job_types.keys()]
 
         return job_types
 
@@ -890,11 +891,10 @@ class td_output_file(output_file):
 
                 if "R(velocity)" in line:
 
-                    # Example:
-                    #
-                    #      state          XX          YY          ZZ    R(velocity)    E-M Angle
-                    # 1      -143.5843   -117.0927    -17.9532    -92.8767
-                    # 136.17
+# Example:
+#
+#      state          XX          YY          ZZ    R(velocity)    E-M Angle
+#        1       -143.5843   -117.0927    -17.9532    -92.8767      136.17
 
                     for i in range(self.nstates):
                         r_vel = next(f).split()[-2]
@@ -902,10 +902,10 @@ class td_output_file(output_file):
 
                 if "R(length)" in line:
 
-                    # Example:
-                    #
-                    #       state          XX          YY          ZZ     R(length)
-                    # 1      -133.6881     23.8640   -170.4743    -93.4328
+# Example:
+#
+#       state          XX          YY          ZZ       R(length)
+#         1        -133.6881     23.8640   -170.4743    -93.4328
 
                     for i in range(self.nstates):
                         r_len = next(f).split()[-1]
@@ -924,12 +924,11 @@ class td_output_file(output_file):
 
                 if "excited state transition electric dipole" in line:
 
-                    # Example:
-                    #
-                    # Ground to excited state transition electric dipole moments (Au):
-                    #       state          X           Y           Z        Dip. S.      Osc.
-                    # 1        -0.8862      0.3776     -0.1925      0.9651
-                    # 0.1142
+# Example:
+#
+# Ground to excited state transition electric dipole moments (Au):
+#       state          X           Y           Z        Dip. S.      Osc.
+#         1        -0.8862      0.3776     -0.1925      0.9651      0.1142
 
                     next(f)
                     for i in range(self.nstates):
@@ -941,12 +940,11 @@ class td_output_file(output_file):
 
                 if "excited state transition velocity dipole" in line:
 
-                    # Example:
-                    #
-                    # Ground to excited state transition velocity dipole moments (Au):
-                    #       state          X           Y           Z        Dip. S.      Osc.
-                    # 1         0.1548     -0.0673      0.0468      0.0307
-                    # 0.1152
+# Example:
+#
+# Ground to excited state transition velocity dipole moments (Au):
+#       state          X           Y           Z        Dip. S.      Osc.
+#         1         0.1548     -0.0673      0.0468      0.0307      0.1152
 
                     next(f)
                     for i in range(self.nstates):
@@ -968,11 +966,11 @@ class td_output_file(output_file):
 
                 if "excited state transition magnetic dipole" in line:
 
-                    # Example:
-                    #
-                    # Ground to excited state transition magnetic dipole moments (Au):
-                    #       state          X           Y           Z
-                    #         1         5.9417      4.8361    -12.7233
+# Example:
+#
+# Ground to excited state transition magnetic dipole moments (Au):
+#       state          X           Y           Z
+#         1         5.9417      4.8361    -12.7233
 
                     next(f)
                     for i in range(self.nstates):
@@ -1014,7 +1012,8 @@ class td_output_file(output_file):
 
             for i in range(self.nstates):
                 f.write('%5d\t%5.4f\t%5.2f\t%2.4f\t%10.4f\t%10.4f\n' %
-                        (i + 1, self.es_energies[i], self.es_wavelengths[i], self.f_osc[i], self.r_vel[i], self.r_len[i]))
+                        (i + 1, self.es_energies[i], self.es_wavelengths[i],
+                            self.f_osc[i], self.r_vel[i], self.r_len[i]))
 
 #
 # To be implemented
@@ -1070,7 +1069,8 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
         opts_dict['job'] = 'td eet=coup IOp(2/12=3) nosymm'
 
     f_coup = input_file('V_%s.%s.com' %
-                        (f1.name.split('.')[0], f2.name.split('.')[0]), opts_dict)
+                        (f1.name.split('.')[0], f2.name.split('.')[0]),
+                        opts_dict)
 
     # Create V_chrom1.chrom2 directory and move the .com file in it
     coup_dir = 'V_%s.%s' % (chrom1, chrom2)

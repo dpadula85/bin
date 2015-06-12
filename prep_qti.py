@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-#Extracts data from results.out, spec.OD.dat and spec.CD.dat and prepares
-#a table for faster plotting with qtiplot.
+# Extracts data from results.out, spec.OD.dat and spec.CD.dat and prepares
+# a table for faster plotting with qtiplot.
 
 energies = []
 f_osc = []
@@ -36,7 +36,9 @@ with open('spec.CD.dat', 'r') as f:
 with open('results_qti.txt', 'w') as f:
 
     for i in range(len(energies)):
-        f.write('%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n' % (wavelengths[i], UV[i], CD[i], 1240 / energies[i], f_osc[i], f_osc[i] * 50000, rot[i], rot[i] / 3))
+        f.write('%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n' %
+                (wavelengths[i], UV[i], CD[i], 1240 / energies[i], f_osc[i],
+                    f_osc[i] * 50000, rot[i], rot[i] / 3))
 
     for j in range(i + 1, len(wavelengths)):
         f.write('%f\t%f\t%f\n' % (wavelengths[j], UV[j], CD[j]))
