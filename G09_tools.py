@@ -127,19 +127,20 @@ if __name__ == '__main__':
             for chrom1 in dirs[:]:
                 for chrom2 in filter(lambda x: x != chrom1, dirs):
 
-                    f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
-                    f2 = G09_files.input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
+                    G09_files.gen_coup(chrom1, chrom2)
+                    #f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
+                    #f2 = G09_files.input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
 
-                    G09_opts['structure'] = f1.structure + f2.structure
-                    G09_opts['basis'] = f1.basis
-                    G09_opts['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
+                    #G09_opts['structure'] = f1.structure + f2.structure
+                    #G09_opts['basis'] = f1.basis
+                    #G09_opts['chk'] = 'V_%s.%s' % (f1.name.split('.')[0], f2.name.split('.')[0])
 
-                    f_coup = G09_files.input_file('V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0]), G09_opts)
+                    #f_coup = G09_files.input_file('V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0]), G09_opts)
 
                     #Create V_chrom1.chrom2 directory and move the .com file in it
-                    coup_dir = 'V_%s.%s' % (chrom1, chrom2)
-                    os.makedirs(coup_dir)
-                    shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
+                    #coup_dir = 'V_%s.%s' % (chrom1, chrom2)
+                    #os.makedirs(coup_dir)
+                    #shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
 
                 #Remove chrom1 to avoid equivalent couple chrom2.chrom1
                 calclist.write('RES: %s\n' % chrom1)

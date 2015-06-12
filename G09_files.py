@@ -980,7 +980,7 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
     # Default options for coupling calculations
     default = {}
     default['name'] = 'V_%s.%s.com' % (f1.name.split('.')[0], f2.name.split('.')[0])
-    default['funct'] = 'cam-b3lyp'
+    default['funct'] = f1.funct 
     default['job'] = 'td eet=coup IOp(2/12=3) nosymm'
     default['structure'] = f1.structure + f2.structure
     default['basis'] = f1.basis
