@@ -455,7 +455,7 @@ class output_file:
         '''Sets a label for the performed G09 job.'''
 
         # This function is actually not used yet.
-        # The idea is to determinf what kind of job was run
+        # The idea is to determine what kind of job was run
         # and create an instance of a child class based on it.
         keywords_split = re.split('[ =()]', self.job)
         job_types = [dft.job_types[keyword] for keyword in keywords_split if keyword in dft.job_types.keys()]
@@ -880,7 +880,7 @@ class td_output_file(output_file):
                     f_osc = line.split()[-2].split('=')[-1]
                     oscillators.append(float(f_osc))
 
-        return energies, wavelengths, oscillators
+        return len(energies), energies, wavelengths, oscillators
 
 
     def get_es_rot(self):
@@ -892,9 +892,6 @@ class td_output_file(output_file):
         with open(self.file, 'r') as f:
             for line in f:
 
-                if "nstates" in line:
-                    nstates = int(re.search('nstates[=\s](\d+)', line).group(1))
-
                 if "R(velocity)" in line:
 
         # Example:
@@ -902,7 +899,7 @@ class td_output_file(output_file):
         #      state          XX          YY          ZZ    R(velocity)    E-M Angle
         #         1      -143.5843   -117.0927    -17.9532    -92.8767      136.17
 
-                    for i in range(nstates):
+                    for i in range(self.nstates):
                         r_vel = next(f).split()[-2]
                         rot_vel.append(float(r_vel))
 
@@ -913,7 +910,7 @@ class td_output_file(output_file):
         #       state          XX          YY          ZZ     R(length)
         #         1      -133.6881     23.8640   -170.4743    -93.4328
 
-                    for i in range(nstates):
+                    for i in range(self.nstates):
                         r_len = next(f).split()[-1]
                         rot_len.append(float(r_len))
 
@@ -926,8 +923,8 @@ class td_output_file(output_file):
         '''Returns the results of the excited states calculation.'''
 
         self.es_energies, self. es_wavelengths, self.f_osc = self.get_es_prop()
-        self.r_vel, self.r_len = self.get_es_rot()
         self.nstates = len(self.es_energies)
+        self.r_vel, self.r_len = self.get_es_rot()
 
         results = { 'numer of states'         : self.nstates,
                     'excitation energies'     : self.es_energies,
