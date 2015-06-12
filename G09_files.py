@@ -362,7 +362,7 @@ class input_file:
         if opts_dict:
             opts_dict = u.dict_compare(self.options, opts_dict)
 
-        with open('%s' % opts_dict['name'], 'w') as f:
+        with open(opts_dict['name'], 'w') as f:
 
             if opts_dict['nproc']:
                 f.write('%%nproc=%d\n' % opts_dict['nproc'])
