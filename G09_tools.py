@@ -33,8 +33,8 @@ def options():
     properties and writes it to a stick file.''', action='store_true')
 
     # Preparation of input files for Coupling calculations for EXAT
-    parser.add_argument('--coup', help='''Prepares Coupling files and directories
-    for coupling calculations with G09.
+    parser.add_argument('--coup', help='''Prepares Coupling files and 
+    directories for coupling calculations with G09.
     This option does not require a file to be specified.''',
                         choices=['all', 'calclist'])
 
@@ -58,8 +58,8 @@ def options():
                         help='Name of the checkpoint file without extension.')
 
     parser.add_argument('-j', '--job', nargs='*', default=['td=(nstates=32)'],
-                        required=False, help='''Job type. This does not work combined
-    with --coup option.''')
+                        required=False, help='''Job type. This does not work 
+    combined with --coup option.''')
 
     parser.add_argument('-f', '--funct', default='cam-b3lyp',
                         help='Functional.')
