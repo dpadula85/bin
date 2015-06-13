@@ -1092,7 +1092,7 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
 #
 
 def kabsch(struct1,struct2):
-
+    '''Returns the RMSD calculated with the Kabsch algorithm.'''
 
     # Modify structures to get rid of the atomic symbol or number and convert
     # to np.array
