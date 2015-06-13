@@ -660,12 +660,16 @@ class output_file:
     def get_initial_structure(self):
         '''Returns the structure written in the corresponding input.'''
 
+        # Adding previous line control to avoid crash when multiple jobs are
+        # executed in chain
+        previous = None
         structure = []
         opt = 0
 
         with open(self.file, 'r') as f:
             for line in f:
-                if "multiplicity" in line.lower():
+                if "multiplicity" in line.lower() and "Symbolic Z-matrix" in \
+                        previous:
                     opt = 1
 
                 if not line.strip():
@@ -678,6 +682,8 @@ class output_file:
                     atom_y = float(curr_line[2])
                     atom_z = float(curr_line[3])
                     structure.append([atom, atom_x, atom_y, atom_z])
+
+                previous = line
 
         return structure
 
