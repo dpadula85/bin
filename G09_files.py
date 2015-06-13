@@ -5,6 +5,7 @@ import re
 import itertools
 import os
 import shutil
+import numpy as np
 from difflib import SequenceMatcher
 
 # Import personal modules
@@ -1018,6 +1019,7 @@ class td_output_file(output_file):
 #
 # To be implemented
 # I could use spectrum.py by Sandro&Lorenzo to make everything faster
+# but I don't like it has too many options...I should rewrite something simpler
 #  def write_spectra(self, lineshape, bandwidth_type, bandwidth):
 #    '''Writes convoluted spectra in a file for plotting.'''
 #    pass
@@ -1077,6 +1079,67 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
     coup_dir = 'V_%s.%s' % (chrom1, chrom2)
     os.makedirs(coup_dir)
     shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
+
+#
+# ==============================
+#  RMSD between two structures 
+# ==============================
+#
+# The problem has been solved by W. Kabsch in 1976 (Acta Crystallographica,
+# 32, 922.) The following function is described in PyMol Wiki (see
+# http://www.pymolwiki.org/index.php/Kabsch). I adapted it to the structures
+# obtained with this module.
+#
+
+def kabsch(struct1,struct2):
+
+
+    # Modify structures to get rid of the atomic symbol or number and convert
+    # to np.array
+    struct1 = np.array([ [atom[1], atom[2], atom[3]] for atom in struct1 ])    
+    struct2 = np.array([ [atom[1], atom[2], atom[3]] for atom in struct2 ])    
+
+    # check for consistency in number of atoms
+    assert len(struct1) == len(struct2)
+    L = len(struct1)
+    assert L > 0
+
+    # Center the two fragments to their center of coordinates
+    COM1 = np.sum(struct1,axis=0) / float(L)
+    COM2 = np.sum(struct2,axis=0) / float(L)
+    struct1 -= COM1
+    struct2 -= COM2
+
+    # Initial residual, see Kabsch.
+    E0 = np.sum(np.sum(struct1 * struct1,axis=0),axis=0) + \
+         np.sum(np.sum(struct2 * struct2,axis=0),axis=0)
+
+    # This beautiful step provides the answer.  V and Wt are the orthonormal
+    # bases that when multiplied by each other give us the rotation matrix, U.
+    # S, (Sigma, from SVD) provides us with the error!  Isn't SVD great!
+    V, S, Wt = np.linalg.svd( np.dot( np.transpose(struct2), struct1))
+
+    # we already have our solution, in the results from SVD.
+    # we just need to check for reflections and then produce
+    # the rotation. V and Wt are orthonormal, so their det's
+    # are +/-1.
+    reflect = float(str(float(np.linalg.det(V) * np.linalg.det(Wt))))
+
+    if reflect == -1.0:
+        S[-1] = -S[-1]
+        V[:,-1] = -V[:,-1]
+
+    RMSD = E0 - (2.0 * sum(S))
+    RMSD = np.sqrt(abs(RMSD / L))
+
+    # The rotation matrix U is simply V*Wt
+    #U = np.dot(V, Wt)
+ 
+    # rotate and translate the molecule
+    # struct2 = np.dot((struct2), U)
+    # struct2 = struct2 + COM1
+
+    return RMSD
 
 #
 # =========================
