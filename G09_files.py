@@ -1093,7 +1093,7 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
 # obtained with this module.
 #
 
-def kabsch(struct1,struct2):
+def kabsch(struct1, struct2):
     '''Returns the RMSD calculated with the Kabsch algorithm.'''
 
     # Modify structures to get rid of the atomic symbol or number and convert
@@ -1107,19 +1107,19 @@ def kabsch(struct1,struct2):
     assert L > 0
 
     # Center the two fragments to their center of coordinates
-    com1 = np.sum(struct1,axis=0) / float(L)
-    com2 = np.sum(struct2,axis=0) / float(L)
+    com1 = np.sum(struct1, axis=0) / float(L)
+    com2 = np.sum(struct2, axis=0) / float(L)
     struct1 -= com1
     struct2 -= com2
 
     # Initial residual, see Kabsch.
-    E0 = np.sum(np.sum(struct1 * struct1,axis=0),axis=0) + \
-         np.sum(np.sum(struct2 * struct2,axis=0),axis=0)
+    E0 = np.sum(np.sum(struct1 * struct1, axis=0), axis=0) + \
+         np.sum(np.sum(struct2 * struct2, axis=0), axis=0)
 
     # This beautiful step provides the answer. V and Wt are the orthonormal
     # bases that when multiplied by each other give us the rotation matrix, U.
     # S, (Sigma, from SVD) provides us with the error!  Isn't SVD great!
-    V, S, Wt = np.linalg.svd( np.dot( np.transpose(struct2), struct1))
+    V, S, Wt = np.linalg.svd(np.dot(np.transpose(struct2), struct1))
 
     # we already have our solution, in the results from SVD.
     # we just need to check for reflections and then produce
