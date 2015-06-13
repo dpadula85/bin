@@ -21,7 +21,6 @@ import util as u
 
 
 class input_file:
-
     '''A class describing G09 input files.'''
 
     def __init__(self, infile, opts_dict=None):
@@ -402,7 +401,6 @@ class input_file:
 
 
 class output_file:
-
     '''A class describing G09 logfiles.'''
 
     def __init__(self, outfile):
@@ -757,7 +755,6 @@ class output_file:
 
 
 class opt_output_file(output_file):
-
     '''A class describing G09 optimization logfiles.'''
 
     def __init__(self, outfile):
@@ -852,7 +849,6 @@ class opt_output_file(output_file):
 
 
 class td_output_file(output_file):
-
     '''A class describing G09 td logfiles.'''
 
     def __init__(self, outfile):
@@ -1055,7 +1051,7 @@ class td_output_file(output_file):
 
 
 def gen_coup(chrom1, chrom2, opts_dict=None):
-    '''Generate the coupling between chrom1 and chrom2 with options
+    '''Generates the coupling between chrom1 and chrom2 with options
     stored in opts_dict.'''
 
     f1 = input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
@@ -1111,16 +1107,16 @@ def kabsch(struct1,struct2):
     assert L > 0
 
     # Center the two fragments to their center of coordinates
-    COM1 = np.sum(struct1,axis=0) / float(L)
-    COM2 = np.sum(struct2,axis=0) / float(L)
-    struct1 -= COM1
-    struct2 -= COM2
+    com1 = np.sum(struct1,axis=0) / float(L)
+    com2 = np.sum(struct2,axis=0) / float(L)
+    struct1 -= com1
+    struct2 -= com2
 
     # Initial residual, see Kabsch.
     E0 = np.sum(np.sum(struct1 * struct1,axis=0),axis=0) + \
          np.sum(np.sum(struct2 * struct2,axis=0),axis=0)
 
-    # This beautiful step provides the answer.  V and Wt are the orthonormal
+    # This beautiful step provides the answer. V and Wt are the orthonormal
     # bases that when multiplied by each other give us the rotation matrix, U.
     # S, (Sigma, from SVD) provides us with the error!  Isn't SVD great!
     V, S, Wt = np.linalg.svd( np.dot( np.transpose(struct2), struct1))
@@ -1139,11 +1135,11 @@ def kabsch(struct1,struct2):
     RMSD = np.sqrt(abs(RMSD / L))
 
     # The rotation matrix U is simply V*Wt
-    #U = np.dot(V, Wt)
+    # U = np.dot(V, Wt)
  
     # rotate and translate the molecule
     # struct2 = np.dot((struct2), U)
-    # struct2 = struct2 + COM1
+    # struct2 = struct2 + com1
 
     return RMSD
 
