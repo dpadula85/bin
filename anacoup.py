@@ -18,8 +18,8 @@ def options():
     Threshold under which couplings will be ignored.''')
 
     # Unit
-    parser.add_argument('-u', '--unit', default='eV', choices=['eV', 'cm'], help='''
-    Unit of the Threshold.''')
+    parser.add_argument('-u', '--unit', default='eV', choices=['eV', 'cm'],
+    help='''Unit of the Threshold.''')
 
     args = parser.parse_args()
 
