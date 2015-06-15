@@ -1022,7 +1022,7 @@ class td_output_file(output_file):
 # To be implemented
 # I could use spectrum.py by Sandro&Lorenzo to make everything faster
 # but I don't like it has too many options...I should rewrite something simpler
-#  def write_spectra(self, lineshape, bandwidth_type, bandwidth):
+#  def write_spectra(self, lineshape, bandwidth):
 #    '''Writes convoluted spectra in a file for plotting.'''
 #    pass
 #

@@ -51,6 +51,8 @@ for coupling in couplings:
         if chrom1 in trps.keys() and trps[chrom1] != chrom2:
 
             chrom1 = trps[chrom1]
+            # chrom2 comes first since chrom1 is now one of the artificially
+            # added residues, thus his index is higher than chrom2
             G09_files.gen_coup(chrom2, chrom1, G09_opts)
 
         if chrom2 in trps.keys() and trps[chrom2] != chrom1:
