@@ -13,7 +13,6 @@
 # import standard Python modules
 import os
 import re
-import shutil
 
 # import personal modules
 import G09_files
