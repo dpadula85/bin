@@ -18,7 +18,9 @@ import shutil
 # import personal modules
 import G09_files
 
+#
 # Correspondence between bb index and side chain index
+#
 trps = {'0029': '0130',
         '0064': '0131',
         '0065': '0132',
@@ -29,8 +31,9 @@ trps = {'0029': '0130',
 couplings = sorted(
     filter(lambda x: re.match('V_\d+', x), os.listdir(os.getcwd())))
 
-
+#
 # Create the couplings among all the side-chain residues
+#
 side_res = sorted(trps.values()[:])
 
 for chrom1 in side_res[:]:
@@ -49,8 +52,10 @@ for chrom1 in side_res[:]:
     # Remove chrom1 to avoid equivalent couple chrom2.chrom1
     side_res.remove(chrom1)
 
+#
 # Substitute the bb_res with the corresponding side_res in the couplings where
 # bb_res is involved
+#
 for coupling in couplings:
 
     # Couplings are named V_chrom1.chrom2
@@ -81,7 +86,9 @@ for coupling in couplings:
             chrom2 = trps[chrom2]
             G09_files.gen_coup(chrom1, chrom2, G09_opts)
 
+#
 # Create the couplings between the originary residue and its side chain.
+#
 for bb_res, ind_res in trps.iteritems():
 
     chrom1, chrom2 = bb_res, ind_res
