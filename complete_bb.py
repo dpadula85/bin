@@ -29,7 +29,28 @@ trps = {'0029': '0130',
 couplings = sorted(
     filter(lambda x: re.match('V_\d+', x), os.listdir(os.getcwd())))
 
-# Go through the couplings
+
+# Create the couplings among all the side-chain residues
+side_res = sorted(trps.values()[:])
+
+for chrom1 in side_res[:]:
+    for chrom2 in filter(lambda x: x != chrom1, side_res):
+
+        f1 = G09_files.input_file(
+            os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
+
+        G09_opts = f1.options
+        G09_opts['funct'] = 'cam-b3lyp'
+        G09_opts['job'] = 'td nosymm eet=coup IOp(2/12=3)'
+        G09_opts['add_opts'] = '\n'
+
+        G09_files.gen_coup(chrom1, chrom2, G09_opts)
+
+    # Remove chrom1 to avoid equivalent couple chrom2.chrom1
+    side_res.remove(chrom1)
+
+# Substitute the bb_res with the corresponding side_res in the couplings where
+# bb_res is involved
 for coupling in couplings:
 
     # Couplings are named V_chrom1.chrom2

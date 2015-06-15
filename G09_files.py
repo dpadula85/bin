@@ -1079,7 +1079,10 @@ def gen_coup(chrom1, chrom2, opts_dict=None):
 
     # Create V_chrom1.chrom2 directory and move the .com file in it
     coup_dir = 'V_%s.%s' % (chrom1, chrom2)
-    os.makedirs(coup_dir)
+
+    if not os.path.isdir(coup_dir):
+        os.makedirs(coup_dir)
+    
     shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
 
 #
