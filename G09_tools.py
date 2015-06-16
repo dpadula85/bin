@@ -141,10 +141,6 @@ if __name__ == '__main__':
             for chrom1 in dirs[:]:
                 for chrom2 in filter(lambda x: x != chrom1, dirs):
 
-                    f1 = G09_files.input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
-                    G09_opts['funct'] = f1.funct
-                    G09_opts['basis'] = f1.basis
-                    G09_opts['job'] = "integral(ultrafine) td eet=coup IOp(2/12=3) nosymm"
                     G09_files.gen_coup(chrom1, chrom2, G09_opts)
 
                 # Remove chrom1 to avoid equivalent couple chrom2.chrom1
