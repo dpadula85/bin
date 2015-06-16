@@ -867,10 +867,9 @@ class td_output_file(output_file):
 
                 if "Excited State  " in line:
 
-                    # Example:
-                    #
-                    # Excited State   1:      Singlet-?Sym    4.8743 eV  254.36
-                    # nm  f=0.0151  <S**2>=0.000
+# Example:
+#
+# Excited State   1:      Singlet-?Sym    4.8743 eV  254.36 nm  f=0.0151  <S**2>=0.000
 
                     energy = line.split()[4]
                     energies.append(float(energy))

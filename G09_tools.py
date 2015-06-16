@@ -139,8 +139,7 @@ if __name__ == '__main__':
             calclist.write('1 1 0 0\n')
 
             G09_opts['funct'] = 'b3lyp'
-            G09_opts['job'] = '''
-            integral(ultrafine) td eet=coup IOp(2/12=3) nosymm'''
+            G09_opts['job'] = "integral(ultrafine) td eet=coup IOp(2/12=3) nosymm"
 
             for chrom1 in dirs[:]:
                 for chrom2 in filter(lambda x: x != chrom1, dirs):
