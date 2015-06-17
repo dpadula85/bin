@@ -20,7 +20,7 @@ energy_conversion = {'au'       : 1,
 # Options are stored in dictionaries. dictA is the default options dictionary
 # and dictB is the one passed to the function.
 # We want to compare dictA and dictB. We want to add to dictB all the missing 
-# key sin dictA with their value.
+# keys in dictA with their value.
 
 def dict_compare(dictA, dictB):
 
