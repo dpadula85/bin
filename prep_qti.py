@@ -9,10 +9,12 @@ rot = []
 
 with open('results.out', 'r') as f:
     for line in f:
-        energies.append(float(line.split()[1]))
-        f_osc.append(float(line.split()[2]))
-        rot.append(float(line.split()[-1]))
-
+        if line.startswith('#'):
+            pass
+        else:
+            energies.append(float(line.split()[1]))
+            f_osc.append(float(line.split()[2]))
+            rot.append(float(line.split()[-1]))
 
 wavelengths = []
 UV = []
