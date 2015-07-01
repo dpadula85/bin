@@ -1146,6 +1146,35 @@ def kabsch(struct1, struct2):
     return RMSD
 
 #
+# ============================
+#  Translation of a structure 
+# ============================
+#
+
+def translate(struct, dx=0.0, dy=0.0, dz=0.0):
+    '''Translates a structure by dx along x, dy along y and dz along z.'''
+
+    # Define the transformation matrix for a translation
+    T = np.eye(4)
+    T[-1,:3] = float(dx), float(dy),float(dz)
+
+    # Convert the structure from the format obtained from G09 files to a format
+    # for dot product with the transformation matrix
+    atoms =  np.array(struct)[:,0]
+    struct = np.array(struct)[:,1:].astype(np.float)
+
+    # Add a column containing ones to the structure matrix
+    struct = np.c_[struct, np.ones(len(struct))]
+
+    # Perform the translation
+    new_struct = np.dot(struct, T)
+
+    # Return the new structure in the same format as the input one
+    final = np.c_[atoms, new_struct[:,:3]].tolist()
+
+    return final
+
+#
 # =========================
 #  The Program Starts Here
 # =========================
