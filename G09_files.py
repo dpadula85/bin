@@ -1170,7 +1170,11 @@ def translate(struct, dx=0.0, dy=0.0, dz=0.0):
     new_struct = np.dot(struct, T)
 
     # Return the new structure in the same format as the input one
+    # I could handle the format with structured arrays, but I do not know how
+    # they work, so I will do like this, for now
     final = np.c_[atoms, new_struct[:,:3]].tolist()
+    final = [[atom[0], float(atom[1]), float(atom[2]), float(atom[3])] for atom
+            in final]
 
     return final
 
