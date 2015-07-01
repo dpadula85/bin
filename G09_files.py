@@ -1156,7 +1156,7 @@ def translate(struct, dx=0.0, dy=0.0, dz=0.0):
 
     # Define the transformation matrix for a translation
     T = np.eye(4)
-    T[-1,:3] = float(dx), float(dy),float(dz)
+    T[-1,:3] = float(dx), float(dy), float(dz)
 
     # Convert the structure from the format obtained from G09 files to a format
     # for dot product with the transformation matrix
