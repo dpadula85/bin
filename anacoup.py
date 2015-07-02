@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # This Script looks for couplings higher than a certain threshold in all the 
-# coupling calculationis contained in the PWD. The PWD should contain folders
+# coupling calculations contained in the PWD. The PWD should contain folders
 # named V_chrom1.chrom2, containing the V_chrom1.chrom2.log logfiles from
 # coupling calculations with G09. At the moment, it works only with gdvh23dev
 # version of G09. I will extend it to the gdvh36 version in case I will use it.
