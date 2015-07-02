@@ -21,6 +21,10 @@ def options():
     parser.add_argument('-u', '--unit', default='eV', choices=['eV', 'cm'],
     help='''Unit of the Threshold.''')
 
+    # Coupling type
+    parser.add_argument('-c', '--coup', default='coulomb',
+    choices=['coulomb', 'tot'], help='''Unit of the Threshold.''')
+
     args = parser.parse_args()
 
     return args
@@ -43,11 +47,19 @@ if __name__ == '__main__':
     args = options()
     thresh = args.thresh
     unit = args.unit
+    coup_type = args.coup
 
+    # Set up the column containing the coupling in the desired unit
     if unit == 'eV':
         col = 8
     if unit == 'cm':
         col = 10
+
+    # Set up the string to be matched for the desired coupling
+    if coup_type == 'coulomb':
+        search_string = 'Coulomb term'
+    if coup_type == 'tot':
+        search_string = 'TOTAL COUPLING'
 
     # Couplings defined as the folders whose name equals
     # 'V_' followed by some digits
@@ -63,7 +75,7 @@ if __name__ == '__main__':
         suspect_data[coupling] = []
         with open(os.path.join(coupling, '%s.log' % coupling), 'r') as f:
             for line in f:
-                if 'Coulomb term' in line:
+                if search_string in line:
                     coup = float(line.split()[col])
                     if abs(coup) > thresh:
                         suspect_data[coupling].append(coup)
