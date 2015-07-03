@@ -31,7 +31,7 @@ def options():
 
     # Coupling type
     parser.add_argument('-c', '--coup', default='coulomb',
-    choices=['coulomb', 'tot'], help='''Unit of the Threshold.''')
+    choices=['coulomb', 'tot'], help='''Type of coupling to be analyzed.''')
 
     args = parser.parse_args()
 
