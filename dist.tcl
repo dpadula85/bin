@@ -1,4 +1,5 @@
-#A script for VMD allowing to measure the distance between two residues in a protein
+# A script for VMD allowing to measure the distance between two residues
+# in a protein
 
 proc measure_dist_cent_mass { selstring1 selstring2 {molID {top}} {weight
 {}}} {
