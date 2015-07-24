@@ -337,7 +337,11 @@ class input_file:
 
         for atom in self.structure:
 
-            m = ELEMENTS[atom[0]].mass
+            try:
+                m = ELEMENTS[atom[0]].mass
+            except:
+                m = ELEMENTS[int(atom[0])].mass
+
             tot_mass += m
             x_com += atom[1] * m
             y_com += atom[2] * m
@@ -695,7 +699,11 @@ class output_file:
 
         for atom in self.structure:
 
-            m = ELEMENTS[atom[0]].mass
+            try:
+                m = ELEMENTS[atom[0]].mass
+            except:
+                m = ELEMENTS[int(atom[0])].mass
+
             tot_mass += m
             x_com += atom[1] * m
             y_com += atom[2] * m
@@ -1079,7 +1087,7 @@ def gen_coup(chrom1, chrom2, opts_dict=None, thresh=15.0):
 
     if abs(d) > thresh:
 
-        print("Distance between the two chromophores higher than %f A." % thresh)
+        print("Distance %s - %s higher than %3.1f A." % (chrom1, chrom2, thresh))
 
     else:
 

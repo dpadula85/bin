@@ -187,7 +187,7 @@ if __name__ == '__main__':
     split_dict['PRO'] = '1-5,8-10 link 1 7 5 6\n'
     split_dict['SER'] = '1-5,7-10 link 5 6\n'
     split_dict['THR'] = '1-5,8-10 link 5 6 5 7\n'
-    split_dict['TRP'] = '1-5,13-16 link 5 6\n'
+    split_dict['TRP'] = '1-5,15-18 link 5 6\n'
     split_dict['TYR'] = '1-5,13-16 link 5 6\n'
     split_dict['VAL'] = '1-5,8-10 link 5 6 5 7\n'
 
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     opts['funct'] = 'cam-b3lyp'
     opts['basis'] = '6-31G(d)'
     opts['job'] = 'td=nstates=10 eet=prop IOp(2/12=3) scrf=(iefpcm,solvent=water)'
-    opts['add_opts'] = '\ng03defaults nocav nodis norep rmin=0.5 ofac=0.8 sphereonh=4\n' 
+    opts['add_opts'] = '\ng03defaults nocav nodis norep rmin=0.5 ofac=0.8 sphereonh=4\n\n' 
 
     for res_id, res_name in prot_seq.iteritems():
         
