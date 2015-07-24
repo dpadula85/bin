@@ -151,7 +151,7 @@ def parse_mol2(mol2file):
 #
 
 if __name__ == '__main__':
-
+    
     # qmip general options
     qmip_db_file ='full.db' 
     qmip_mol2_file = 'prova.mol2'
@@ -200,6 +200,9 @@ if __name__ == '__main__':
     opts['basis'] = '6-31G(d)'
     opts['job'] = 'td=nstates=10 eet=prop IOp(2/12=3) scrf=(iefpcm,solvent=water)'
     opts['add_opts'] = '\ng03defaults nocav nodis norep rmin=0.5 ofac=0.8 sphereonh=4\n\n' 
+
+    # write coordinates for each residue in an .xyz file
+    xyz = open('fragment.xyz', 'w')
 
     for res_id, res_name in prot_seq.iteritems():
         
@@ -263,6 +266,7 @@ if __name__ == '__main__':
                 # splitting dictionary
                 if res_name == 'ALA' or res_name == 'GLY':
                     pass
+
                 else:
                     sel_f.write('split %d %s' % (res_id, split_dict[res_name]))
             
@@ -333,4 +337,10 @@ if __name__ == '__main__':
         # move the just written file to its directory
         os.makedirs(os.path.join(os.getcwd(), '%04d' % (res_id + 1)))
         shutil.move(prop_infile.name, os.path.join(os.getcwd(), '%04d' % (res_id + 1)))
+
+        # write coordinates for this residue in the xyz file
+        for xyz_coor in prop_infile.structure:
+            xyz.write('%s %12.8f %12.8f %12.8f\n' % tuple(xyz_coor))
         pass
+
+    xyz.close()
