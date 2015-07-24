@@ -984,6 +984,20 @@ class td_output_file(output_file):
 
         return m
 
+    def mag_int(self, s):
+        '''Returns the intrinsic component of the transition magnetic dipole
+        moment relative to state s.'''
+
+        # m = m_int + r x mu
+        x, y, z = self.get_com()
+        r = np.array([x, y, z])
+        m = np.array(self.m[s - 1])
+        mu = np.array(self.mu_len[s - 1])
+        
+        mag_int = m - np.cross(r, mu)
+
+        return mag_int.tolist()
+
     def get_results(self):
         '''Returns the results of the excited states calculation.'''
 
