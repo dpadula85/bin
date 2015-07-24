@@ -13,6 +13,7 @@
 # Import standard Python modules
 import os
 import subprocess
+import shutil
 import numpy as np
 
 # Import personal modules
@@ -202,6 +203,11 @@ if __name__ == '__main__':
 
     for res_id, res_name in prot_seq.iteritems():
         
+        # special case for the last aminoacid
+        # which should be skipped
+        if res_id == max(prot_seq.keys()):
+            continue
+
         # special case for the first aminoacid
         # the previous residue should not be included
         if res_id == min(prot_seq.keys()):
@@ -255,7 +261,10 @@ if __name__ == '__main__':
             
                 # write splitting options for the current residue according to the
                 # splitting dictionary
-                sel_f.write('split %d %s' % (res_id, split_dict[res_name]))
+                if res_name == 'ALA' or res_name == 'GLY':
+                    pass
+                else:
+                    sel_f.write('split %d %s' % (res_id, split_dict[res_name]))
             
                 # for the ith + 1 residue keep always N, CA (atoms 1, 2) and
                 # the first two H atoms (H and HA). BEWARE!!! GLY and PRO are
@@ -285,6 +294,7 @@ if __name__ == '__main__':
         
         # execute qmip
         subprocess.call(qmip_cmd.split())
+        #print res_id, res_name
         
         # after qmip executes, a file called frame00001.com is generated for our
         # further processing. Let's open it with my G09 module.
@@ -301,10 +311,10 @@ if __name__ == '__main__':
             cap_N = np.array(bad_f.structure[1][1:])
             
             # To substitute the C with an H atom, let's define the versor of the
-            # C-N bond, and multiply it for the typical N-H distance
+            # C-N bond, and multiply it for the typical N-H distance in A.
             d_CN = bad_C - cap_N
             v = d_CN / np.linalg.norm(d_CN)
-            d_NH = v * 1.08 + cap_N
+            d_NH = v * 0.86 + cap_N
             cap_H = ['1'] + d_NH.tolist()
             
             # substitute the C atom with the just generated H one
@@ -318,5 +328,9 @@ if __name__ == '__main__':
         opts['structure'] = bad_f.structure
         
         # write the file with the correctly capped structure and options
-        G09_files.input_file('%04d.com' % (res_id + 1), opts)
+        prop_infile = G09_files.input_file('%04d.com' % (res_id + 1), opts)
+
+        # move the just written file to its directory
+        os.makedirs(os.path.join(os.getcwd(), '%04d' % (res_id + 1)))
+        shutil.move(prop_infile.name, os.path.join(os.getcwd(), '%04d' % (res_id + 1)))
         pass

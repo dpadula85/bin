@@ -1063,40 +1063,53 @@ class td_output_file(output_file):
 #
 
 
-def gen_coup(chrom1, chrom2, opts_dict=None):
+def gen_coup(chrom1, chrom2, opts_dict=None, thresh=15.0):
     '''Generates the coupling between chrom1 and chrom2 with options
     stored in opts_dict.'''
 
     f1 = input_file(os.path.join(os.getcwd(), chrom1, '%s.com' % chrom1))
     f2 = input_file(os.path.join(os.getcwd(), chrom2, '%s.com' % chrom2))
 
-    # Change the options for the generation of the new file
-    opts_dict['chk'] = 'V_%s.%s' % \
-        (f1.name.split('.')[0], f2.name.split('.')[0])
+    # Check the distance between the two chromophores
+    x1, y1, z1 = f1.get_com()
+    x2, y2, z2 = f2.get_com()
+    p1 = np.array([x1, y1, z1]) 
+    p2 = np.array([x2, y2, z2])
+    d = np.linalg.norm(p1-p2)
 
-    opts_dict['title'] = 'coupling %s - %s' % \
-        (f1.name.split('.')[0], f2.name.split('.')[0])
+    if abs(d) > thresh:
 
-    opts_dict['structure'] = f1.structure + f2.structure
+        print("Distance between the two chromophores higher than %f A." % thresh)
 
-    # If the options dictionary does not refer to another coupling calculation
-    # use the default options listed below for the new coupling calculation
-    if 'eet=coup' not in opts_dict['job']:
-        opts_dict['basis'] = f1.basis
-        opts_dict['funct'] = f1.funct
-        opts_dict['job'] = 'td eet=coup IOp(2/12=3) nosymm'
+    else:
 
-    f_coup = input_file('V_%s.%s.com' %
-                        (f1.name.split('.')[0], f2.name.split('.')[0]),
-                        opts_dict)
-
-    # Create V_chrom1.chrom2 directory and move the .com file in it
-    coup_dir = 'V_%s.%s' % (chrom1, chrom2)
-
-    if not os.path.isdir(coup_dir):
-        os.makedirs(coup_dir)
-    
-    shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
+        # Change the options for the generation of the new file
+        opts_dict['chk'] = 'V_%s.%s' % \
+            (f1.name.split('.')[0], f2.name.split('.')[0])
+        
+        opts_dict['title'] = 'coupling %s - %s' % \
+            (f1.name.split('.')[0], f2.name.split('.')[0])
+        
+        opts_dict['structure'] = f1.structure + f2.structure
+        
+        # If the options dictionary does not refer to another coupling calculation
+        # use the default options listed below for the new coupling calculation
+        if 'eet=coup' not in opts_dict['job']:
+            opts_dict['basis'] = f1.basis
+            opts_dict['funct'] = f1.funct
+            opts_dict['job'] = 'td eet=coup IOp(2/12=3) nosymm'
+        
+        f_coup = input_file('V_%s.%s.com' %
+                            (f1.name.split('.')[0], f2.name.split('.')[0]),
+                            opts_dict)
+        
+        # Create V_chrom1.chrom2 directory and move the .com file in it
+        coup_dir = 'V_%s.%s' % (chrom1, chrom2)
+        
+        if not os.path.isdir(coup_dir):
+            os.makedirs(coup_dir)
+        
+        shutil.move(f_coup.name, os.path.join(coup_dir, f_coup.name))
 
 #
 # ==============================
