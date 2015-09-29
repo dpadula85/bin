@@ -16,10 +16,10 @@ end
 
 seq 1 275 > num
 
-paste num S1.e.dat > boh
-mv boh S1.e.dat
-paste num S2.e.dat > boh
-mv boh S2.e.dat
+paste num S1.e.dat > tmp.dat
+mv tmp.dat S1.e.dat
+paste num S2.e.dat > tmp.dat
+mv tmp.dat S2.e.dat
 
 distribution.py -i S1.e.dat -c 1 -v -e
 mv hist.1.dat hist.S1.dat
