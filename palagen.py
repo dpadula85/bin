@@ -198,7 +198,7 @@ if __name__ == '__main__':
     opts['mem_unit'] = 'MW'
     opts['funct'] = 'cam-b3lyp'
     opts['basis'] = '6-31G(d)'
-    opts['job'] = 'td=nstates=10 eet=prop IOp(2/12=3) scrf=(iefpcm,solvent=water)'
+    opts['job'] = 'td=nstates=10 eet=prop IOp(2/12=3) scrf=(iefpcm,solvent=water) nosymm'
     opts['add_opts'] = '\ng03defaults nocav nodis norep rmin=0.5 ofac=0.8 sphereonh=4\n\n' 
 
     # write coordinates for each residue in an .xyz file
