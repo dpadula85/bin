@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-set ssid = `iwlist wlan0 scan | grep ESSID | awk '{print $1}' | cut -d \" -f2
+set ssid = `iwlist wlan0 scan | grep ESSID | awk '{print $1}' | cut -d \" -f2`
 
 if ( $ssid == "TNCAPBA6E09_EXT" ) then
   echo "163B76E17C"
