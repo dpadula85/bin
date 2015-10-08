@@ -16,9 +16,9 @@ set framelist = `seq -w $start $end`
 # List of residues and couplings in each frame
 #
 set WDir = `pwd`
-set reslist = `awk '{print $2}' $Wdir/reslist.in`
-set ResIDi = `awk '{print $1}' $Wdir/couplist.in`
-set ResIDj = `awk '{print $2}' $Wdir/couplist.in`
+set reslist = `awk '{print $2}' $WDir/reslist.in`
+set ResIDi = `awk '{print $1}' $WDir/couplist.in`
+set ResIDj = `awk '{print $2}' $WDir/couplist.in`
 
 #
 # Cycle over frames
@@ -26,7 +26,7 @@ set ResIDj = `awk '{print $2}' $Wdir/couplist.in`
 set init = `expr $start - 1`
 foreach frame ( $framelist )
 
-  cd $Wdir/$frame/
+  cd $WDir/$frame/
 
   set fin = $frame
   set lim = `expr $frame - $init`
