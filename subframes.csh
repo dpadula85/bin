@@ -7,7 +7,6 @@ set WDir = `pwd`
 set reslist = `awk '{print $2}' $WDir/reslist.in`
 set ResIDi = `awk '{print $1}' $WDir/couplist.in`
 set ResIDj = `awk '{print $2}' $WDir/couplist.in`
-
 # Take start and end as parameters
 # Modify here their values if preferred
 #
@@ -16,14 +15,14 @@ set ResIDj = `awk '{print $2}' $WDir/couplist.in`
 #
 # List of frames
 #
-set start = 00033 
-set end = 00270
-set framelist = `seq -w $start $end`
+#set start = 00033 
+#set end = 00270
+#set framelist = `seq -w $start $end`
 
 #
 # Uncomment to resubmit incomplete frames from framelog file
 #
-#set framelist = `cat $WDir/framelog | grep -i incomplete | awk '{print $2}'`
+set framelist = `cat $WDir/framelog | grep -i incomplete | awk '{print $2}'`
 
 #
 # Cycle over frames
@@ -46,28 +45,28 @@ while ( $i <= $#framelist )
     set mem = 1200
     set q = "short_old"
     set str = $nproc":oldres"
-    set qidx = $qidx + 1
-  
+    set qidx = `expr $qidx + 1`
+
   else if ( $qidx > 4 && $qidx <= 8 ) then
     set nproc = 6
     set mem = 1200
     set q = "long_old"
     set str = $nproc":oldres"
-    set qidx = $qidx + 1
+    set qidx = `expr $qidx + 1`
   
   else if ( $qidx > 8 && $qidx <= 12 ) then
     set nproc = 4
     set mem = 1500
     set q = "short_new"
     set str = $nproc":newres"
-    set qidx = $qidx + 1
+    set qidx = `expr $qidx + 1`
   
   else if ( $qidx > 12 && $qidx < 16 ) then
     set nproc = 4
     set mem = 1500
     set q = "long_new"
     set str = $nproc":newres"
-    set qidx = $qidx + 1
+    set qidx = `expr $qidx + 1`
 
   else if ( $qidx == 16 ) then
     set nproc = 4
@@ -111,8 +110,7 @@ while ( $i <= $#framelist )
       #
       # Check both memory and nproc
       if ( $proc != $nproc  && $memfile != $mem) then
-        sed -i "${linemem}s/^%mem=.*/%mem=${mem}MW/" $res/$res.com
-        sed -i "${lineproc}s/$proc/$nproc/" $res/$res.com
+        sed -i -e "${linemem}s/^%mem=.*/%mem=${mem}MW/ ; ${lineproc}s/$proc/$nproc/" $res/$res.com
 
       # Change processors setting if required
       else if ( $proc != $nproc  && $memfile == $mem) then
@@ -150,8 +148,7 @@ while ( $i <= $#framelist )
       #
       # Check both memory and nproc
       if ( $proc != $nproc  && $memfile != $mem) then
-        sed -i "${linemem}s/^%mem=.*/%mem=${mem}MW/" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com
-        sed -i "${lineproc}s/$proc/$nproc/" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com
+        sed -i -e "${linemem}s/^%mem=.*/%mem=${mem}MW/ ; ${lineproc}s/$proc/$nproc/" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com
 
       # Change processors setting if required
       else if ( $proc != $nproc  && $memfile == $mem) then
