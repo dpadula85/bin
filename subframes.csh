@@ -1,5 +1,13 @@
 #!/bin/tcsh
 
+#
+# List of residues and couplings in each frame
+#
+set WDir = `pwd`
+set reslist = `awk '{print $2}' $WDir/reslist.in`
+set ResIDi = `awk '{print $1}' $WDir/couplist.in`
+set ResIDj = `awk '{print $2}' $WDir/couplist.in`
+
 # Take start and end as parameters
 # Modify here their values if preferred
 #
@@ -8,63 +16,65 @@
 #
 # List of frames
 #
-set start = 00001 
+set start = 00033 
 set end = 00270
 set framelist = `seq -w $start $end`
 
 #
-# List of residues and couplings in each frame
+# Uncomment to resubmit incomplete frames from framelog file
 #
-set WDir = `pwd`
-set reslist = `awk '{print $2}' $Wdir/reslist.in`
-set ResIDi = `awk '{print $1}' $Wdir/couplist.in`
-set ResIDj = `awk '{print $2}' $Wdir/couplist.in`
+#set framelist = `cat $WDir/framelog | grep -i incomplete | awk '{print $2}'`
 
 #
 # Cycle over frames
 #
-set init = `expr $start - 1`
-foreach frame ( $framelist )
+set qidx = 1
+set i = 1
+while ( $i <= $#framelist )
+#foreach frame ( $framelist )
 
-  cd $Wdir/$frame/
+  set frame = $framelist[$i]
+  cd $WDir/$frame/
 
-  set fin = $frame
-  set lim = `expr $frame - $init`
 
   #
   # Group the frames 4 by 4 and set the correct values of
   # processors, memory and queue for the current frame
   #
-  if ( $lim <= 4 ) then
+  if ( $qidx <= 4 ) then
     set nproc = 6
     set mem = 1200
     set q = "short_old"
     set str = $nproc":oldres"
+    set qidx = $qidx + 1
   
-  else if ( $lim > 4 && $lim <= 8 ) then
+  else if ( $qidx > 4 && $qidx <= 8 ) then
     set nproc = 6
     set mem = 1200
     set q = "long_old"
     set str = $nproc":oldres"
+    set qidx = $qidx + 1
   
-  else if ( $lim > 8 && $lim <= 12 ) then
+  else if ( $qidx > 8 && $qidx <= 12 ) then
     set nproc = 4
     set mem = 1500
     set q = "short_new"
     set str = $nproc":newres"
+    set qidx = $qidx + 1
   
-  else if ( $lim > 12 && $lim < 16 ) then
+  else if ( $qidx > 12 && $qidx < 16 ) then
     set nproc = 4
     set mem = 1500
     set q = "long_new"
     set str = $nproc":newres"
+    set qidx = $qidx + 1
 
-  else if ( $lim == 16 ) then
+  else if ( $qidx == 16 ) then
     set nproc = 4
     set mem = 1500
     set q = "long_new"
     set str = $nproc":newres"
-    set init = $frame
+    set qidx = 1
 
   endif
   
@@ -80,16 +90,19 @@ foreach frame ( $framelist )
   # nproc and memory correction
   # for each residue in the current frame
   #
-  if ( dosite == 1 ) then
+  if ( $dosite == 1 ) then
 
-    foreach res ( $reslist )
+    set propdonelist = `cat logbook | grep -i prop | grep -i successfully | awk '{print $2}'`
+    set proptodolist = `echo $reslist $propdonelist | tr ' ' '\n' | sort -n | uniq -u`
+
+    foreach res ( $proptodolist )
 
       #
       # Set variables to store line and values of memory and nproc
       #      
       set lineproc = `cat $res/$res.com | grep -i -n nproc | cut -d : -f1`
       set proc = `cat $res/$res.com | grep -i -n nproc | cut -d = -f2`
-      set linememfile = `cat $res/$res.com | grep -i -n mem | cut -d : -f1`
+      set linemem = `cat $res/$res.com | grep -i -n mem | cut -d : -f1`
       set memfile = `cat $res/$res.com | grep -i -n mem | cut -d = -f2 | sed 's/[A-Za-z]*//g'`
 
       #
@@ -128,7 +141,7 @@ foreach frame ( $framelist )
       #      
       set lineproc = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n nproc | cut -d : -f1`
       set proc = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n nproc | cut -d = -f2`
-      set linememfile = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n mem | cut -d : -f1`
+      set linemem = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n mem | cut -d : -f1`
       set memfile = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n nproc | cut -d = -f2 | sed 's/[A-Za-z]*//g'`
 
       #
@@ -161,4 +174,5 @@ foreach frame ( $framelist )
 
   cd ..
 
+@ i ++  
 end
