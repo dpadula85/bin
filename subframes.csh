@@ -35,7 +35,6 @@ while ( $i <= $#framelist )
   set frame = $framelist[$i]
   cd $WDir/$frame/
 
-
   #
   # Group the frames 4 by 4 and set the correct values of
   # processors, memory and queue for the current frame
