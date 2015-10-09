@@ -44,28 +44,28 @@ while ( $i <= $#framelist )
     set mem = 1200
     set q = "short_old"
     set str = $nproc":oldres"
-    set qidx = `expr $qidx + 1`
+    @ qidx ++
 
   else if ( $qidx > 4 && $qidx <= 8 ) then
     set nproc = 6
     set mem = 1200
     set q = "long_old"
     set str = $nproc":oldres"
-    set qidx = `expr $qidx + 1`
+    @ qidx ++
   
   else if ( $qidx > 8 && $qidx <= 12 ) then
     set nproc = 4
     set mem = 1500
     set q = "short_new"
     set str = $nproc":newres"
-    set qidx = `expr $qidx + 1`
+    @ qidx ++
   
   else if ( $qidx > 12 && $qidx < 16 ) then
     set nproc = 4
     set mem = 1500
     set q = "long_new"
     set str = $nproc":newres"
-    set qidx = `expr $qidx + 1`
+    @ qidx ++
 
   else if ( $qidx == 16 ) then
     set nproc = 4
