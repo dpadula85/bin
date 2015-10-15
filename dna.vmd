@@ -336,7 +336,7 @@ display dof_focaldist 0.700000
 mol new pCG_alt_wat.prmtop type parm7 first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
 mol addfile md_tot.nc type netcdf first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
 mol delrep 0 top
-mol representation Licorice 0.300000 12.000000 12.000000
+mol representation Licorice 0.200000 12.000000 12.000000
 mol color Name
 mol selection {resid 1 to 20}
 mol material Opaque
@@ -404,6 +404,7 @@ mol clipplane center 5 1 top {0.0 0.0 0.0}
 mol clipplane color  5 1 top {0.5 0.5 0.5 }
 mol clipplane normal 5 1 top {0.0 0.0 1.0}
 mol clipplane status 5 1 top {0}
+mol showrep top 1 0
 mol representation Points 1.000000
 mol color Name
 mol selection {resname WAT}
@@ -438,6 +439,7 @@ mol clipplane center 5 2 top {0.0 0.0 0.0}
 mol clipplane color  5 2 top {0.5 0.5 0.5 }
 mol clipplane normal 5 2 top {0.0 0.0 1.0}
 mol clipplane status 5 2 top {0}
+mol showrep top 2 0
 mol rename top pCG_alt_wat.prmtop
 set viewpoints([molinfo top]) {{{1 0 0 -45.6177} {0 1 0 -44.2691} {0 0 1 -49.1022} {0 0 0 1}} {{0.589542 -0.791397 -0.161625 0} {0.165596 -0.0774264 0.983149 0} {-0.790576 -0.606373 0.0854061 0} {0 0 0 1}} {{0.0537936 0 0 0} {0 0.0537936 0 0} {0 0 0.0537936 0} {0 0 0 1}} {{1 0 0 0} {0 1 0 0} {0 0 1 0} {0 0 0 1}}}
 lappend viewplist [molinfo top]
@@ -592,6 +594,7 @@ color scale colors WBlk {1.0 1.0 1.0} {0.5 0.5 0.5} {0.0 0.0 0.0}
     {color Segname {} blue}
     {color Conformation {all} blue}
     {color Molecule {0} blue}
+    {color Molecule {pCG_alt_wat.prmtop} blue}
     {color Structure {3_10_Helix} blue}
     {color Surface {Grasp} gray}
     {color Labels {Springs} orange}
