@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import numpy as np
 import argparse as arg
@@ -35,23 +36,7 @@ def options():
     return args
 
 
-if __name__ == '__main__':
-
-    args = options()
-
-    if args.save:
-        imgfmt = args.save
-    else:
-        imgfmt = False
-
-    f = args.filename
-    diag = np.loadtxt(f)
-    
-    # Get coefficients from the diagonalized matrix
-    coeff = diag[:diag.shape[0]/2,2:]
-    
-    if args.square:
-        coeff = np.square(coeff)
+def doplot(coeff):
 
     fig, ax = plt.subplots()
     im = ax.pcolor(coeff)
@@ -69,7 +54,6 @@ if __name__ == '__main__':
     ax.set_xticklabels(xlabels, minor=True)
     ax.set_xlim(right=xlabels[-1])
     
-    
     # Y axis
     # Hide main labels and assign to minor labels their value
     plt.ylabel("Excitonic States")
@@ -80,12 +64,41 @@ if __name__ == '__main__':
     ax.set_ylim(top=xlabels[-1])
     
     # Rotate labels for a fancier plot
-    plt.setp(ax.xaxis.get_minorticklabels(), rotation=-45 )
-    plt.setp(ax.yaxis.get_minorticklabels(), rotation=-45 )
+    plt.setp(ax.xaxis.get_minorticklabels(), rotation=-45)
+    plt.setp(ax.yaxis.get_minorticklabels(), rotation=-45)
     
     # Show grid for separation of matrix elements
     plt.grid()
+
+
+def checkfile(filename):
+
+    if not os.path.isfile(filename):
+        print("\nFile %s not found!\n" % filename)
+        sys.exit()
+
+
+if __name__ == '__main__':
+
+    args = options()
+
+    if args.save:
+        imgfmt = args.save
+    else:
+        imgfmt = False
+
+    f = args.filename
+    checkfile(f)
+    diag = np.loadtxt(f)
     
+    # Get coefficients from the diagonalized matrix
+    coeff = diag[:diag.shape[0]/2,2:]
+    
+    if args.square:
+        coeff = np.square(coeff)
+
+    doplot(coeff)
+
     # Save plot as vector image
     if imgfmt:
         plt.savefig('coeffs.%s' % imgfmt)
