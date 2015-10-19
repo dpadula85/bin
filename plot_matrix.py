@@ -82,16 +82,11 @@ if __name__ == '__main__':
 
     args = options()
 
-    if args.save:
-        imgfmt = args.save
-    else:
-        imgfmt = False
-
     f = args.filename
     checkfile(f)
     diag = np.loadtxt(f)
     
-    # Get coefficients from the diagonalized matrix
+    # Get coefficients from the diag.dat-like file
     coeff = diag[:diag.shape[0]/2,2:]
     
     if args.square:
@@ -100,8 +95,8 @@ if __name__ == '__main__':
     doplot(coeff)
 
     # Save plot as vector image
-    if imgfmt:
-        plt.savefig('coeffs.%s' % imgfmt)
+    if args.save:
+        plt.savefig('coeffs.%s' % args.save)
     
     # Show the plot
     if args.show:
