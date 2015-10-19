@@ -45,8 +45,6 @@ def doplot(coeff):
     fig, ax = plt.subplots()
 
     # Use custom colormap, defined in functions below
-    cm = None
-
     if args.cm:
 
         if args.cm == '1':
@@ -55,9 +53,8 @@ def doplot(coeff):
             C = cm2()
 
         cm = mpl.colors.ListedColormap(C)
-
-    if cm:
         im = ax.pcolor(coeff, cmap=cm)
+
     else:
         im = ax.pcolor(coeff)
 
