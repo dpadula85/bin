@@ -7,22 +7,23 @@ set WDir = `pwd`
 set reslist = `awk '{print $2}' $WDir/reslist.in`
 set ResIDi = `awk '{print $1}' $WDir/couplist.in`
 set ResIDj = `awk '{print $2}' $WDir/couplist.in`
+
 # Take start and end as parameters
 # Modify here their values if preferred
 #
-# set start = $1
-# set end = $2
+#set start = $1
+#set end = $2
 #
 # List of frames
 #
-#set start = 00033 
-#set end = 00270
-#set framelist = `seq -w $start $end`
+set start = 00001 
+set end = 00270
+set framelist = `seq -w $start $end`
 
 #
 # Uncomment to resubmit incomplete frames from framelog file
 #
-set framelist = `cat $WDir/framelog | grep -i incomplete | awk '{print $2}'`
+#set framelist = `cat $WDir/framelog | grep -i incomplete | awk '{print $2}'`
 
 #
 # Cycle over frames
