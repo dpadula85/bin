@@ -40,23 +40,22 @@ def options():
     return args
 
 
-def doplot(coeff):
+def doplot(coeff, colormap=None):
 
     fig, ax = plt.subplots()
 
-    # Use custom colormap, defined in functions below
-    if args.cm:
-
-        if args.cm == '1':
-            C = cm1()
-        elif args.cm =='2':
-            C = cm2()
-
-        cm = mpl.colors.ListedColormap(C)
-        im = ax.pcolor(coeff, cmap=cm)
+    if not colormap:
+        im = ax.pcolor(coeff)
 
     else:
-        im = ax.pcolor(coeff)
+        if colormap == '1':
+            colormap = cm1()
+        
+        elif colormap == '2':
+            colormap = cm2()
+
+        cm = mpl.colors.ListedColormap(colormap)
+        im = ax.pcolor(coeff, cmap=cm)
 
     fig.colorbar(im)
     
@@ -662,7 +661,12 @@ if __name__ == '__main__':
     if args.square:
         coeff = np.square(coeff)
 
-    doplot(coeff)
+    # Use custom colormap, defined in functions below
+    if args.cm:
+        doplot(coeff, args.cm)
+
+    else:
+        doplot(coeff)
 
     # Save plot as vector image
     if args.save:
