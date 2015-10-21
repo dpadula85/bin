@@ -130,7 +130,7 @@ if __name__ == '__main__':
         # Directories of chromophores, expressed as all directories whose name
         # contains only digits
         dirs = sorted(filter(
-            lambda x: re.match('\d+', x), os.listdir(os.getcwd())))
+            lambda x: re.match('\d+', x), os.listdir(os.getcwd())), key=int)
 
         if args.coup == 'all':
 
