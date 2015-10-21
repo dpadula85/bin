@@ -91,7 +91,11 @@ while ( $i <= $#framelist )
   #
   if ( $dosite == 1 ) then
 
-    set propdonelist = `cat logbook | grep -i prop | grep -i successfully | awk '{print $2}'`
+    if ( -e logbook ) then
+      set propdonelist = `cat logbook | grep -i prop | grep -i successfully | awk '{print $2}'`
+    else
+      set propdonelist = ()
+
     set proptodolist = `echo $reslist $propdonelist | tr ' ' '\n' | sort -n | uniq -u`
 
     foreach res ( $proptodolist )
