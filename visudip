@@ -1,0 +1,29 @@
+#!/bin/tcsh
+# 
+# Plot dipole
+#
+ setenv mol $1
+ setenv workDir `pwd`
+ setenv ntmax $2
+ setenv prefix visudip
+ set outDir = `expr ${prefix}_${mol:r} `
+ if (! -e $outDir ) mkdir $outDir 
+ set ncut = `grep -n 'Dipole moment' $mol | awk -F \: '{print $1}'`
+ set lenght = ` wc -l $mol | awk '{print $1}' `
+ set bottom = (`expr $lenght - $ncut - 1 `)
+ echo " Il file $mol.log contiene $lenght righe "
+ echo " La parte superiore contiene le prime $ncut righe "
+ echo " La parte inferiore conteiene le ultime $bottom righe "
+ head -$ncut $mol > $outDir/init.in
+ tail -$bottom $mol > $outDir/end.in
+ set n=1
+ while ($n <= $ntmax )
+ set k = (`expr $n + 1 `) 
+ grep -A$k "electric dipole moments (Au):" $mol | tail -1 | awk '{printf "     X= %-10s Y= %-10s Z= %-10s Tot= %s  \n",$2,$3,$4,$5 }' > $outDir/dip_$n
+ cat $outDir/init.in $outDir/dip_$n $outDir/end.in > $outDir/${mol:r}_dip_$n.log
+ rm $outDir/dip_$n
+ set n = (`expr $n + 1 `)
+ end
+ rm $outDir/init.in $outDir/end.in
+ cd $outDir
+ echo " Estrazione di $ntmax dipoli di transizione completata"
