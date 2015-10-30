@@ -89,7 +89,7 @@ if ( $publist == 'yes' ) then
 
     else
         mv tmp.pdf Padula_pub.pdf
-        echo "Your output is in ${cv_file:r}.pdf and in Padula_pub.pdf"
+        echo "Your output is in ${cv_file:r}.pdf and in $WDir/Padula_pub.pdf"
 
     endif
 
