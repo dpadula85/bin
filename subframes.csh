@@ -37,6 +37,12 @@ while ( $i <= $#framelist )
   cd $WDir/$frame/
 
   #
+  # Uncomment to resubmit incomplete frames
+  #
+  #cat logbook | grep -i successfully > tmp
+  #mv tmp logbook
+
+  #
   # Group the frames 4 by 4 and set the correct values of
   # processors, memory and queue for the current frame
   #
