@@ -48,14 +48,16 @@ cd $WDir
 #
 
 # check if lines are commented
-set check = `sed -n '241p' $cv_file`
+set start = `grep -n "References" $cv_file | cut -d : -f1`
+set end = `expr $start + 40`
+set check = `sed -n "${start}p" $cv_file`
 
 # if yes
 if ( $check =~ "%*") then
 
     # and if references are wanted, delete the comment character
     if ( $refs == 'yes' ) then
-        sed -i '241,281s/^%//' $cv_file
+        sed -i "${start},${end}s/^%//" $cv_file
     endif
 
 # if not
@@ -63,7 +65,7 @@ else
 
     # and if references are not wanted, comment the lines
     if ( $refs == 'no' ) then
-        sed -i '241,281s/^/%/' $cv_file
+        sed -i "${start},${end}s/^/%/" $cv_file
     endif
 
 endif
