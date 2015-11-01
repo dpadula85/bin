@@ -16,6 +16,11 @@ else
     set join = $1
 endif
 
+if ( $join != 'yes' && $join != 'no' ) then
+    echo "The argument should be yes or no."
+    exit 0
+endif
+
 #
 # tex files for cv, and publication list
 #
