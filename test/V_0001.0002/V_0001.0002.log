@@ -1,0 +1,1942 @@
+ Entering Gaussian System, Link 0=gdv
+ Input=V_0001.0002.com
+ Output=V_0001.0002.log
+ Initial command:
+ /cm/shared/apps/gaussian/gdvH23dev/gdv/l1.exe "/local/dpadula/gauscr/Gau-61732.inp" -scrdir="/local/dpadula/gauscr/"
+ Entering Link 1 = /cm/shared/apps/gaussian/gdvH23dev/gdv/l1.exe PID=     61733.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2012,
+            Gaussian, Inc.  All Rights Reserved.
+  
+ This is the private, development version of
+ the Gaussian(R) DV system of programs. It is based on
+ the Gaussian(R) 09 system (copyright 2009, Gaussian, Inc.),
+ the Gaussian(R) 03 system (copyright 2003, Gaussian, Inc.),
+ the Gaussian(R) 98 system (copyright 1998, Gaussian, Inc.),
+ the Gaussian(R) 94 system (copyright 1995, Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992, Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990, Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988, Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986, Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983,
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is
+ subject to restrictions as set forth in subparagraphs (a)
+ and (c) of the Commercial Computer Software - Restricted
+ Rights clause in FAR 52.227-19.
+  
+ Gaussian, Inc.
+ 340 Quinnipiac St., Bldg. 40, Wallingford CT 06492
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian Development Version, Revision H.23,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, B. Mennucci, 
+ G. A. Petersson, H. Nakatsuji, M. Caricato, X. Li, H. P. Hratchian, 
+ A. F. Izmaylov, J. Bloino, G. Zheng, J. L. Sonnenberg, W. Liang, 
+ M. Hada, M. Ehara, K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, 
+ T. Nakajima, Y. Honda, O. Kitao, H. Nakai, T. Vreven, 
+ J. A. Montgomery, Jr., J. E. Peralta, F. Ogliaro, M. Bearpark, 
+ J. J. Heyd, E. Brothers, K. N. Kudin, V. N. Staroverov, T. Keith, 
+ R. Kobayashi, J. Normand, K. Raghavachari, A. Rendell, J. C. Burant, 
+ S. S. Iyengar, J. Tomasi, M. Cossi, N. Rega, J. M. Millam, M. Klene, 
+ J. E. Knox, J. B. Cross, V. Bakken, C. Adamo, J. Jaramillo, 
+ R. Gomperts, R. E. Stratmann, O. Yazyev, A. J. Austin, R. Cammi, 
+ C. Pomelli, J. W. Ochterski, R. L. Martin, K. Morokuma, 
+ V. G. Zakrzewski, G. A. Voth, P. Salvador, J. J. Dannenberg, 
+ S. Dapprich, P. V. Parandekar, N. J. Mayhall, A. D. Daniels, 
+ O. Farkas, J. B. Foresman, J. V. Ortiz, J. Cioslowski, 
+ and D. J. Fox, Gaussian, Inc., Wallingford CT, 2010.
+ 
+ ******************************************
+ Gaussian DV:  ES64L-GDVRevH.23 23-Jul-2012
+                29-Jul-2015 
+ ******************************************
+ %nproc=16
+ Will use up to   16 processors via shared memory.
+ %mem=24GB
+ %chk=V_0001.0002.chk
+ -----------------------------------------------
+ #p b3lyp cc-pVTZ td eet=coup IOp(2/12=3) nosymm
+ -----------------------------------------------
+ 1/38=1/1;
+ 2/12=3,15=1,17=6,18=5,40=1/2;
+ 3/5=16,6=1,11=9,16=1,25=1,30=1,74=-5/1,2,8,3;
+ 4//1;
+ 5/5=2,38=5,112=4/2;
+ 8/6=1,10=1,49=1/1;
+ 9/42=1,70=2,78=4/14;
+ 6/7=2,8=2,9=2,10=2/1;
+ 99/5=1,9=1/99;
+ Leave Link    1 at Wed Jul 29 17:51:49 2015, MaxMem= 3221225472 cpu:       0.2
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l101.exe)
+ --------------------
+ coupling 0001 - 0002
+ --------------------
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ C                    -1.44979   0.901     0.40844 
+ C                    -2.70559   1.08882   2.88315 
+ C                    -2.2834    1.99746   0.6607 
+ C                    -1.23001  -0.07043   1.39489 
+ C                    -1.85209   0.00712   2.63569 
+ C                    -2.91514   2.06925   1.91821 
+ H                    -1.67803  -0.75174   3.3936 
+ H                    -3.57334   2.909     2.13233 
+ H                    -3.20601   1.17458   3.84442 
+ N                    -2.53191   2.96965  -0.32198 
+ H                    -2.90697   3.83328   0.05269 
+ H                    -1.74077   3.16346  -0.92476 
+ H                    -0.90947   0.69495  -0.51315 
+ H                    -0.54695  -0.85187   1.07186 
+ C                     0.7838    0.50423  -0.48941 
+ C                     3.36181   0.05377   0.44755 
+ C                     1.83725   1.266    -1.00679 
+ C                     1.01145  -0.45818   0.49105 
+ C                     2.30478  -0.69754   0.97035 
+ C                     3.12997   1.02951  -0.53149 
+ H                     3.97394   1.59589  -0.90856 
+ H                     4.37741  -0.103     0.79261 
+ O                     2.43042  -1.66881   1.93113 
+ O                     1.50331   2.20694  -1.95175 
+ C                     2.55383   2.94986  -2.54417 
+ H                     3.26622   2.29616  -3.06573 
+ H                     3.09722   3.54934  -1.8008 
+ H                     2.08146   3.61749  -3.2678 
+ C                     3.72852  -1.95241   2.42056 
+ H                     4.39711  -2.29526   1.61891 
+ H                     3.60641  -2.75172   3.1543 
+ H                     4.17734  -1.07731   2.91058 
+ H                    -0.25949   0.57957  -0.77388 
+ H                     0.10677  -0.96411   0.80831 
+ 
+ NAtoms=     34 NQM=        0 NQMF=       0 NMMI=     34 NMMIF=      0
+                NMic=       0 NMicF=      0.
+                    Isotopes and Nuclear Properties:
+ (Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
+  in nuclear magnetons)
+
+  Atom         1           2           3           4           5           6           7           8           9          10
+ IAtWgt=          12          12          12          12          12          12           1           1           1          14
+ AtmWgt=  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000   1.0078250   1.0078250   1.0078250  14.0030740
+ NucSpn=           0           0           0           0           0           0           1           1           1           2
+ AtZEff=   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.0440000
+ NMagM=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   0.4037610
+ AtZNuc=   6.0000000   6.0000000   6.0000000   6.0000000   6.0000000   6.0000000   1.0000000   1.0000000   1.0000000   7.0000000
+
+  Atom        11          12          13          14          15          16          17          18          19          20
+ IAtWgt=           1           1           1           1          12          12          12          12          12          12
+ AtmWgt=   1.0078250   1.0078250   1.0078250   1.0078250  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000  12.0000000
+ NucSpn=           1           1           1           1           0           0           0           0           0           0
+ AtZEff=   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NMagM=    2.7928460   2.7928460   2.7928460   2.7928460   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ AtZNuc=   1.0000000   1.0000000   1.0000000   1.0000000   6.0000000   6.0000000   6.0000000   6.0000000   6.0000000   6.0000000
+
+  Atom        21          22          23          24          25          26          27          28          29          30
+ IAtWgt=           1           1          16          16          12           1           1           1          12           1
+ AtmWgt=   1.0078250   1.0078250  15.9949146  15.9949146  12.0000000   1.0078250   1.0078250   1.0078250  12.0000000   1.0078250
+ NucSpn=           1           1           0           0           0           1           1           1           0           1
+ AtZEff=   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+ NMagM=    2.7928460   2.7928460   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   0.0000000   2.7928460
+ AtZNuc=   1.0000000   1.0000000   8.0000000   8.0000000   6.0000000   1.0000000   1.0000000   1.0000000   6.0000000   1.0000000
+
+  Atom        31          32          33          34
+ IAtWgt=           1           1           1           1
+ AtmWgt=   1.0078250   1.0078250   1.0078250   1.0078250
+ NucSpn=           1           1           1           1
+ AtZEff=   0.0000000   0.0000000   0.0000000   0.0000000
+ NQMom=    0.0000000   0.0000000   0.0000000   0.0000000
+ NMagM=    2.7928460   2.7928460   2.7928460   2.7928460
+ AtZNuc=   1.0000000   1.0000000   1.0000000   1.0000000
+ Leave Link  101 at Wed Jul 29 17:51:49 2015, MaxMem= 3221225472 cpu:       0.1
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l202.exe)
+                          Input orientation:                          
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1          6           0       -1.449794    0.901002    0.408440
+      2          6           0       -2.705589    1.088823    2.883146
+      3          6           0       -2.283400    1.997464    0.660704
+      4          6           0       -1.230010   -0.070427    1.394891
+      5          6           0       -1.852093    0.007123    2.635693
+      6          6           0       -2.915142    2.069255    1.918209
+      7          1           0       -1.678029   -0.751739    3.393596
+      8          1           0       -3.573339    2.909002    2.132334
+      9          1           0       -3.206005    1.174575    3.844420
+     10          7           0       -2.531909    2.969653   -0.321976
+     11          1           0       -2.906966    3.833285    0.052691
+     12          1           0       -1.740765    3.163459   -0.924758
+     13          1           0       -0.909471    0.694948   -0.513154
+     14          1           0       -0.546951   -0.851866    1.071855
+     15          6           0        0.783800    0.504231   -0.489408
+     16          6           0        3.361813    0.053770    0.447551
+     17          6           0        1.837252    1.266004   -1.006792
+     18          6           0        1.011446   -0.458178    0.491045
+     19          6           0        2.304777   -0.697542    0.970346
+     20          6           0        3.129968    1.029509   -0.531486
+     21          1           0        3.973944    1.595890   -0.908557
+     22          1           0        4.377414   -0.102998    0.792608
+     23          8           0        2.430421   -1.668805    1.931125
+     24          8           0        1.503309    2.206944   -1.951750
+     25          6           0        2.553827    2.949861   -2.544167
+     26          1           0        3.266225    2.296161   -3.065729
+     27          1           0        3.097222    3.549338   -1.800795
+     28          1           0        2.081461    3.617490   -3.267799
+     29          6           0        3.728523   -1.952409    2.420562
+     30          1           0        4.397107   -2.295262    1.618909
+     31          1           0        3.606409   -2.751721    3.154305
+     32          1           0        4.177336   -1.077311    2.910579
+     33          1           0       -0.259490    0.579572   -0.773883
+     34          1           0        0.106772   -0.964109    0.808308
+ ---------------------------------------------------------------------
+                    Distance matrix (angstroms):
+                    1          2          3          4          5
+     1  C    0.000000
+     2  C    2.781451   0.000000
+     3  C    1.400273   2.437852   0.000000
+     4  C    1.401808   2.395015   2.434098   0.000000
+     5  C    2.433417   1.399915   2.836911   1.390176   0.000000
+     6  C    2.406546   1.391497   1.409104   2.773404   2.428424
+     7  H    3.419766   2.168895   3.923428   2.158640   1.086549
+     8  H    3.393127   2.151687   2.158828   3.861607   3.411298
+     9  H    3.868472   1.087113   3.415317   3.384490   2.158018
+    10  N    2.446180   3.720282   1.404482   3.726213   4.241054
+    11  H    3.293659   3.947671   2.031934   4.455631   4.735416
+    12  H    2.642119   4.442425   2.041491   4.012438   4.759376
+    13  H    1.088000   3.862129   2.227593   2.080669   3.358106
+    14  H    2.080335   3.421516   3.361991   1.087000   2.210621
+    15  C    2.439774   4.887914   3.600030   2.817134   4.118410
+    16  C    4.885785   6.619428   5.974263   4.690172   5.654640
+    17  C    3.597330   5.983345   4.505036   4.118522   5.335142
+    18  C    2.812810   4.683130   4.112782   2.447736   3.607752
+    19  C    4.119209   5.652758   5.330132   3.615001   4.533156
+    20  C    4.676985   6.761432   5.626971   4.891850   5.991429
+    21  H    5.624437   7.697422   6.463606   5.929893   7.002042
+    22  H    5.925534   7.480623   6.985398   5.639771   6.497373
+    23  O    4.896790   5.906730   6.105376   4.030027   4.652428
+    24  O    3.999600   6.507015   4.605210   4.884410   6.094470
+    25  C    5.380027   7.783358   5.880223   6.241454   7.409642
+    26  H    6.021391   8.515242   6.691327   6.761213   7.996442
+    27  H    5.706992   7.852774   6.117057   6.483830   7.531629
+    28  H    5.776141   8.194153   6.091768   6.804944   7.959825
+    29  C    6.245443   7.131681   7.405526   5.401935   5.918558
+    30  H    6.772561   7.968602   7.998426   6.055123   6.737012
+    31  H    6.815229   7.393553   7.966345   5.803087   6.138031
+    32  H    6.468309   7.215785   7.500486   5.705306   6.132339
+    33  H    1.708224   4.429064   2.857389   2.463329   3.806480
+    34  H    2.461998   4.053253   3.808625   1.711647   2.849523
+                    6          7          8          9         10
+     6  C    0.000000
+     7  H    3.415439   0.000000
+     8  H    1.088231   4.310917   0.000000
+     9  H    2.143674   2.499728   2.464631   0.000000
+    10  N    2.444589   5.327602   2.666813   4.586454   0.000000
+    11  H    2.567495   5.804686   2.371343   4.640622   1.013362
+    12  H    3.264799   5.829313   3.573358   5.371000   1.013319
+    13  H    3.438454   4.236305   4.358536   4.948996   2.800560
+    14  H    3.854555   2.584539   4.942445   4.343287   4.526238
+    15  C    4.682744   4.766107   5.625043   5.928740   4.135246
+    16  C    6.754642   5.893050   7.686818   7.478714   6.620461
+    17  C    5.637916   5.982633   6.467461   6.998361   4.739300
+    18  C    4.882910   3.967903   5.920471   5.630088   4.996638
+    19  C    5.983408   4.662384   6.993541   6.491059   6.205800
+    20  C    6.604955   6.457240   7.454042   7.701568   5.988731
+    21  H    7.461514   7.480955   8.242133   8.620903   6.675135
+    22  H    7.692012   6.622266   8.607060   8.273693   7.643443
+    23  O    6.522907   4.456366   7.552611   6.596576   7.156569
+    24  O    5.875224   6.888210   6.553242   7.539165   4.418243
+    25  C    7.113220   8.177254   7.708015   8.783015   5.550066
+    26  H    7.943578   8.686669   8.612494   9.534037   6.449816
+    27  H    7.222892   8.263413   7.770194   8.788550   5.848936
+    28  H    7.365987   8.808979   7.851125   9.192866   5.511873
+    29  C    7.782315   5.623096   8.776877   7.739062   8.422661
+    30  H    8.521008   6.514542   9.532889   8.648698   8.916144
+    31  H    8.203680   5.655305   9.199836   7.893101   9.082819
+    32  H    7.822335   5.884268   8.750390   7.775396   8.475925
+    33  H    4.064358   4.599188   4.985372   5.510417   3.328753
+    34  H    4.423251   3.148703   5.504293   4.976589   4.869770
+                   11         12         13         14         15
+    11  H    0.000000
+    12  H    1.662558   0.000000
+    13  H    3.762888   2.637046   0.000000
+    14  H    5.344063   4.640527   2.244173   0.000000
+    15  C    4.999822   3.692485   1.704143   2.459154   0.000000
+    16  C    7.330638   6.131044   4.424696   4.060588   2.779741
+    17  C    5.497367   4.050836   2.848556   3.806648   1.399195
+    18  C    5.827758   4.763971   2.455207   1.709074   1.392603
+    19  C    6.966545   5.904673   3.804102   2.857704   2.426626
+    20  C    6.681840   5.332208   4.053311   4.430577   2.404619
+    21  H    7.299100   5.925828   4.981545   5.509269   3.397709
+    22  H    8.312881   7.145012   5.503898   4.988803   3.863464
+    23  O    7.892352   6.993257   4.766205   3.204759   3.645879
+    24  O    5.110117   3.534636   3.190172   4.764670   2.356983
+    25  C    6.111004   4.594740   4.604789   6.094553   3.651868
+    26  H    7.084884   5.514155   5.149365   6.447479   4.001359
+    27  H    6.290176   4.931781   5.085190   6.395524   4.042813
+    28  H    5.996385   4.506151   5.007494   6.761383   4.369870
+    29  C    9.116512   8.202218   6.093126   4.616263   4.813980
+    30  H    9.662381   8.598915   6.453434   5.179418   5.033701
+    31  H    9.767618   8.956583   6.761875   5.019606   5.643136
+    32  H    9.081235   8.229086   6.382669   5.074507   5.057398
+    33  H    4.275395   2.982182   0.709765   2.353381   1.084000
+    34  H    5.715642   4.842905   2.351910   0.713730   2.073271
+                   16         17         18         19         20
+    16  C    0.000000
+    17  C    2.430825   0.000000
+    18  C    2.405869   2.428636   0.000000
+    19  C    1.398252   2.825449   1.399903   0.000000
+    20  C    1.401547   1.397483   2.783329   2.432929   0.000000
+    21  H    2.142865   2.164239   3.867102   3.402385   1.084097
+    22  H    1.084014   3.400651   3.398063   2.163539   2.142876
+    23  O    2.456776   4.194796   2.356468   1.371946   3.719506
+    24  O    3.721135   1.374712   3.648569   4.197265   2.459577
+    25  C    4.241529   2.390058   4.817280   5.071230   2.840875
+    26  H    4.169004   2.709688   5.032003   5.116301   2.836434
+    27  H    4.164621   2.726093   5.065884   5.132561   2.821658
+    28  H    5.305020   3.271281   5.646673   6.052375   3.909529
+    29  C    2.837605   5.067725   3.652159   2.388487   4.238478
+    30  H    2.821677   5.111729   4.013683   2.711307   4.157397
+    31  H    3.906036   6.048698   4.368881   3.268573   5.301863
+    32  H    2.830358   5.129611   4.032410   2.723088   4.169351
+    33  H    3.857746   2.218505   2.071774   3.353926   3.427772
+    34  H    3.429506   3.355972   1.084000   2.220031   3.861253
+                   21         22         23         24         25
+    21  H    0.000000
+    22  H    2.437820   0.000000
+    23  O    4.593963   2.745680   0.000000
+    24  O    2.750578   4.596500   5.563964   0.000000
+    25  C    2.554445   4.876421   6.432383   1.416500   0.000000
+    26  H    2.375844   4.677335   6.433357   2.087290   1.098572
+    27  H    2.319632   4.658775   6.449874   2.089347   1.098751
+    28  H    3.637909   5.966601   7.422635   2.013923   1.092017
+    29  C    4.871724   2.547865   1.415997   6.431867   7.075358
+    30  H    4.659208   2.342901   2.087529   6.433781   6.945517
+    31  H    5.961849   3.631501   2.012913   7.421804   8.129486
+    32  H    4.666173   2.339897   2.088278   6.448178   6.971955
+    33  H    4.355801   4.941728   4.428080   2.672671   4.082515
+    34  H    4.945325   4.356620   2.675193   4.429877   5.704939
+                   26         27         28         29         30
+    26  H    0.000000
+    27  H    1.788595   0.000000
+    28  H    1.786171   1.785641   0.000000
+    29  C    6.954384   6.963305   8.129824   0.000000
+    30  H    6.656267   6.895175   8.012663   1.098727   0.000000
+    31  H    8.017833   8.032162   9.172553   1.091874   1.786336
+    32  H    6.922910   6.691007   8.037798   1.098793   1.788886
+    33  H    4.542015   4.597997   4.574781   5.702601   5.972773
+    34  H    5.968221   6.010109   6.442445   4.085728   4.564648
+                   31         32         33         34
+    31  H    0.000000
+    32  H    1.785779   0.000000
+    33  H    6.439980   6.000496   0.000000
+    34  H    4.576758   4.582777   2.240631   0.000000
+ Symmetry turned off by external request.
+ Stoichiometry    C14H17NO2
+ Framework group  C1[X(C14H17NO2)]
+ Deg. of freedom    96
+ Full point group                 C1      NOp   1
+ Rotational constants (GHZ):      0.5350287      0.3403136      0.2176845
+ Leave Link  202 at Wed Jul 29 17:51:49 2015, MaxMem= 3221225472 cpu:       0.0
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l301.exe)
+ Standard basis: CC-pVTZ (5D, 7F)
+ Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
+ Ernie:  51 primitive shells out of 578 were deleted.
+   748 basis functions,  1173 primitive gaussians,   850 cartesian basis functions
+    62 alpha electrons       62 beta electrons
+       nuclear repulsion energy      1165.0752920431 Hartrees.
+ IExCor=  402 DFT=T Ex+Corr=B3LYP ExCW=0 ScaHFX=  0.200000
+ ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0 IEmpDi=  4
+ NAtoms=   34 NActive=   34 NUniq=   34 SFac= 1.00D+00 NAtFMM=   60 NAOKFM=F Big=F
+ Integral buffers will be    131072 words long.
+ Regular integral format.
+ Two-electron integral symmetry is turned off.
+ Leave Link  301 at Wed Jul 29 17:51:49 2015, MaxMem= 3221225472 cpu:       0.1
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l302.exe)
+ NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
+         NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
+ One-electron integrals computed using PRISM.
+ NBasis=   748 RedAO= T EigKep=  2.50D-05  NBF=   748
+ NBsUse=   748 1.00D-06 EigRej= -1.00D+00 NBFU=   748
+ Precomputing XC quadrature grid using
+ IXCGrd= 4 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 0.00D+00.
+ Generated NRdTot=       0 NPtTot=           0 NUsed=           0 NTot=          32
+ NSgBfM=   840   840   841   844   844 NAtAll=    34    34.
+ Leave Link  302 at Wed Jul 29 17:51:51 2015, MaxMem= 3221225472 cpu:       5.9
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l308.exe)
+ Leave Link  308 at Wed Jul 29 17:51:51 2015, MaxMem= 3221225472 cpu:       0.4
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l303.exe)
+ DipDrv:  MaxL=1.
+ Leave Link  303 at Wed Jul 29 17:51:51 2015, MaxMem= 3221225472 cpu:       0.3
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l401.exe)
+ ExpMin= 1.03D-01 ExpMax= 1.53D+04 ExpMxC= 5.22D+02 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
+ Harris functional with IExCor=  402 and IRadAn=       1 diagonalized for initial guess.
+ HarFok:  IExCor=  402 AccDes= 0.00D+00 IRadAn=         1 IDoV= 1 UseB2=F ITyADJ=14
+ ICtDFT=  3500011 ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         wScrn=  0.000000 ICntrl=     500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Symmetry not used in FoFCou.
+ Harris En= -748.962666877660    
+ JPrj=0 DoOrth=F DoCkMO=F.
+ Leave Link  401 at Wed Jul 29 17:51:53 2015, MaxMem= 3221225472 cpu:      20.4
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l502.exe)
+ Closed shell SCF:
+ Using DIIS extrapolation, IDIIS=  1040.
+ Two-electron integral symmetry not used.
+ IVT=     2204818 IEndB=     2204818 NGot=  3221225472 MDV=  3219760645
+ LenX=  3219760645 LenY=  3219037295
+ Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
+ Requested convergence on MAX density matrix=1.00D-06.
+ Requested convergence on             energy=1.00D-06.
+ No special actions if energy rises.
+ Fock matrices will be formed incrementally for  20 cycles.
+ Integral accuracy reduced to 1.0D-05 until final iterations.
+ Leave Link  502 at Wed Jul 29 17:51:53 2015, MaxMem= 3221225472 cpu:       0.1
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l801.exe)
+ DoSCS=F DFT=T ScalE2(SS,OS)=  1.000000  1.000000
+ EET: In l801 skip all calculations
+ Leave Link  801 at Wed Jul 29 17:51:53 2015, MaxMem= 3221225472 cpu:       0.0
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l914.exe)
+ RHF ground state
+ Using an hybrid functional in EET
+ Read data:    NBsqD      94864
+               NBasisD      308
+               NstMonD       10
+ Present data: NBsq      559504
+               Nbasis       748
+ Other data:   NBSqD      94864
+               NBSqA     193600
+               NTot         748
+ Number of states for donor monomer    NStMonD:       10
+ Number of states for acceptor monomer NStMonA:       10
+ FoFJK:  IHMeth= 1 ICntrl=       0 DoSepK=F KAlg= 0 I1Cent=   0 FoldK=F
+ IRaf=         0 NMat=   1 IRICut=       1 DoRegI=T DoRafI=F ISym2E= 0.
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=F FulRan=T
+         wScrn=  0.000000 ICntrl=       0 IOpCl=  0 I1Cent=           0 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Symmetry not used in FoFCou.
+ --------------------------------------------------------------------------------
+                           Electronic Energy Transfer
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  1)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         0.1679 eV
+     > Coulomb term    D:   1 A:   1 =      -0.025149 eV;     -202.8410 cm-1
+     > HF exchange     D:   1 A:   1 =       0.002906 eV;       23.4378 cm-1
+     > XC term         D:   1 A:   1 =       0.002198 eV;       17.7285 cm-1
+     > Overlap term    D:   1 A:   1 =      -0.000009 eV;       -0.0764 cm-1
+     > TOTAL COUPLING  D:   1 A:   1 =      -0.020055 eV;     -161.7511 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  2)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference        -0.8274 eV
+     > Coulomb term    D:   1 A:   2 =       0.010171 eV;       82.0327 cm-1
+     > HF exchange     D:   1 A:   2 =      -0.001448 eV;      -11.6810 cm-1
+     > XC term         D:   1 A:   2 =      -0.001781 eV;      -14.3656 cm-1
+     > Overlap term    D:   1 A:   2 =       0.000012 eV;        0.0981 cm-1
+     > TOTAL COUPLING  D:   1 A:   2 =       0.006954 eV;       56.0841 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  3)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference        -1.4181 eV
+     > Coulomb term    D:   1 A:   3 =       0.000620 eV;        4.9972 cm-1
+     > HF exchange     D:   1 A:   3 =      -0.000116 eV;       -0.9320 cm-1
+     > XC term         D:   1 A:   3 =      -0.000189 eV;       -1.5247 cm-1
+     > Overlap term    D:   1 A:   3 =       0.000000 eV;       -0.0011 cm-1
+     > TOTAL COUPLING  D:   1 A:   3 =       0.000315 eV;        2.5393 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  4)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference        -1.8478 eV
+     > Coulomb term    D:   1 A:   4 =      -0.016887 eV;     -136.2045 cm-1
+     > HF exchange     D:   1 A:   4 =       0.001690 eV;       13.6338 cm-1
+     > XC term         D:   1 A:   4 =       0.002200 eV;       17.7461 cm-1
+     > Overlap term    D:   1 A:   4 =      -0.000012 eV;       -0.0969 cm-1
+     > TOTAL COUPLING  D:   1 A:   4 =      -0.013009 eV;     -104.9215 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  5)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference        -1.8964 eV
+     > Coulomb term    D:   1 A:   5 =       0.001311 eV;       10.5746 cm-1
+     > HF exchange     D:   1 A:   5 =      -0.000239 eV;       -1.9287 cm-1
+     > XC term         D:   1 A:   5 =      -0.000336 eV;       -2.7082 cm-1
+     > Overlap term    D:   1 A:   5 =       0.000002 eV;        0.0127 cm-1
+     > TOTAL COUPLING  D:   1 A:   5 =       0.000738 eV;        5.9503 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  6)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -2.1530 eV
+     > Coulomb term    D:   1 A:   6 =       0.000832 eV;        6.7089 cm-1
+     > HF exchange     D:   1 A:   6 =       0.000105 eV;        0.8506 cm-1
+     > XC term         D:   1 A:   6 =       0.000306 eV;        2.4676 cm-1
+     > Overlap term    D:   1 A:   6 =       0.000000 eV;        0.0008 cm-1
+     > TOTAL COUPLING  D:   1 A:   6 =       0.001243 eV;       10.0279 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  7)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -2.2204 eV
+     > Coulomb term    D:   1 A:   7 =       0.044127 eV;      355.9080 cm-1
+     > HF exchange     D:   1 A:   7 =       0.001620 eV;       13.0660 cm-1
+     > XC term         D:   1 A:   7 =      -0.000107 eV;       -0.8601 cm-1
+     > Overlap term    D:   1 A:   7 =      -0.000063 eV;       -0.5059 cm-1
+     > TOTAL COUPLING  D:   1 A:   7 =       0.045578 eV;      367.6079 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  8)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -2.5495 eV
+     > Coulomb term    D:   1 A:   8 =      -0.001347 eV;      -10.8652 cm-1
+     > HF exchange     D:   1 A:   8 =       0.000031 eV;        0.2464 cm-1
+     > XC term         D:   1 A:   8 =       0.000161 eV;        1.2977 cm-1
+     > Overlap term    D:   1 A:   8 =       0.000001 eV;        0.0115 cm-1
+     > TOTAL COUPLING  D:   1 A:   8 =      -0.001154 eV;       -9.3097 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> (  9)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -2.6346 eV
+     > Coulomb term    D:   1 A:   9 =       0.007337 eV;       59.1782 cm-1
+     > HF exchange     D:   1 A:   9 =      -0.001077 eV;       -8.6874 cm-1
+     > XC term         D:   1 A:   9 =      -0.001120 eV;       -9.0357 cm-1
+     > Overlap term    D:   1 A:   9 =       0.000002 eV;        0.0140 cm-1
+     > TOTAL COUPLING  D:   1 A:   9 =       0.005142 eV;       41.4692 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  1) -> ( 10)
+   Donor state      1; Transition energy         4.9826 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -2.6475 eV
+     > Coulomb term    D:   1 A:  10 =       0.005014 eV;       40.4424 cm-1
+     > HF exchange     D:   1 A:  10 =      -0.000743 eV;       -5.9924 cm-1
+     > XC term         D:   1 A:  10 =      -0.000543 eV;       -4.3810 cm-1
+     > Overlap term    D:   1 A:  10 =      -0.000026 eV;       -0.2102 cm-1
+     > TOTAL COUPLING  D:   1 A:  10 =       0.003702 eV;       29.8587 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  1)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         0.9038 eV
+     > Coulomb term    D:   2 A:   1 =       0.011265 eV;       90.8548 cm-1
+     > HF exchange     D:   2 A:   1 =       0.000083 eV;        0.6732 cm-1
+     > XC term         D:   2 A:   1 =      -0.000463 eV;       -3.7341 cm-1
+     > Overlap term    D:   2 A:   1 =       0.000031 eV;        0.2460 cm-1
+     > TOTAL COUPLING  D:   2 A:   1 =       0.010916 eV;       88.0399 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  2)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference        -0.0915 eV
+     > Coulomb term    D:   2 A:   2 =      -0.040316 eV;     -325.1744 cm-1
+     > HF exchange     D:   2 A:   2 =       0.005460 eV;       44.0362 cm-1
+     > XC term         D:   2 A:   2 =       0.006421 eV;       51.7855 cm-1
+     > Overlap term    D:   2 A:   2 =      -0.000110 eV;       -0.8896 cm-1
+     > TOTAL COUPLING  D:   2 A:   2 =      -0.028546 eV;     -230.2422 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  3)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference        -0.6822 eV
+     > Coulomb term    D:   2 A:   3 =      -0.000398 eV;       -3.2102 cm-1
+     > HF exchange     D:   2 A:   3 =       0.000424 eV;        3.4218 cm-1
+     > XC term         D:   2 A:   3 =       0.000815 eV;        6.5772 cm-1
+     > Overlap term    D:   2 A:   3 =      -0.000015 eV;       -0.1170 cm-1
+     > TOTAL COUPLING  D:   2 A:   3 =       0.000827 eV;        6.6718 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  4)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference        -1.1119 eV
+     > Coulomb term    D:   2 A:   4 =       0.017128 eV;      138.1466 cm-1
+     > HF exchange     D:   2 A:   4 =      -0.005813 eV;      -46.8819 cm-1
+     > XC term         D:   2 A:   4 =      -0.007432 eV;      -59.9451 cm-1
+     > Overlap term    D:   2 A:   4 =       0.000123 eV;        0.9927 cm-1
+     > TOTAL COUPLING  D:   2 A:   4 =       0.004006 eV;       32.3123 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  5)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference        -1.1605 eV
+     > Coulomb term    D:   2 A:   5 =      -0.001453 eV;      -11.7155 cm-1
+     > HF exchange     D:   2 A:   5 =       0.000424 eV;        3.4166 cm-1
+     > XC term         D:   2 A:   5 =       0.000381 eV;        3.0757 cm-1
+     > Overlap term    D:   2 A:   5 =      -0.000008 eV;       -0.0627 cm-1
+     > TOTAL COUPLING  D:   2 A:   5 =      -0.000655 eV;       -5.2859 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  6)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -1.4170 eV
+     > Coulomb term    D:   2 A:   6 =       0.000117 eV;        0.9420 cm-1
+     > HF exchange     D:   2 A:   6 =      -0.000373 eV;       -3.0070 cm-1
+     > XC term         D:   2 A:   6 =      -0.001464 eV;      -11.8078 cm-1
+     > Overlap term    D:   2 A:   6 =       0.000022 eV;        0.1744 cm-1
+     > TOTAL COUPLING  D:   2 A:   6 =      -0.001698 eV;      -13.6983 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  7)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -1.4845 eV
+     > Coulomb term    D:   2 A:   7 =      -0.032430 eV;     -261.5656 cm-1
+     > HF exchange     D:   2 A:   7 =       0.002439 eV;       19.6695 cm-1
+     > XC term         D:   2 A:   7 =       0.002821 eV;       22.7555 cm-1
+     > Overlap term    D:   2 A:   7 =      -0.000149 eV;       -1.2039 cm-1
+     > TOTAL COUPLING  D:   2 A:   7 =      -0.027319 eV;     -220.3445 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  8)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -1.8136 eV
+     > Coulomb term    D:   2 A:   8 =       0.001306 eV;       10.5296 cm-1
+     > HF exchange     D:   2 A:   8 =      -0.000487 eV;       -3.9316 cm-1
+     > XC term         D:   2 A:   8 =      -0.001027 eV;       -8.2870 cm-1
+     > Overlap term    D:   2 A:   8 =       0.000015 eV;        0.1243 cm-1
+     > TOTAL COUPLING  D:   2 A:   8 =      -0.000194 eV;       -1.5646 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> (  9)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -1.8987 eV
+     > Coulomb term    D:   2 A:   9 =      -0.014873 eV;     -119.9585 cm-1
+     > HF exchange     D:   2 A:   9 =       0.002618 eV;       21.1181 cm-1
+     > XC term         D:   2 A:   9 =       0.003195 eV;       25.7667 cm-1
+     > Overlap term    D:   2 A:   9 =      -0.000066 eV;       -0.5355 cm-1
+     > TOTAL COUPLING  D:   2 A:   9 =      -0.009126 eV;      -73.6091 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  2) -> ( 10)
+   Donor state      2; Transition energy         5.7185 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -1.9116 eV
+     > Coulomb term    D:   2 A:  10 =       0.000288 eV;        2.3219 cm-1
+     > HF exchange     D:   2 A:  10 =      -0.000049 eV;       -0.3932 cm-1
+     > XC term         D:   2 A:  10 =       0.000017 eV;        0.1360 cm-1
+     > Overlap term    D:   2 A:  10 =      -0.000050 eV;       -0.4034 cm-1
+     > TOTAL COUPLING  D:   2 A:  10 =       0.000206 eV;        1.6613 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  1)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         1.2866 eV
+     > Coulomb term    D:   3 A:   1 =       0.001508 eV;       12.1616 cm-1
+     > HF exchange     D:   3 A:   1 =      -0.000497 eV;       -4.0123 cm-1
+     > XC term         D:   3 A:   1 =      -0.000701 eV;       -5.6552 cm-1
+     > Overlap term    D:   3 A:   1 =       0.000018 eV;        0.1480 cm-1
+     > TOTAL COUPLING  D:   3 A:   1 =       0.000328 eV;        2.6421 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  2)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         0.2913 eV
+     > Coulomb term    D:   3 A:   2 =       0.014891 eV;      120.1014 cm-1
+     > HF exchange     D:   3 A:   2 =      -0.002352 eV;      -18.9718 cm-1
+     > XC term         D:   3 A:   2 =      -0.002573 eV;      -20.7514 cm-1
+     > Overlap term    D:   3 A:   2 =       0.000037 eV;        0.2991 cm-1
+     > TOTAL COUPLING  D:   3 A:   2 =       0.010003 eV;       80.6774 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  3)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference        -0.2994 eV
+     > Coulomb term    D:   3 A:   3 =       0.000979 eV;        7.8938 cm-1
+     > HF exchange     D:   3 A:   3 =       0.000210 eV;        1.6948 cm-1
+     > XC term         D:   3 A:   3 =      -0.000293 eV;       -2.3609 cm-1
+     > Overlap term    D:   3 A:   3 =       0.000006 eV;        0.0459 cm-1
+     > TOTAL COUPLING  D:   3 A:   3 =       0.000902 eV;        7.2737 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  4)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference        -0.7291 eV
+     > Coulomb term    D:   3 A:   4 =      -0.024098 eV;     -194.3633 cm-1
+     > HF exchange     D:   3 A:   4 =       0.002763 eV;       22.2888 cm-1
+     > XC term         D:   3 A:   4 =       0.002877 eV;       23.2056 cm-1
+     > Overlap term    D:   3 A:   4 =      -0.000046 eV;       -0.3699 cm-1
+     > TOTAL COUPLING  D:   3 A:   4 =      -0.018503 eV;     -149.2388 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  5)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference        -0.7777 eV
+     > Coulomb term    D:   3 A:   5 =       0.001688 eV;       13.6181 cm-1
+     > HF exchange     D:   3 A:   5 =       0.000036 eV;        0.2929 cm-1
+     > XC term         D:   3 A:   5 =      -0.000295 eV;       -2.3788 cm-1
+     > Overlap term    D:   3 A:   5 =       0.000002 eV;        0.0173 cm-1
+     > TOTAL COUPLING  D:   3 A:   5 =       0.001432 eV;       11.5495 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  6)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -1.0343 eV
+     > Coulomb term    D:   3 A:   6 =      -0.000958 eV;       -7.7300 cm-1
+     > HF exchange     D:   3 A:   6 =      -0.000706 eV;       -5.6917 cm-1
+     > XC term         D:   3 A:   6 =       0.000248 eV;        1.9999 cm-1
+     > Overlap term    D:   3 A:   6 =      -0.000011 eV;       -0.0925 cm-1
+     > TOTAL COUPLING  D:   3 A:   6 =      -0.001428 eV;      -11.5143 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  7)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -1.1017 eV
+     > Coulomb term    D:   3 A:   7 =       0.001248 eV;       10.0670 cm-1
+     > HF exchange     D:   3 A:   7 =      -0.000351 eV;       -2.8298 cm-1
+     > XC term         D:   3 A:   7 =       0.000067 eV;        0.5377 cm-1
+     > Overlap term    D:   3 A:   7 =      -0.000057 eV;       -0.4560 cm-1
+     > TOTAL COUPLING  D:   3 A:   7 =       0.000907 eV;        7.3188 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  8)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -1.4308 eV
+     > Coulomb term    D:   3 A:   8 =      -0.000749 eV;       -6.0421 cm-1
+     > HF exchange     D:   3 A:   8 =      -0.000864 eV;       -6.9680 cm-1
+     > XC term         D:   3 A:   8 =       0.000332 eV;        2.6762 cm-1
+     > Overlap term    D:   3 A:   8 =      -0.000004 eV;       -0.0344 cm-1
+     > TOTAL COUPLING  D:   3 A:   8 =      -0.001286 eV;      -10.3683 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> (  9)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -1.5159 eV
+     > Coulomb term    D:   3 A:   9 =       0.008907 eV;       71.8397 cm-1
+     > HF exchange     D:   3 A:   9 =      -0.001039 eV;       -8.3799 cm-1
+     > XC term         D:   3 A:   9 =      -0.001217 eV;       -9.8180 cm-1
+     > Overlap term    D:   3 A:   9 =       0.000012 eV;        0.0935 cm-1
+     > TOTAL COUPLING  D:   3 A:   9 =       0.006662 eV;       53.7353 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  3) -> ( 10)
+   Donor state      3; Transition energy         6.1013 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -1.5288 eV
+     > Coulomb term    D:   3 A:  10 =      -0.001305 eV;      -10.5226 cm-1
+     > HF exchange     D:   3 A:  10 =       0.001256 eV;       10.1268 cm-1
+     > XC term         D:   3 A:  10 =       0.000253 eV;        2.0372 cm-1
+     > Overlap term    D:   3 A:  10 =      -0.000034 eV;       -0.2769 cm-1
+     > TOTAL COUPLING  D:   3 A:  10 =       0.000169 eV;        1.3645 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  1)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         1.9534 eV
+     > Coulomb term    D:   4 A:   1 =       0.026784 eV;      216.0246 cm-1
+     > HF exchange     D:   4 A:   1 =       0.000311 eV;        2.5073 cm-1
+     > XC term         D:   4 A:   1 =      -0.000789 eV;       -6.3601 cm-1
+     > Overlap term    D:   4 A:   1 =       0.000027 eV;        0.2141 cm-1
+     > TOTAL COUPLING  D:   4 A:   1 =       0.026333 eV;      212.3859 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  2)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         0.9581 eV
+     > Coulomb term    D:   4 A:   2 =       0.009644 eV;       77.7868 cm-1
+     > HF exchange     D:   4 A:   2 =      -0.002140 eV;      -17.2595 cm-1
+     > XC term         D:   4 A:   2 =      -0.003897 eV;      -31.4341 cm-1
+     > Overlap term    D:   4 A:   2 =       0.000094 eV;        0.7592 cm-1
+     > TOTAL COUPLING  D:   4 A:   2 =       0.003701 eV;       29.8523 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  3)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         0.3674 eV
+     > Coulomb term    D:   4 A:   3 =       0.002087 eV;       16.8358 cm-1
+     > HF exchange     D:   4 A:   3 =      -0.000514 eV;       -4.1461 cm-1
+     > XC term         D:   4 A:   3 =      -0.000406 eV;       -3.2773 cm-1
+     > Overlap term    D:   4 A:   3 =       0.000010 eV;        0.0773 cm-1
+     > TOTAL COUPLING  D:   4 A:   3 =       0.001177 eV;        9.4897 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  4)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference        -0.0623 eV
+     > Coulomb term    D:   4 A:   4 =      -0.073917 eV;     -596.1819 cm-1
+     > HF exchange     D:   4 A:   4 =       0.003068 eV;       24.7427 cm-1
+     > XC term         D:   4 A:   4 =       0.004406 eV;       35.5339 cm-1
+     > Overlap term    D:   4 A:   4 =      -0.000114 eV;       -0.9214 cm-1
+     > TOTAL COUPLING  D:   4 A:   4 =      -0.066558 eV;     -536.8266 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  5)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference        -0.1109 eV
+     > Coulomb term    D:   4 A:   5 =       0.005090 eV;       41.0560 cm-1
+     > HF exchange     D:   4 A:   5 =      -0.000145 eV;       -1.1700 cm-1
+     > XC term         D:   4 A:   5 =      -0.000267 eV;       -2.1516 cm-1
+     > Overlap term    D:   4 A:   5 =       0.000008 eV;        0.0637 cm-1
+     > TOTAL COUPLING  D:   4 A:   5 =       0.004686 eV;       37.7980 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  6)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -0.3674 eV
+     > Coulomb term    D:   4 A:   6 =      -0.002572 eV;      -20.7417 cm-1
+     > HF exchange     D:   4 A:   6 =       0.001019 eV;        8.2162 cm-1
+     > XC term         D:   4 A:   6 =       0.000504 eV;        4.0642 cm-1
+     > Overlap term    D:   4 A:   6 =      -0.000019 eV;       -0.1502 cm-1
+     > TOTAL COUPLING  D:   4 A:   6 =      -0.001068 eV;       -8.6116 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  7)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -0.4349 eV
+     > Coulomb term    D:   4 A:   7 =      -0.074910 eV;     -604.1917 cm-1
+     > HF exchange     D:   4 A:   7 =       0.005651 eV;       45.5774 cm-1
+     > XC term         D:   4 A:   7 =       0.005351 eV;       43.1576 cm-1
+     > Overlap term    D:   4 A:   7 =      -0.000177 eV;       -1.4253 cm-1
+     > TOTAL COUPLING  D:   4 A:   7 =      -0.064085 eV;     -516.8820 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  8)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -0.7640 eV
+     > Coulomb term    D:   4 A:   8 =      -0.002873 eV;      -23.1746 cm-1
+     > HF exchange     D:   4 A:   8 =       0.000378 eV;        3.0451 cm-1
+     > XC term         D:   4 A:   8 =       0.000723 eV;        5.8278 cm-1
+     > Overlap term    D:   4 A:   8 =      -0.000007 eV;       -0.0535 cm-1
+     > TOTAL COUPLING  D:   4 A:   8 =      -0.001780 eV;      -14.3553 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> (  9)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -0.8491 eV
+     > Coulomb term    D:   4 A:   9 =       0.016665 eV;      134.4127 cm-1
+     > HF exchange     D:   4 A:   9 =      -0.001185 eV;       -9.5562 cm-1
+     > XC term         D:   4 A:   9 =      -0.001559 eV;      -12.5760 cm-1
+     > Overlap term    D:   4 A:   9 =       0.000031 eV;        0.2472 cm-1
+     > TOTAL COUPLING  D:   4 A:   9 =       0.013952 eV;      112.5278 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  4) -> ( 10)
+   Donor state      4; Transition energy         6.7681 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -0.8620 eV
+     > Coulomb term    D:   4 A:  10 =      -0.006430 eV;      -51.8652 cm-1
+     > HF exchange     D:   4 A:  10 =      -0.000065 eV;       -0.5247 cm-1
+     > XC term         D:   4 A:  10 =       0.001492 eV;       12.0356 cm-1
+     > Overlap term    D:   4 A:  10 =      -0.000067 eV;       -0.5438 cm-1
+     > TOTAL COUPLING  D:   4 A:  10 =      -0.005071 eV;      -40.8980 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  1)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         1.9878 eV
+     > Coulomb term    D:   5 A:   1 =      -0.042929 eV;     -346.2491 cm-1
+     > HF exchange     D:   5 A:   1 =      -0.000096 eV;       -0.7775 cm-1
+     > XC term         D:   5 A:   1 =       0.001450 eV;       11.6911 cm-1
+     > Overlap term    D:   5 A:   1 =       0.000012 eV;        0.0958 cm-1
+     > TOTAL COUPLING  D:   5 A:   1 =      -0.041564 eV;     -335.2397 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  2)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         0.9924 eV
+     > Coulomb term    D:   5 A:   2 =       0.015481 eV;      124.8652 cm-1
+     > HF exchange     D:   5 A:   2 =      -0.003162 eV;      -25.5041 cm-1
+     > XC term         D:   5 A:   2 =      -0.004963 eV;      -40.0313 cm-1
+     > Overlap term    D:   5 A:   2 =      -0.000002 eV;       -0.0133 cm-1
+     > TOTAL COUPLING  D:   5 A:   2 =       0.007354 eV;       59.3166 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  3)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         0.4017 eV
+     > Coulomb term    D:   5 A:   3 =       0.001975 eV;       15.9333 cm-1
+     > HF exchange     D:   5 A:   3 =      -0.000678 eV;       -5.4656 cm-1
+     > XC term         D:   5 A:   3 =      -0.000496 eV;       -3.9973 cm-1
+     > Overlap term    D:   5 A:   3 =      -0.000002 eV;       -0.0137 cm-1
+     > TOTAL COUPLING  D:   5 A:   3 =       0.000801 eV;        6.4567 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  4)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference        -0.0280 eV
+     > Coulomb term    D:   5 A:   4 =      -0.077081 eV;     -621.7040 cm-1
+     > HF exchange     D:   5 A:   4 =       0.003968 eV;       32.0078 cm-1
+     > XC term         D:   5 A:   4 =       0.005727 eV;       46.1946 cm-1
+     > Overlap term    D:   5 A:   4 =      -0.000012 eV;       -0.0945 cm-1
+     > TOTAL COUPLING  D:   5 A:   4 =      -0.067397 eV;     -543.5961 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  5)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference        -0.0765 eV
+     > Coulomb term    D:   5 A:   5 =       0.004157 eV;       33.5246 cm-1
+     > HF exchange     D:   5 A:   5 =      -0.000224 eV;       -1.8072 cm-1
+     > XC term         D:   5 A:   5 =      -0.000252 eV;       -2.0327 cm-1
+     > Overlap term    D:   5 A:   5 =       0.000000 eV;       -0.0022 cm-1
+     > TOTAL COUPLING  D:   5 A:   5 =       0.003680 eV;       29.6825 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  6)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -0.3331 eV
+     > Coulomb term    D:   5 A:   6 =       0.003172 eV;       25.5832 cm-1
+     > HF exchange     D:   5 A:   6 =       0.001002 eV;        8.0784 cm-1
+     > XC term         D:   5 A:   6 =       0.000535 eV;        4.3124 cm-1
+     > Overlap term    D:   5 A:   6 =       0.000004 eV;        0.0340 cm-1
+     > TOTAL COUPLING  D:   5 A:   6 =       0.004712 eV;       38.0081 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  7)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -0.4005 eV
+     > Coulomb term    D:   5 A:   7 =       0.116202 eV;      937.2338 cm-1
+     > HF exchange     D:   5 A:   7 =      -0.007664 eV;      -61.8129 cm-1
+     > XC term         D:   5 A:   7 =      -0.009866 eV;      -79.5781 cm-1
+     > Overlap term    D:   5 A:   7 =      -0.000016 eV;       -0.1302 cm-1
+     > TOTAL COUPLING  D:   5 A:   7 =       0.098656 eV;      795.7126 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  8)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -0.7297 eV
+     > Coulomb term    D:   5 A:   8 =      -0.004826 eV;      -38.9266 cm-1
+     > HF exchange     D:   5 A:   8 =       0.001078 eV;        8.6932 cm-1
+     > XC term         D:   5 A:   8 =       0.000974 eV;        7.8566 cm-1
+     > Overlap term    D:   5 A:   8 =       0.000002 eV;        0.0196 cm-1
+     > TOTAL COUPLING  D:   5 A:   8 =      -0.002772 eV;      -22.3572 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> (  9)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -0.8147 eV
+     > Coulomb term    D:   5 A:   9 =       0.020621 eV;      166.3235 cm-1
+     > HF exchange     D:   5 A:   9 =      -0.001807 eV;      -14.5756 cm-1
+     > XC term         D:   5 A:   9 =      -0.002766 eV;      -22.3083 cm-1
+     > Overlap term    D:   5 A:   9 =      -0.000006 eV;       -0.0444 cm-1
+     > TOTAL COUPLING  D:   5 A:   9 =       0.016043 eV;      129.3951 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  5) -> ( 10)
+   Donor state      5; Transition energy         6.8025 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -0.8276 eV
+     > Coulomb term    D:   5 A:  10 =       0.003137 eV;       25.3021 cm-1
+     > HF exchange     D:   5 A:  10 =      -0.000570 eV;       -4.5993 cm-1
+     > XC term         D:   5 A:  10 =      -0.001367 eV;      -11.0257 cm-1
+     > Overlap term    D:   5 A:  10 =      -0.000036 eV;       -0.2894 cm-1
+     > TOTAL COUPLING  D:   5 A:  10 =       0.001164 eV;        9.3877 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  1)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         2.0639 eV
+     > Coulomb term    D:   6 A:   1 =      -0.009182 eV;      -74.0608 cm-1
+     > HF exchange     D:   6 A:   1 =      -0.000033 eV;       -0.2623 cm-1
+     > XC term         D:   6 A:   1 =       0.000247 eV;        1.9905 cm-1
+     > Overlap term    D:   6 A:   1 =       0.000028 eV;        0.2237 cm-1
+     > TOTAL COUPLING  D:   6 A:   1 =      -0.008940 eV;      -72.1088 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  2)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         1.0685 eV
+     > Coulomb term    D:   6 A:   2 =      -0.024561 eV;     -198.1010 cm-1
+     > HF exchange     D:   6 A:   2 =       0.004983 eV;       40.1913 cm-1
+     > XC term         D:   6 A:   2 =       0.005520 eV;       44.5200 cm-1
+     > Overlap term    D:   6 A:   2 =      -0.000062 eV;       -0.4963 cm-1
+     > TOTAL COUPLING  D:   6 A:   2 =      -0.014120 eV;     -113.8861 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  3)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         0.4778 eV
+     > Coulomb term    D:   6 A:   3 =      -0.005524 eV;      -44.5570 cm-1
+     > HF exchange     D:   6 A:   3 =      -0.000091 eV;       -0.7365 cm-1
+     > XC term         D:   6 A:   3 =       0.000481 eV;        3.8820 cm-1
+     > Overlap term    D:   6 A:   3 =      -0.000013 eV;       -0.1012 cm-1
+     > TOTAL COUPLING  D:   6 A:   3 =      -0.005147 eV;      -41.5127 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  4)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference         0.0481 eV
+     > Coulomb term    D:   6 A:   4 =       0.164317 eV;     1325.3073 cm-1
+     > HF exchange     D:   6 A:   4 =      -0.007212 eV;      -58.1662 cm-1
+     > XC term         D:   6 A:   4 =      -0.008154 eV;      -65.7694 cm-1
+     > Overlap term    D:   6 A:   4 =       0.000111 eV;        0.8941 cm-1
+     > TOTAL COUPLING  D:   6 A:   4 =       0.149062 eV;     1202.2659 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  5)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference        -0.0005 eV
+     > Coulomb term    D:   6 A:   5 =      -0.010649 eV;      -85.8887 cm-1
+     > HF exchange     D:   6 A:   5 =       0.000503 eV;        4.0585 cm-1
+     > XC term         D:   6 A:   5 =       0.000592 eV;        4.7732 cm-1
+     > Overlap term    D:   6 A:   5 =      -0.000009 eV;       -0.0697 cm-1
+     > TOTAL COUPLING  D:   6 A:   5 =      -0.009562 eV;      -77.1267 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  6)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -0.2570 eV
+     > Coulomb term    D:   6 A:   6 =       0.004032 eV;       32.5193 cm-1
+     > HF exchange     D:   6 A:   6 =       0.000758 eV;        6.1108 cm-1
+     > XC term         D:   6 A:   6 =      -0.000654 eV;       -5.2783 cm-1
+     > Overlap term    D:   6 A:   6 =       0.000020 eV;        0.1576 cm-1
+     > TOTAL COUPLING  D:   6 A:   6 =       0.004155 eV;       33.5094 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  7)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -0.3244 eV
+     > Coulomb term    D:   6 A:   7 =       0.026116 eV;      210.6362 cm-1
+     > HF exchange     D:   6 A:   7 =      -0.001209 eV;       -9.7476 cm-1
+     > XC term         D:   6 A:   7 =      -0.002308 eV;      -18.6140 cm-1
+     > Overlap term    D:   6 A:   7 =      -0.000088 eV;       -0.7104 cm-1
+     > TOTAL COUPLING  D:   6 A:   7 =       0.022511 eV;      181.5642 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  8)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -0.6536 eV
+     > Coulomb term    D:   6 A:   8 =       0.009009 eV;       72.6645 cm-1
+     > HF exchange     D:   6 A:   8 =       0.000540 eV;        4.3547 cm-1
+     > XC term         D:   6 A:   8 =      -0.000559 eV;       -4.5103 cm-1
+     > Overlap term    D:   6 A:   8 =       0.000013 eV;        0.1038 cm-1
+     > TOTAL COUPLING  D:   6 A:   8 =       0.009003 eV;       72.6128 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> (  9)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -0.7387 eV
+     > Coulomb term    D:   6 A:   9 =      -0.039185 eV;     -316.0499 cm-1
+     > HF exchange     D:   6 A:   9 =       0.002668 eV;       21.5218 cm-1
+     > XC term         D:   6 A:   9 =       0.002979 eV;       24.0307 cm-1
+     > Overlap term    D:   6 A:   9 =      -0.000051 eV;       -0.4084 cm-1
+     > TOTAL COUPLING  D:   6 A:   9 =      -0.033588 eV;     -270.9057 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  6) -> ( 10)
+   Donor state      6; Transition energy         6.8786 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -0.7515 eV
+     > Coulomb term    D:   6 A:  10 =       0.005253 eV;       42.3669 cm-1
+     > HF exchange     D:   6 A:  10 =      -0.000815 eV;       -6.5698 cm-1
+     > XC term         D:   6 A:  10 =      -0.000559 eV;       -4.5096 cm-1
+     > Overlap term    D:   6 A:  10 =      -0.000060 eV;       -0.4853 cm-1
+     > TOTAL COUPLING  D:   6 A:  10 =       0.003819 eV;       30.8023 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  1)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         2.2338 eV
+     > Coulomb term    D:   7 A:   1 =       0.020902 eV;      168.5898 cm-1
+     > HF exchange     D:   7 A:   1 =       0.000882 eV;        7.1107 cm-1
+     > XC term         D:   7 A:   1 =       0.000556 eV;        4.4868 cm-1
+     > Overlap term    D:   7 A:   1 =       0.000013 eV;        0.1058 cm-1
+     > TOTAL COUPLING  D:   7 A:   1 =       0.022354 eV;      180.2932 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  2)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         1.2384 eV
+     > Coulomb term    D:   7 A:   2 =       0.004147 eV;       33.4454 cm-1
+     > HF exchange     D:   7 A:   2 =      -0.000614 eV;       -4.9502 cm-1
+     > XC term         D:   7 A:   2 =      -0.001987 eV;      -16.0280 cm-1
+     > Overlap term    D:   7 A:   2 =       0.000014 eV;        0.1135 cm-1
+     > TOTAL COUPLING  D:   7 A:   2 =       0.001560 eV;       12.5807 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  3)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         0.6478 eV
+     > Coulomb term    D:   7 A:   3 =       0.000525 eV;        4.2360 cm-1
+     > HF exchange     D:   7 A:   3 =      -0.000602 eV;       -4.8594 cm-1
+     > XC term         D:   7 A:   3 =      -0.000174 eV;       -1.4030 cm-1
+     > Overlap term    D:   7 A:   3 =      -0.000003 eV;       -0.0263 cm-1
+     > TOTAL COUPLING  D:   7 A:   3 =      -0.000255 eV;       -2.0527 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  4)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference         0.2181 eV
+     > Coulomb term    D:   7 A:   4 =      -0.028049 eV;     -226.2324 cm-1
+     > HF exchange     D:   7 A:   4 =       0.000784 eV;        6.3261 cm-1
+     > XC term         D:   7 A:   4 =       0.002414 eV;       19.4726 cm-1
+     > Overlap term    D:   7 A:   4 =      -0.000008 eV;       -0.0660 cm-1
+     > TOTAL COUPLING  D:   7 A:   4 =      -0.024859 eV;     -200.4996 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  5)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference         0.1695 eV
+     > Coulomb term    D:   7 A:   5 =       0.002739 eV;       22.0923 cm-1
+     > HF exchange     D:   7 A:   5 =      -0.000346 eV;       -2.7917 cm-1
+     > XC term         D:   7 A:   5 =      -0.000071 eV;       -0.5688 cm-1
+     > Overlap term    D:   7 A:   5 =       0.000001 eV;        0.0096 cm-1
+     > TOTAL COUPLING  D:   7 A:   5 =       0.002324 eV;       18.7413 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  6)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference        -0.0871 eV
+     > Coulomb term    D:   7 A:   6 =      -0.001398 eV;      -11.2717 cm-1
+     > HF exchange     D:   7 A:   6 =       0.001387 eV;       11.1829 cm-1
+     > XC term         D:   7 A:   6 =       0.000567 eV;        4.5739 cm-1
+     > Overlap term    D:   7 A:   6 =       0.000005 eV;        0.0433 cm-1
+     > TOTAL COUPLING  D:   7 A:   6 =       0.000561 eV;        4.5284 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  7)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference        -0.1545 eV
+     > Coulomb term    D:   7 A:   7 =      -0.065066 eV;     -524.7887 cm-1
+     > HF exchange     D:   7 A:   7 =       0.004821 eV;       38.8816 cm-1
+     > XC term         D:   7 A:   7 =       0.003184 eV;       25.6838 cm-1
+     > Overlap term    D:   7 A:   7 =      -0.000149 eV;       -1.2015 cm-1
+     > TOTAL COUPLING  D:   7 A:   7 =      -0.057209 eV;     -461.4248 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  8)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference        -0.4836 eV
+     > Coulomb term    D:   7 A:   8 =      -0.001400 eV;      -11.2921 cm-1
+     > HF exchange     D:   7 A:   8 =       0.001283 eV;       10.3498 cm-1
+     > XC term         D:   7 A:   8 =       0.000360 eV;        2.8999 cm-1
+     > Overlap term    D:   7 A:   8 =       0.000004 eV;        0.0346 cm-1
+     > TOTAL COUPLING  D:   7 A:   8 =       0.000247 eV;        1.9922 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> (  9)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -0.5687 eV
+     > Coulomb term    D:   7 A:   9 =       0.006141 eV;       49.5280 cm-1
+     > HF exchange     D:   7 A:   9 =      -0.000647 eV;       -5.2182 cm-1
+     > XC term         D:   7 A:   9 =      -0.000853 eV;       -6.8766 cm-1
+     > Overlap term    D:   7 A:   9 =      -0.000008 eV;       -0.0677 cm-1
+     > TOTAL COUPLING  D:   7 A:   9 =       0.004633 eV;       37.3655 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  7) -> ( 10)
+   Donor state      7; Transition energy         7.0485 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -0.5816 eV
+     > Coulomb term    D:   7 A:  10 =      -0.004521 eV;      -36.4669 cm-1
+     > HF exchange     D:   7 A:  10 =      -0.002387 eV;      -19.2541 cm-1
+     > XC term         D:   7 A:  10 =       0.000634 eV;        5.1125 cm-1
+     > Overlap term    D:   7 A:  10 =      -0.000068 eV;       -0.5454 cm-1
+     > TOTAL COUPLING  D:   7 A:  10 =      -0.006342 eV;      -51.1540 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  1)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         2.7431 eV
+     > Coulomb term    D:   8 A:   1 =      -0.009968 eV;      -80.3939 cm-1
+     > HF exchange     D:   8 A:   1 =       0.001401 eV;       11.2975 cm-1
+     > XC term         D:   8 A:   1 =       0.001551 eV;       12.5073 cm-1
+     > Overlap term    D:   8 A:   1 =       0.000011 eV;        0.0920 cm-1
+     > TOTAL COUPLING  D:   8 A:   1 =      -0.007005 eV;      -56.4972 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  2)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         1.7478 eV
+     > Coulomb term    D:   8 A:   2 =      -0.000790 eV;       -6.3726 cm-1
+     > HF exchange     D:   8 A:   2 =       0.000002 eV;        0.0169 cm-1
+     > XC term         D:   8 A:   2 =      -0.000013 eV;       -0.1024 cm-1
+     > Overlap term    D:   8 A:   2 =       0.000002 eV;        0.0186 cm-1
+     > TOTAL COUPLING  D:   8 A:   2 =      -0.000798 eV;       -6.4396 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  3)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         1.1571 eV
+     > Coulomb term    D:   8 A:   3 =      -0.000095 eV;       -0.7666 cm-1
+     > HF exchange     D:   8 A:   3 =       0.000117 eV;        0.9403 cm-1
+     > XC term         D:   8 A:   3 =       0.000117 eV;        0.9405 cm-1
+     > Overlap term    D:   8 A:   3 =       0.000000 eV;        0.0006 cm-1
+     > TOTAL COUPLING  D:   8 A:   3 =       0.000138 eV;        1.1148 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  4)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference         0.7274 eV
+     > Coulomb term    D:   8 A:   4 =      -0.000771 eV;       -6.2185 cm-1
+     > HF exchange     D:   8 A:   4 =      -0.000020 eV;       -0.1633 cm-1
+     > XC term         D:   8 A:   4 =      -0.000140 eV;       -1.1259 cm-1
+     > Overlap term    D:   8 A:   4 =      -0.000005 eV;       -0.0444 cm-1
+     > TOTAL COUPLING  D:   8 A:   4 =      -0.000936 eV;       -7.5520 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  5)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference         0.6788 eV
+     > Coulomb term    D:   8 A:   5 =       0.000550 eV;        4.4390 cm-1
+     > HF exchange     D:   8 A:   5 =      -0.000172 eV;       -1.3887 cm-1
+     > XC term         D:   8 A:   5 =      -0.000196 eV;       -1.5836 cm-1
+     > Overlap term    D:   8 A:   5 =       0.000000 eV;        0.0005 cm-1
+     > TOTAL COUPLING  D:   8 A:   5 =       0.000182 eV;        1.4672 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  6)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference         0.4222 eV
+     > Coulomb term    D:   8 A:   6 =       0.000542 eV;        4.3706 cm-1
+     > HF exchange     D:   8 A:   6 =      -0.000257 eV;       -2.0726 cm-1
+     > XC term         D:   8 A:   6 =      -0.000369 eV;       -2.9780 cm-1
+     > Overlap term    D:   8 A:   6 =      -0.000002 eV;       -0.0152 cm-1
+     > TOTAL COUPLING  D:   8 A:   6 =      -0.000086 eV;       -0.6951 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  7)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference         0.3548 eV
+     > Coulomb term    D:   8 A:   7 =       0.012898 eV;      104.0256 cm-1
+     > HF exchange     D:   8 A:   7 =       0.001237 eV;        9.9770 cm-1
+     > XC term         D:   8 A:   7 =      -0.004049 eV;      -32.6563 cm-1
+     > Overlap term    D:   8 A:   7 =      -0.000066 eV;       -0.5331 cm-1
+     > TOTAL COUPLING  D:   8 A:   7 =       0.010020 eV;       80.8132 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  8)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference         0.0257 eV
+     > Coulomb term    D:   8 A:   8 =       0.000186 eV;        1.4975 cm-1
+     > HF exchange     D:   8 A:   8 =      -0.000278 eV;       -2.2418 cm-1
+     > XC term         D:   8 A:   8 =      -0.000100 eV;       -0.8026 cm-1
+     > Overlap term    D:   8 A:   8 =       0.000000 eV;       -0.0011 cm-1
+     > TOTAL COUPLING  D:   8 A:   8 =      -0.000192 eV;       -1.5480 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> (  9)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference        -0.0594 eV
+     > Coulomb term    D:   8 A:   9 =       0.000188 eV;        1.5182 cm-1
+     > HF exchange     D:   8 A:   9 =      -0.000971 eV;       -7.8349 cm-1
+     > XC term         D:   8 A:   9 =      -0.000482 eV;       -3.8838 cm-1
+     > Overlap term    D:   8 A:   9 =      -0.000006 eV;       -0.0468 cm-1
+     > TOTAL COUPLING  D:   8 A:   9 =      -0.001271 eV;      -10.2474 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  8) -> ( 10)
+   Donor state      8; Transition energy         7.5578 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference        -0.0723 eV
+     > Coulomb term    D:   8 A:  10 =      -0.000361 eV;       -2.9107 cm-1
+     > HF exchange     D:   8 A:  10 =      -0.004617 eV;      -37.2414 cm-1
+     > XC term         D:   8 A:  10 =      -0.001370 eV;      -11.0525 cm-1
+     > Overlap term    D:   8 A:  10 =      -0.000045 eV;       -0.3649 cm-1
+     > TOTAL COUPLING  D:   8 A:  10 =      -0.006394 eV;      -51.5694 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  1)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         2.9866 eV
+     > Coulomb term    D:   9 A:   1 =      -0.010453 eV;      -84.3061 cm-1
+     > HF exchange     D:   9 A:   1 =       0.000974 eV;        7.8557 cm-1
+     > XC term         D:   9 A:   1 =       0.001224 eV;        9.8735 cm-1
+     > Overlap term    D:   9 A:   1 =       0.000012 eV;        0.0947 cm-1
+     > TOTAL COUPLING  D:   9 A:   1 =      -0.008243 eV;      -66.4821 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  2)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         1.9912 eV
+     > Coulomb term    D:   9 A:   2 =       0.000669 eV;        5.3990 cm-1
+     > HF exchange     D:   9 A:   2 =       0.000353 eV;        2.8504 cm-1
+     > XC term         D:   9 A:   2 =      -0.000702 eV;       -5.6625 cm-1
+     > Overlap term    D:   9 A:   2 =      -0.000017 eV;       -0.1359 cm-1
+     > TOTAL COUPLING  D:   9 A:   2 =       0.000304 eV;        2.4510 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  3)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         1.4005 eV
+     > Coulomb term    D:   9 A:   3 =      -0.000697 eV;       -5.6183 cm-1
+     > HF exchange     D:   9 A:   3 =      -0.000196 eV;       -1.5848 cm-1
+     > XC term         D:   9 A:   3 =       0.000144 eV;        1.1598 cm-1
+     > Overlap term    D:   9 A:   3 =      -0.000006 eV;       -0.0509 cm-1
+     > TOTAL COUPLING  D:   9 A:   3 =      -0.000756 eV;       -6.0942 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  4)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference         0.9708 eV
+     > Coulomb term    D:   9 A:   4 =       0.005201 eV;       41.9502 cm-1
+     > HF exchange     D:   9 A:   4 =      -0.000495 eV;       -3.9959 cm-1
+     > XC term         D:   9 A:   4 =       0.000378 eV;        3.0524 cm-1
+     > Overlap term    D:   9 A:   4 =       0.000029 eV;        0.2318 cm-1
+     > TOTAL COUPLING  D:   9 A:   4 =       0.005113 eV;       41.2386 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  5)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference         0.9222 eV
+     > Coulomb term    D:   9 A:   5 =       0.000809 eV;        6.5243 cm-1
+     > HF exchange     D:   9 A:   5 =      -0.000084 eV;       -0.6759 cm-1
+     > XC term         D:   9 A:   5 =      -0.000254 eV;       -2.0476 cm-1
+     > Overlap term    D:   9 A:   5 =      -0.000003 eV;       -0.0215 cm-1
+     > TOTAL COUPLING  D:   9 A:   5 =       0.000469 eV;        3.7793 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  6)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference         0.6657 eV
+     > Coulomb term    D:   9 A:   6 =       0.001434 eV;       11.5653 cm-1
+     > HF exchange     D:   9 A:   6 =       0.000473 eV;        3.8184 cm-1
+     > XC term         D:   9 A:   6 =      -0.000403 eV;       -3.2505 cm-1
+     > Overlap term    D:   9 A:   6 =       0.000012 eV;        0.0990 cm-1
+     > TOTAL COUPLING  D:   9 A:   6 =       0.001517 eV;       12.2323 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  7)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference         0.5983 eV
+     > Coulomb term    D:   9 A:   7 =       0.018579 eV;      149.8504 cm-1
+     > HF exchange     D:   9 A:   7 =       0.000512 eV;        4.1314 cm-1
+     > XC term         D:   9 A:   7 =      -0.003734 eV;      -30.1199 cm-1
+     > Overlap term    D:   9 A:   7 =      -0.000045 eV;       -0.3595 cm-1
+     > TOTAL COUPLING  D:   9 A:   7 =       0.015312 eV;      123.5023 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  8)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference         0.2691 eV
+     > Coulomb term    D:   9 A:   8 =       0.001119 eV;        9.0258 cm-1
+     > HF exchange     D:   9 A:   8 =       0.000079 eV;        0.6347 cm-1
+     > XC term         D:   9 A:   8 =      -0.000340 eV;       -2.7441 cm-1
+     > Overlap term    D:   9 A:   8 =       0.000008 eV;        0.0681 cm-1
+     > TOTAL COUPLING  D:   9 A:   8 =       0.000866 eV;        6.9845 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> (  9)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference         0.1840 eV
+     > Coulomb term    D:   9 A:   9 =      -0.000389 eV;       -3.1345 cm-1
+     > HF exchange     D:   9 A:   9 =      -0.000596 eV;       -4.8048 cm-1
+     > XC term         D:   9 A:   9 =      -0.000598 eV;       -4.8253 cm-1
+     > Overlap term    D:   9 A:   9 =      -0.000016 eV;       -0.1276 cm-1
+     > TOTAL COUPLING  D:   9 A:   9 =      -0.001598 eV;      -12.8922 cm-1
+ --------------------------------------------------------------------------------
+   EET :: (  9) -> ( 10)
+   Donor state      9; Transition energy         7.8013 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference         0.1712 eV
+     > Coulomb term    D:   9 A:  10 =       0.000172 eV;        1.3845 cm-1
+     > HF exchange     D:   9 A:  10 =      -0.002666 eV;      -21.4990 cm-1
+     > XC term         D:   9 A:  10 =      -0.001004 eV;       -8.0967 cm-1
+     > Overlap term    D:   9 A:  10 =      -0.000032 eV;       -0.2598 cm-1
+     > TOTAL COUPLING  D:   9 A:  10 =      -0.003530 eV;      -28.4711 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  1)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   1; Transition energy         4.8147 eV
+                       Energy difference         3.1891 eV
+     > Coulomb term    D:  10 A:   1 =       0.000994 eV;        8.0132 cm-1
+     > HF exchange     D:  10 A:   1 =      -0.000715 eV;       -5.7659 cm-1
+     > XC term         D:  10 A:   1 =      -0.000095 eV;       -0.7676 cm-1
+     > Overlap term    D:  10 A:   1 =       0.000030 eV;        0.2460 cm-1
+     > TOTAL COUPLING  D:  10 A:   1 =       0.000214 eV;        1.7256 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  2)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   2; Transition energy         5.8101 eV
+                       Energy difference         2.1937 eV
+     > Coulomb term    D:  10 A:   2 =      -0.003083 eV;      -24.8638 cm-1
+     > HF exchange     D:  10 A:   2 =      -0.000233 eV;       -1.8807 cm-1
+     > XC term         D:  10 A:   2 =      -0.000674 eV;       -5.4340 cm-1
+     > Overlap term    D:  10 A:   2 =       0.000015 eV;        0.1242 cm-1
+     > TOTAL COUPLING  D:  10 A:   2 =      -0.003974 eV;      -32.0543 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  3)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   3; Transition energy         6.4007 eV
+                       Energy difference         1.6030 eV
+     > Coulomb term    D:  10 A:   3 =      -0.000515 eV;       -4.1540 cm-1
+     > HF exchange     D:  10 A:   3 =      -0.000340 eV;       -2.7449 cm-1
+     > XC term         D:  10 A:   3 =      -0.000094 eV;       -0.7548 cm-1
+     > Overlap term    D:  10 A:   3 =      -0.000006 eV;       -0.0488 cm-1
+     > TOTAL COUPLING  D:  10 A:   3 =      -0.000955 eV;       -7.7025 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  4)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   4; Transition energy         6.8304 eV
+                       Energy difference         1.1733 eV
+     > Coulomb term    D:  10 A:   4 =       0.003461 eV;       27.9134 cm-1
+     > HF exchange     D:  10 A:   4 =       0.000004 eV;        0.0336 cm-1
+     > XC term         D:  10 A:   4 =       0.000214 eV;        1.7246 cm-1
+     > Overlap term    D:  10 A:   4 =      -0.000002 eV;       -0.0191 cm-1
+     > TOTAL COUPLING  D:  10 A:   4 =       0.003676 eV;       29.6525 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  5)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   5; Transition energy         6.8790 eV
+                       Energy difference         1.1248 eV
+     > Coulomb term    D:  10 A:   5 =      -0.000088 eV;       -0.7086 cm-1
+     > HF exchange     D:  10 A:   5 =      -0.000092 eV;       -0.7392 cm-1
+     > XC term         D:  10 A:   5 =      -0.000189 eV;       -1.5234 cm-1
+     > Overlap term    D:  10 A:   5 =       0.000003 eV;        0.0209 cm-1
+     > TOTAL COUPLING  D:  10 A:   5 =      -0.000366 eV;       -2.9503 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  6)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   6; Transition energy         7.1356 eV
+                       Energy difference         0.8682 eV
+     > Coulomb term    D:  10 A:   6 =       0.000682 eV;        5.5024 cm-1
+     > HF exchange     D:  10 A:   6 =       0.000833 eV;        6.7188 cm-1
+     > XC term         D:  10 A:   6 =       0.000286 eV;        2.3106 cm-1
+     > Overlap term    D:  10 A:   6 =       0.000009 eV;        0.0715 cm-1
+     > TOTAL COUPLING  D:  10 A:   6 =       0.001811 eV;       14.6034 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  7)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   7; Transition energy         7.2030 eV
+                       Energy difference         0.8008 eV
+     > Coulomb term    D:  10 A:   7 =      -0.005164 eV;      -41.6494 cm-1
+     > HF exchange     D:  10 A:   7 =      -0.000446 eV;       -3.5963 cm-1
+     > XC term         D:  10 A:   7 =       0.002259 eV;       18.2220 cm-1
+     > Overlap term    D:  10 A:   7 =      -0.000148 eV;       -1.1918 cm-1
+     > TOTAL COUPLING  D:  10 A:   7 =      -0.003498 eV;      -28.2155 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  8)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   8; Transition energy         7.5321 eV
+                       Energy difference         0.4716 eV
+     > Coulomb term    D:  10 A:   8 =       0.000288 eV;        2.3258 cm-1
+     > HF exchange     D:  10 A:   8 =       0.001056 eV;        8.5144 cm-1
+     > XC term         D:  10 A:   8 =       0.000418 eV;        3.3678 cm-1
+     > Overlap term    D:  10 A:   8 =       0.000005 eV;        0.0401 cm-1
+     > TOTAL COUPLING  D:  10 A:   8 =       0.001767 eV;       14.2481 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> (  9)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state   9; Transition energy         7.6172 eV
+                       Energy difference         0.3865 eV
+     > Coulomb term    D:  10 A:   9 =      -0.001652 eV;      -13.3222 cm-1
+     > HF exchange     D:  10 A:   9 =       0.000477 eV;        3.8475 cm-1
+     > XC term         D:  10 A:   9 =       0.000119 eV;        0.9584 cm-1
+     > Overlap term    D:  10 A:   9 =      -0.000012 eV;       -0.0977 cm-1
+     > TOTAL COUPLING  D:  10 A:   9 =      -0.001068 eV;       -8.6140 cm-1
+ --------------------------------------------------------------------------------
+   EET :: ( 10) -> ( 10)
+   Donor state     10; Transition energy         8.0038 eV
+   Acceptor state  10; Transition energy         7.6301 eV
+                       Energy difference         0.3737 eV
+     > Coulomb term    D:  10 A:  10 =       0.001096 eV;        8.8434 cm-1
+     > HF exchange     D:  10 A:  10 =       0.001245 eV;       10.0420 cm-1
+     > XC term         D:  10 A:  10 =       0.000293 eV;        2.3594 cm-1
+     > Overlap term    D:  10 A:  10 =      -0.000027 eV;       -0.2181 cm-1
+     > TOTAL COUPLING  D:  10 A:  10 =       0.002607 eV;       21.0266 cm-1
+ --------------------------------------------------------------------------------
+ Leave Link  914 at Wed Jul 29 18:51:52 2015, MaxMem= 3221225472 cpu:   55951.9
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l601.exe)
+ Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Alpha  occ. eigenvalues --  -18.94680 -18.94636 -14.20531 -10.12605 -10.12602
+ Alpha  occ. eigenvalues --  -10.12282 -10.12273 -10.12240 -10.12035 -10.11869
+ Alpha  occ. eigenvalues --  -10.11828 -10.11774 -10.11738 -10.11623 -10.10527
+ Alpha  occ. eigenvalues --  -10.10524 -10.10003  -1.06740  -1.06583  -0.95345
+ Alpha  occ. eigenvalues --   -0.92750  -0.90214  -0.86460  -0.81990  -0.80960
+ Alpha  occ. eigenvalues --   -0.79755  -0.76148  -0.75633  -0.73416  -0.72374
+ Alpha  occ. eigenvalues --   -0.67263  -0.66140  -0.63436  -0.63117  -0.59402
+ Alpha  occ. eigenvalues --   -0.58340  -0.57760  -0.57509  -0.55910  -0.54250
+ Alpha  occ. eigenvalues --   -0.51999  -0.51714  -0.51638  -0.50437  -0.49998
+ Alpha  occ. eigenvalues --   -0.49296  -0.48678  -0.47706  -0.47014  -0.45909
+ Alpha  occ. eigenvalues --   -0.44739  -0.42768  -0.41231  -0.41091  -0.40542
+ Alpha  occ. eigenvalues --   -0.39097  -0.37186  -0.36603  -0.35940  -0.33124
+ Alpha  occ. eigenvalues --   -0.30318  -0.28629
+ Alpha virt. eigenvalues --   -0.17686  -0.14579  -0.14317  -0.11486  -0.07867
+ Alpha virt. eigenvalues --   -0.03685  -0.02703  -0.02387  -0.02148  -0.01258
+ Alpha virt. eigenvalues --   -0.01168  -0.00853   0.00952   0.01026   0.01765
+ Alpha virt. eigenvalues --    0.02594   0.03090   0.03120   0.03531   0.03852
+ Alpha virt. eigenvalues --    0.04236   0.04708   0.06142   0.06891   0.07612
+ Alpha virt. eigenvalues --    0.07890   0.08945   0.10014   0.10917   0.11712
+ Alpha virt. eigenvalues --    0.12854   0.15023   0.15429   0.15911   0.16518
+ Alpha virt. eigenvalues --    0.16738   0.17823   0.18120   0.18463   0.18964
+ Alpha virt. eigenvalues --    0.19456   0.19611   0.20551   0.21267   0.21606
+ Alpha virt. eigenvalues --    0.22044   0.22410   0.22736   0.23433   0.24240
+ Alpha virt. eigenvalues --    0.24823   0.24932   0.25006   0.25927   0.27020
+ Alpha virt. eigenvalues --    0.28193   0.28510   0.29209   0.29681   0.30239
+ Alpha virt. eigenvalues --    0.30664   0.31090   0.31849   0.32194   0.33144
+ Alpha virt. eigenvalues --    0.33581   0.33934   0.34154   0.34163   0.34678
+ Alpha virt. eigenvalues --    0.35117   0.35450   0.36246   0.36473   0.37233
+ Alpha virt. eigenvalues --    0.37487   0.38063   0.38166   0.38532   0.38810
+ Alpha virt. eigenvalues --    0.40010   0.40689   0.41043   0.41501   0.41774
+ Alpha virt. eigenvalues --    0.42522   0.43044   0.43539   0.44244   0.45308
+ Alpha virt. eigenvalues --    0.45679   0.46272   0.47289   0.47764   0.48377
+ Alpha virt. eigenvalues --    0.49848   0.50103   0.51931   0.52782   0.53196
+ Alpha virt. eigenvalues --    0.53598   0.54740   0.55740   0.56213   0.56959
+ Alpha virt. eigenvalues --    0.57481   0.57775   0.58049   0.58654   0.59806
+ Alpha virt. eigenvalues --    0.60179   0.60969   0.61622   0.62537   0.62649
+ Alpha virt. eigenvalues --    0.63807   0.64437   0.65354   0.66191   0.66746
+ Alpha virt. eigenvalues --    0.67629   0.68314   0.69218   0.69868   0.70393
+ Alpha virt. eigenvalues --    0.71581   0.73784   0.74074   0.74722   0.75392
+ Alpha virt. eigenvalues --    0.76041   0.77580   0.77932   0.78946   0.79542
+ Alpha virt. eigenvalues --    0.79813   0.80563   0.81464   0.82092   0.82847
+ Alpha virt. eigenvalues --    0.83529   0.83850   0.84666   0.85123   0.85895
+ Alpha virt. eigenvalues --    0.86814   0.87214   0.87546   0.87872   0.88238
+ Alpha virt. eigenvalues --    0.89390   0.90167   0.91040   0.91384   0.91726
+ Alpha virt. eigenvalues --    0.92676   0.93192   0.94662   0.95102   0.96106
+ Alpha virt. eigenvalues --    0.96617   0.97410   0.98066   0.98566   0.99285
+ Alpha virt. eigenvalues --    1.00638   1.00854   1.01617   1.01973   1.03478
+ Alpha virt. eigenvalues --    1.04115   1.05230   1.05526   1.07061   1.07568
+ Alpha virt. eigenvalues --    1.09153   1.09668   1.09950   1.10368   1.11229
+ Alpha virt. eigenvalues --    1.11369   1.11972   1.13428   1.14108   1.14331
+ Alpha virt. eigenvalues --    1.14709   1.15467   1.16620   1.17379   1.17600
+ Alpha virt. eigenvalues --    1.18421   1.18761   1.19505   1.19980   1.20380
+ Alpha virt. eigenvalues --    1.20823   1.21284   1.22344   1.23537   1.24673
+ Alpha virt. eigenvalues --    1.25500   1.26159   1.26865   1.28625   1.29735
+ Alpha virt. eigenvalues --    1.30100   1.31050   1.31269   1.32058   1.33270
+ Alpha virt. eigenvalues --    1.33589   1.34323   1.35212   1.38251   1.38549
+ Alpha virt. eigenvalues --    1.38848   1.39660   1.40692   1.41257   1.43010
+ Alpha virt. eigenvalues --    1.44415   1.45098   1.47348   1.48624   1.50401
+ Alpha virt. eigenvalues --    1.52106   1.53005   1.54297   1.55498   1.56915
+ Alpha virt. eigenvalues --    1.57101   1.59220   1.59884   1.61255   1.63523
+ Alpha virt. eigenvalues --    1.64653   1.66802   1.69180   1.71401   1.73721
+ Alpha virt. eigenvalues --    1.74844   1.76869   1.77451   1.78354   1.79447
+ Alpha virt. eigenvalues --    1.80194   1.81115   1.81563   1.83190   1.84367
+ Alpha virt. eigenvalues --    1.85764   1.87299   1.88265   1.91621   1.92419
+ Alpha virt. eigenvalues --    1.93411   1.94555   1.94834   1.96063   1.96650
+ Alpha virt. eigenvalues --    1.97156   1.97859   2.00208   2.01061   2.02065
+ Alpha virt. eigenvalues --    2.02349   2.03352   2.04349   2.05638   2.08078
+ Alpha virt. eigenvalues --    2.09245   2.10255   2.11318   2.12368   2.13547
+ Alpha virt. eigenvalues --    2.13800   2.16117   2.16657   2.17992   2.18896
+ Alpha virt. eigenvalues --    2.19477   2.19906   2.21299   2.22487   2.23431
+ Alpha virt. eigenvalues --    2.24504   2.25803   2.26895   2.28960   2.29482
+ Alpha virt. eigenvalues --    2.30725   2.31546   2.32359   2.33188   2.33643
+ Alpha virt. eigenvalues --    2.34599   2.35607   2.36564   2.37490   2.39132
+ Alpha virt. eigenvalues --    2.40357   2.41819   2.42619   2.43130   2.43381
+ Alpha virt. eigenvalues --    2.44307   2.45274   2.46958   2.47568   2.48485
+ Alpha virt. eigenvalues --    2.50153   2.50210   2.50900   2.52176   2.52255
+ Alpha virt. eigenvalues --    2.52907   2.53056   2.54220   2.54621   2.55827
+ Alpha virt. eigenvalues --    2.56764   2.56790   2.57567   2.58139   2.59806
+ Alpha virt. eigenvalues --    2.60324   2.60464   2.63216   2.63334   2.64583
+ Alpha virt. eigenvalues --    2.64981   2.66296   2.67438   2.68803   2.69526
+ Alpha virt. eigenvalues --    2.69700   2.71242   2.71503   2.72438   2.72867
+ Alpha virt. eigenvalues --    2.73445   2.74041   2.74800   2.75187   2.75617
+ Alpha virt. eigenvalues --    2.76246   2.76971   2.77239   2.78215   2.78301
+ Alpha virt. eigenvalues --    2.78966   2.79434   2.79988   2.80794   2.81840
+ Alpha virt. eigenvalues --    2.82190   2.82293   2.82723   2.83157   2.83640
+ Alpha virt. eigenvalues --    2.84305   2.84890   2.85486   2.85915   2.85999
+ Alpha virt. eigenvalues --    2.86953   2.87388   2.88146   2.88469   2.89509
+ Alpha virt. eigenvalues --    2.90720   2.91360   2.92315   2.93207   2.93919
+ Alpha virt. eigenvalues --    2.94151   2.94741   2.95142   2.96742   2.97217
+ Alpha virt. eigenvalues --    2.98004   2.98313   2.98842   2.99791   3.00267
+ Alpha virt. eigenvalues --    3.00527   3.01811   3.02366   3.02905   3.04731
+ Alpha virt. eigenvalues --    3.06706   3.08055   3.09687   3.10210   3.10916
+ Alpha virt. eigenvalues --    3.11773   3.12305   3.12678   3.13678   3.14167
+ Alpha virt. eigenvalues --    3.15371   3.15647   3.16074   3.16606   3.17128
+ Alpha virt. eigenvalues --    3.17807   3.18158   3.18831   3.19916   3.20014
+ Alpha virt. eigenvalues --    3.20725   3.20979   3.21716   3.22069   3.22428
+ Alpha virt. eigenvalues --    3.22978   3.23518   3.23824   3.24319   3.24932
+ Alpha virt. eigenvalues --    3.26064   3.26769   3.27686   3.28119   3.29598
+ Alpha virt. eigenvalues --    3.30241   3.30810   3.32653   3.33239   3.33724
+ Alpha virt. eigenvalues --    3.34504   3.35191   3.36342   3.37011   3.37395
+ Alpha virt. eigenvalues --    3.38689   3.40093   3.40378   3.41362   3.41884
+ Alpha virt. eigenvalues --    3.42908   3.43723   3.45070   3.45217   3.46633
+ Alpha virt. eigenvalues --    3.47657   3.48221   3.50826   3.52869   3.53283
+ Alpha virt. eigenvalues --    3.53747   3.54973   3.55313   3.56221   3.57689
+ Alpha virt. eigenvalues --    3.57880   3.58969   3.59259   3.59527   3.60567
+ Alpha virt. eigenvalues --    3.62118   3.62377   3.62904   3.63759   3.64061
+ Alpha virt. eigenvalues --    3.65293   3.65725   3.66603   3.67656   3.67797
+ Alpha virt. eigenvalues --    3.68917   3.69536   3.70458   3.71155   3.73133
+ Alpha virt. eigenvalues --    3.73559   3.74786   3.76521   3.77214   3.77637
+ Alpha virt. eigenvalues --    3.79533   3.80433   3.81153   3.81837   3.81978
+ Alpha virt. eigenvalues --    3.82813   3.83657   3.84686   3.85821   3.86236
+ Alpha virt. eigenvalues --    3.87055   3.87095   3.88466   3.89092   3.89699
+ Alpha virt. eigenvalues --    3.90705   3.90933   3.91559   3.92498   3.93271
+ Alpha virt. eigenvalues --    3.93477   3.94827   3.95478   3.96806   3.97187
+ Alpha virt. eigenvalues --    3.97949   3.98492   3.99150   3.99583   4.00922
+ Alpha virt. eigenvalues --    4.02585   4.03061   4.03569   4.04131   4.04870
+ Alpha virt. eigenvalues --    4.05249   4.05912   4.07624   4.08231   4.08906
+ Alpha virt. eigenvalues --    4.09729   4.10384   4.11232   4.11700   4.12390
+ Alpha virt. eigenvalues --    4.13911   4.14499   4.14705   4.16742   4.17407
+ Alpha virt. eigenvalues --    4.17648   4.19506   4.20800   4.23526   4.24829
+ Alpha virt. eigenvalues --    4.25661   4.26816   4.28019   4.29609   4.31552
+ Alpha virt. eigenvalues --    4.32824   4.33363   4.35127   4.36682   4.39205
+ Alpha virt. eigenvalues --    4.41768   4.43168   4.44305   4.45585   4.47095
+ Alpha virt. eigenvalues --    4.48716   4.49146   4.49862   4.51730   4.52344
+ Alpha virt. eigenvalues --    4.53133   4.53940   4.55810   4.57260   4.58591
+ Alpha virt. eigenvalues --    4.59205   4.61604   4.63260   4.64739   4.66337
+ Alpha virt. eigenvalues --    4.67023   4.67687   4.70334   4.70594   4.71772
+ Alpha virt. eigenvalues --    4.72301   4.73582   4.76341   4.76875   4.78301
+ Alpha virt. eigenvalues --    4.78648   4.79647   4.81211   4.82399   4.83824
+ Alpha virt. eigenvalues --    4.85100   4.87265   4.87977   4.88487   4.90817
+ Alpha virt. eigenvalues --    4.91750   4.92280   4.93328   4.94626   4.95532
+ Alpha virt. eigenvalues --    4.96701   5.00094   5.00842   5.01543   5.01824
+ Alpha virt. eigenvalues --    5.04269   5.10092   5.10885   5.12097   5.12299
+ Alpha virt. eigenvalues --    5.12714   5.15181   5.18116   5.21253   5.22627
+ Alpha virt. eigenvalues --    5.23567   5.24476   5.25615   5.27647   5.30130
+ Alpha virt. eigenvalues --    5.32455   5.33720   5.35488   5.39201   5.42722
+ Alpha virt. eigenvalues --    5.45708   5.46470   5.48021   5.52071   5.54582
+ Alpha virt. eigenvalues --    5.55194   5.56330   5.58141   5.58811   5.62369
+ Alpha virt. eigenvalues --    5.65594   5.66651   5.67073   5.67940   5.71552
+ Alpha virt. eigenvalues --    5.72299   5.73777   5.77824   5.82410   5.84278
+ Alpha virt. eigenvalues --    5.85675   5.89226   5.94387   5.97184   5.98340
+ Alpha virt. eigenvalues --    6.02019   6.03072   6.09271   6.14057   6.17700
+ Alpha virt. eigenvalues --    6.24402   6.28319   6.39801   6.40638   6.44189
+ Alpha virt. eigenvalues --    6.44889   6.46904   6.52924   6.57362   6.59277
+ Alpha virt. eigenvalues --    6.65171   6.65563   6.68519   6.68990   6.70360
+ Alpha virt. eigenvalues --    6.89848   7.01499   7.03392   7.05372   7.16176
+ Alpha virt. eigenvalues --    7.16403   7.30016   7.47088   7.78325   8.60021
+ Alpha virt. eigenvalues --   10.16063  10.88655  11.20223  12.02546  12.19043
+ Alpha virt. eigenvalues --   12.39700  12.60903  12.63872  12.98489  13.05469
+ Alpha virt. eigenvalues --   13.09408  13.26811  14.50843  14.89996  14.97066
+ Alpha virt. eigenvalues --   17.05281
+          Condensed to atoms (all electrons):
+              1          2          3          4          5          6
+     1  C    2.645677  -0.014500   0.203063   0.231833  -0.015533  -0.012395
+     2  C   -0.014500   2.494630  -0.010326  -0.013543   0.229082   0.240592
+     3  C    0.203063  -0.010326   2.328593  -0.015473  -0.014041   0.221847
+     4  C    0.231833  -0.013543  -0.015473   2.562122   0.230317  -0.013979
+     5  C   -0.015533   0.229082  -0.014041   0.230317   2.553068  -0.014300
+     6  C   -0.012395   0.240592   0.221847  -0.013979  -0.014300   2.552829
+     7  H    0.002818  -0.016934  -0.000518  -0.015373   0.207147   0.002441
+     8  H    0.001642  -0.014629  -0.013978   0.000119   0.001693   0.201544
+     9  H   -0.000103   0.204965   0.002209   0.002186  -0.016246  -0.015535
+    10  N   -0.024437   0.000777   0.197963   0.000214   0.000559  -0.024703
+    11  H    0.000494   0.000186  -0.010956  -0.000123   0.000000  -0.000754
+    12  H   -0.001823  -0.000081  -0.010853   0.000109   0.000006   0.000872
+    13  H    0.184619  -0.000511  -0.022081  -0.016571   0.002524   0.002904
+    14  H   -0.021901   0.003122   0.003845   0.197517  -0.022150  -0.000575
+    15  C   -0.050645   0.000036   0.001901   0.006515  -0.000852  -0.000303
+    16  C    0.000107  -0.000001  -0.000009  -0.000149   0.000022   0.000000
+    17  C    0.002855  -0.000001  -0.000153  -0.001645   0.000022   0.000001
+    18  C    0.004766  -0.000247  -0.001377  -0.048168   0.004133  -0.000048
+    19  C   -0.001826   0.000007   0.000082   0.002814  -0.000143   0.000001
+    20  C   -0.000228   0.000000   0.000014   0.000054  -0.000006  -0.000002
+    21  H    0.000014   0.000000  -0.000001   0.000000   0.000000   0.000000
+    22  H    0.000001   0.000000   0.000000   0.000012   0.000000   0.000000
+    23  O    0.000063   0.000002  -0.000001   0.000769   0.000033   0.000000
+    24  O    0.000786   0.000000   0.000041   0.000031   0.000000   0.000006
+    25  C   -0.000027   0.000000   0.000003  -0.000002   0.000000   0.000000
+    26  H   -0.000003   0.000000   0.000000   0.000001   0.000000   0.000000
+    27  H    0.000011   0.000000  -0.000003  -0.000001   0.000000   0.000000
+    28  H   -0.000002   0.000000   0.000001   0.000000   0.000000   0.000000
+    29  C   -0.000002   0.000000   0.000000  -0.000028   0.000001   0.000000
+    30  H    0.000001   0.000000   0.000000  -0.000003   0.000000   0.000000
+    31  H    0.000000   0.000000   0.000000  -0.000001   0.000000   0.000000
+    32  H   -0.000001   0.000000   0.000000   0.000010   0.000000   0.000000
+    33  H   -0.025716   0.000105   0.003320   0.002854  -0.000452  -0.000552
+    34  H    0.004682  -0.000377  -0.000808  -0.029373   0.002490   0.000090
+              7          8          9         10         11         12
+     1  C    0.002818   0.001642  -0.000103  -0.024437   0.000494  -0.001823
+     2  C   -0.016934  -0.014629   0.204965   0.000777   0.000186  -0.000081
+     3  C   -0.000518  -0.013978   0.002209   0.197963  -0.010956  -0.010853
+     4  C   -0.015373   0.000119   0.002186   0.000214  -0.000123   0.000109
+     5  C    0.207147   0.001693  -0.016246   0.000559   0.000000   0.000006
+     6  C    0.002441   0.201544  -0.015535  -0.024703  -0.000754   0.000872
+     7  H    0.227838  -0.000059  -0.002100   0.000008  -0.000001   0.000000
+     8  H   -0.000059   0.229337  -0.002528  -0.001583   0.001190  -0.000056
+     9  H   -0.002100  -0.002528   0.228389  -0.000066  -0.000014   0.000005
+    10  N    0.000008  -0.001583  -0.000066   3.229112   0.185742   0.185601
+    11  H   -0.000001   0.001190  -0.000014   0.185742   0.216243  -0.013729
+    12  H    0.000000  -0.000056   0.000005   0.185601  -0.013729   0.213702
+    13  H    0.000008  -0.000138   0.000041   0.001834  -0.000413  -0.000019
+    14  H   -0.003504   0.000047  -0.000125  -0.000157   0.000011  -0.000025
+    15  C    0.000009   0.000010  -0.000001   0.000251  -0.000004  -0.000475
+    16  C    0.000005   0.000000   0.000000   0.000000   0.000000  -0.000004
+    17  C    0.000003  -0.000001   0.000000   0.000068   0.000004  -0.000023
+    18  C    0.000246  -0.000001   0.000011   0.000026   0.000000  -0.000002
+    19  C   -0.000022   0.000000   0.000000   0.000000   0.000000   0.000003
+    20  C   -0.000001   0.000000   0.000000   0.000004   0.000000   0.000019
+    21  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000001
+    22  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+    23  O    0.000082   0.000000   0.000000   0.000000   0.000000   0.000000
+    24  O    0.000000   0.000000   0.000000  -0.000112  -0.000008   0.001167
+    25  C    0.000000   0.000000   0.000000   0.000004   0.000000  -0.000051
+    26  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000010
+    27  H    0.000000   0.000000   0.000000   0.000001   0.000000  -0.000010
+    28  H    0.000000   0.000000   0.000000   0.000002   0.000000  -0.000021
+    29  C   -0.000002   0.000000   0.000000   0.000000   0.000000   0.000000
+    30  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+    31  H   -0.000001   0.000000   0.000000   0.000000   0.000000   0.000000
+    32  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+    33  H   -0.000034   0.000027  -0.000008  -0.000608   0.000118   0.000665
+    34  H    0.000875  -0.000011   0.000023   0.000038  -0.000002   0.000000
+             13         14         15         16         17         18
+     1  C    0.184619  -0.021901  -0.050645   0.000107   0.002855   0.004766
+     2  C   -0.000511   0.003122   0.000036  -0.000001  -0.000001  -0.000247
+     3  C   -0.022081   0.003845   0.001901  -0.000009  -0.000153  -0.001377
+     4  C   -0.016571   0.197517   0.006515  -0.000149  -0.001645  -0.048168
+     5  C    0.002524  -0.022150  -0.000852   0.000022   0.000022   0.004133
+     6  C    0.002904  -0.000575  -0.000303   0.000000   0.000001  -0.000048
+     7  H    0.000008  -0.003504   0.000009   0.000005   0.000003   0.000246
+     8  H   -0.000138   0.000047   0.000010   0.000000  -0.000001  -0.000001
+     9  H    0.000041  -0.000125  -0.000001   0.000000   0.000000   0.000011
+    10  N    0.001834  -0.000157   0.000251   0.000000   0.000068   0.000026
+    11  H   -0.000413   0.000011  -0.000004   0.000000   0.000004   0.000000
+    12  H   -0.000019  -0.000025  -0.000475  -0.000004  -0.000023  -0.000002
+    13  H    0.293347  -0.010065  -0.022371   0.000879   0.007743   0.000281
+    14  H   -0.010065   0.292488   0.000214  -0.001954  -0.001985  -0.025256
+    15  C   -0.022371   0.000214   2.647957  -0.022284   0.202608   0.229091
+    16  C    0.000879  -0.001954  -0.022284   2.635747   0.003561   0.001869
+    17  C    0.007743  -0.001985   0.202608   0.003561   2.325327  -0.008264
+    18  C    0.000281  -0.025256   0.229091   0.001869  -0.008264   2.650009
+    19  C   -0.001924   0.009220  -0.007467   0.190954  -0.021555   0.198106
+    20  C   -0.002021   0.000847  -0.000802   0.179883   0.201907  -0.022320
+    21  H    0.000001  -0.000004   0.001532  -0.014985  -0.017470   0.000061
+    22  H   -0.000004  -0.000001   0.000013   0.205671   0.001855   0.001707
+    23  O    0.000059  -0.004633   0.000454  -0.026424   0.000064  -0.023649
+    24  O   -0.004836   0.000058  -0.023663   0.002389   0.182719   0.000503
+    25  C    0.000177  -0.000003   0.000327  -0.000638  -0.019158  -0.000021
+    26  H    0.000033  -0.000001  -0.000080  -0.000335  -0.001210  -0.000032
+    27  H   -0.000095   0.000002   0.000637  -0.000452  -0.002067  -0.000052
+    28  H    0.000027   0.000000  -0.000032   0.000046   0.001003   0.000012
+    29  C   -0.000003   0.000185  -0.000012  -0.001842   0.000056   0.000266
+    30  H   -0.000001   0.000033  -0.000030   0.001666  -0.000002  -0.000056
+    31  H    0.000000   0.000024   0.000013  -0.000049  -0.000003  -0.000047
+    32  H    0.000002  -0.000097  -0.000064   0.000770   0.000017   0.000717
+    33  H   -0.006924   0.009556   0.181392  -0.003476  -0.040753  -0.017363
+    34  H    0.009488  -0.004644  -0.017573   0.009061   0.007716   0.185096
+             19         20         21         22         23         24
+     1  C   -0.001826  -0.000228   0.000014   0.000001   0.000063   0.000786
+     2  C    0.000007   0.000000   0.000000   0.000000   0.000002   0.000000
+     3  C    0.000082   0.000014  -0.000001   0.000000  -0.000001   0.000041
+     4  C    0.002814   0.000054   0.000000   0.000012   0.000769   0.000031
+     5  C   -0.000143  -0.000006   0.000000   0.000000   0.000033   0.000000
+     6  C    0.000001  -0.000002   0.000000   0.000000   0.000000   0.000006
+     7  H   -0.000022  -0.000001   0.000000   0.000000   0.000082   0.000000
+     8  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+     9  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+    10  N    0.000000   0.000004   0.000000   0.000000   0.000000  -0.000112
+    11  H    0.000000   0.000000   0.000000   0.000000   0.000000  -0.000008
+    12  H    0.000003   0.000019   0.000001   0.000000   0.000000   0.001167
+    13  H   -0.001924  -0.002021   0.000001  -0.000004   0.000059  -0.004836
+    14  H    0.009220   0.000847  -0.000004  -0.000001  -0.004633   0.000058
+    15  C   -0.007467  -0.000802   0.001532   0.000013   0.000454  -0.023663
+    16  C    0.190954   0.179883  -0.014985   0.205671  -0.026424   0.002389
+    17  C   -0.021555   0.201907  -0.017470   0.001855   0.000064   0.182719
+    18  C    0.198106  -0.022320   0.000061   0.001707  -0.023649   0.000503
+    19  C    2.332009   0.006341   0.001701  -0.018606   0.187309   0.000116
+    20  C    0.006341   2.624535   0.204489  -0.015579   0.002584  -0.024864
+    21  H    0.001701   0.204489   0.229503  -0.002433  -0.000024  -0.002632
+    22  H   -0.018606  -0.015579  -0.002433   0.230490  -0.002853  -0.000028
+    23  O    0.187309   0.002584  -0.000024  -0.002853   3.905595   0.000000
+    24  O    0.000116  -0.024864  -0.002632  -0.000028   0.000000   3.909619
+    25  C    0.000055  -0.001317   0.002681  -0.000021   0.000000   0.149247
+    26  H   -0.000009   0.001005   0.000777  -0.000002   0.000000  -0.014312
+    27  H    0.000014   0.000997   0.001067  -0.000004   0.000000  -0.014119
+    28  H   -0.000003  -0.000012  -0.000220   0.000000   0.000000  -0.011963
+    29  C   -0.019090  -0.000628  -0.000022   0.002689   0.149347   0.000000
+    30  H   -0.002027  -0.000389  -0.000004   0.001087  -0.014628   0.000000
+    31  H    0.000928   0.000048   0.000000  -0.000236  -0.011857   0.000000
+    32  H   -0.001602  -0.000438  -0.000005   0.000974  -0.014136   0.000000
+    33  H    0.007775   0.008513  -0.000031   0.000022  -0.000174   0.013540
+    34  H   -0.044071  -0.003555   0.000024  -0.000006   0.014159  -0.000172
+             25         26         27         28         29         30
+     1  C   -0.000027  -0.000003   0.000011  -0.000002  -0.000002   0.000001
+     2  C    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+     3  C    0.000003   0.000000  -0.000003   0.000001   0.000000   0.000000
+     4  C   -0.000002   0.000001  -0.000001   0.000000  -0.000028  -0.000003
+     5  C    0.000000   0.000000   0.000000   0.000000   0.000001   0.000000
+     6  C    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+     7  H    0.000000   0.000000   0.000000   0.000000  -0.000002   0.000000
+     8  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+     9  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+    10  N    0.000004   0.000000   0.000001   0.000002   0.000000   0.000000
+    11  H    0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+    12  H   -0.000051   0.000010  -0.000010  -0.000021   0.000000   0.000000
+    13  H    0.000177   0.000033  -0.000095   0.000027  -0.000003  -0.000001
+    14  H   -0.000003  -0.000001   0.000002   0.000000   0.000185   0.000033
+    15  C    0.000327  -0.000080   0.000637  -0.000032  -0.000012  -0.000030
+    16  C   -0.000638  -0.000335  -0.000452   0.000046  -0.001842   0.001666
+    17  C   -0.019158  -0.001210  -0.002067   0.001003   0.000056  -0.000002
+    18  C   -0.000021  -0.000032  -0.000052   0.000012   0.000266  -0.000056
+    19  C    0.000055  -0.000009   0.000014  -0.000003  -0.019090  -0.002027
+    20  C   -0.001317   0.001005   0.000997  -0.000012  -0.000628  -0.000389
+    21  H    0.002681   0.000777   0.001067  -0.000220  -0.000022  -0.000004
+    22  H   -0.000021  -0.000002  -0.000004   0.000000   0.002689   0.001087
+    23  O    0.000000   0.000000   0.000000   0.000000   0.149347  -0.014628
+    24  O    0.149247  -0.014312  -0.014119  -0.011963   0.000000   0.000000
+    25  C    2.441724   0.192150   0.191191   0.192736   0.000000   0.000000
+    26  H    0.192150   0.271001  -0.018772  -0.009345   0.000000   0.000000
+    27  H    0.191191  -0.018772   0.272494  -0.009843   0.000000   0.000000
+    28  H    0.192736  -0.009345  -0.009843   0.246543   0.000000   0.000000
+    29  C    0.000000   0.000000   0.000000   0.000000   2.441490   0.191649
+    30  H    0.000000   0.000000   0.000000   0.000000   0.191649   0.272392
+    31  H    0.000000   0.000000   0.000000   0.000000   0.192971  -0.009392
+    32  H    0.000000   0.000000   0.000000   0.000000   0.191112  -0.018826
+    33  H   -0.000642  -0.000102   0.000316  -0.000108   0.000011   0.000002
+    34  H    0.000011   0.000002  -0.000006   0.000000  -0.000710  -0.000070
+             31         32         33         34
+     1  C    0.000000  -0.000001  -0.025716   0.004682
+     2  C    0.000000   0.000000   0.000105  -0.000377
+     3  C    0.000000   0.000000   0.003320  -0.000808
+     4  C   -0.000001   0.000010   0.002854  -0.029373
+     5  C    0.000000   0.000000  -0.000452   0.002490
+     6  C    0.000000   0.000000  -0.000552   0.000090
+     7  H   -0.000001   0.000000  -0.000034   0.000875
+     8  H    0.000000   0.000000   0.000027  -0.000011
+     9  H    0.000000   0.000000  -0.000008   0.000023
+    10  N    0.000000   0.000000  -0.000608   0.000038
+    11  H    0.000000   0.000000   0.000118  -0.000002
+    12  H    0.000000   0.000000   0.000665   0.000000
+    13  H    0.000000   0.000002  -0.006924   0.009488
+    14  H    0.000024  -0.000097   0.009556  -0.004644
+    15  C    0.000013  -0.000064   0.181392  -0.017573
+    16  C   -0.000049   0.000770  -0.003476   0.009061
+    17  C   -0.000003   0.000017  -0.040753   0.007716
+    18  C   -0.000047   0.000717  -0.017363   0.185096
+    19  C    0.000928  -0.001602   0.007775  -0.044071
+    20  C    0.000048  -0.000438   0.008513  -0.003555
+    21  H    0.000000  -0.000005  -0.000031   0.000024
+    22  H   -0.000236   0.000974   0.000022  -0.000006
+    23  O   -0.011857  -0.014136  -0.000174   0.014159
+    24  O    0.000000   0.000000   0.013540  -0.000172
+    25  C    0.000000   0.000000  -0.000642   0.000011
+    26  H    0.000000   0.000000  -0.000102   0.000002
+    27  H    0.000000   0.000000   0.000316  -0.000006
+    28  H    0.000000   0.000000  -0.000108   0.000000
+    29  C    0.192971   0.191112   0.000011  -0.000710
+    30  H   -0.009392  -0.018826   0.000002  -0.000070
+    31  H    0.246197  -0.009760   0.000000  -0.000111
+    32  H   -0.009760   0.272214  -0.000006   0.000314
+    33  H    0.000000  -0.000006   0.311935  -0.015949
+    34  H   -0.000111   0.000314  -0.015949   0.310260
+ Mulliken charges:
+              1
+     1  C    2.885709
+     2  C    2.897644
+     3  C    3.137695
+     4  C    2.916950
+     5  C    2.852625
+     6  C    2.860016
+     7  H    0.597069
+     8  H    0.597374
+     9  H    0.598897
+    10  N    3.249461
+    11  H    0.622015
+    12  H    0.625012
+    13  H    0.584011
+    14  H    0.579911
+    15  C    2.873698
+    16  C    2.839972
+    17  C    3.176759
+    18  C    2.870001
+    19  C    3.180909
+    20  C    2.840923
+    21  H    0.595979
+    22  H    0.595252
+    23  O    3.837859
+    24  O    3.836490
+    25  C    2.851575
+    26  H    0.579225
+    27  H    0.578693
+    28  H    0.591178
+    29  C    2.852561
+    30  H    0.578599
+    31  H    0.591276
+    32  H    0.578804
+    33  H    0.572746
+    34  H    0.573110
+ Sum of Mulliken charges =  62.00000
+ Mulliken charges with hydrogens summed into heavy atoms:
+              1
+     1  C    3.469720
+     2  C    3.496541
+     3  C    3.137695
+     4  C    3.496861
+     5  C    3.449693
+     6  C    3.457390
+    10  N    4.496488
+    15  C    3.446445
+    16  C    3.435224
+    17  C    3.176759
+    18  C    3.443111
+    19  C    3.180909
+    20  C    3.436902
+    23  O    3.837859
+    24  O    3.836490
+    25  C    4.600671
+    29  C    4.601240
+ Sum of Mulliken charges with hydrogens summed into heavy atoms =  62.00000
+ Electronic spatial extent (au):  <R**2>=           2691.7631
+ Charge=             62.0000 electrons
+ Dipole moment (field-independent basis, Debye):
+    X=            160.0797    Y=            222.6107    Z=            153.4673  Tot=            314.2185
+ Quadrupole moment (field-independent basis, Debye-Ang):
+   XX=           1740.8075   YY=            849.1427   ZZ=            830.0084
+   XY=           -348.7472   XZ=           -268.9757   YZ=           -353.3221
+ Traceless Quadrupole moment (field-independent basis, Debye-Ang):
+   XX=            600.8213   YY=           -290.8435   ZZ=           -309.9778
+   XY=           -348.7472   XZ=           -268.9757   YZ=           -353.3221
+ Octapole moment (field-independent basis, Debye-Ang**2):
+  XXX=           2102.1878  YYY=           1533.1577  ZZZ=            888.4730  XYY=            254.8020
+  XXY=           1014.2249  XXZ=           1449.0421  XZZ=            347.9134  YZZ=            526.0518
+  YYZ=           -228.3288  XYZ=          -1600.7928
+ Hexadecapole moment (field-independent basis, Debye-Ang**3):
+ XXXX=          14746.7689 YYYY=           5255.4520 ZZZZ=           4790.5202 XXXY=          -3633.3153
+ XXXZ=            192.7696 YYYX=          -1384.3289 YYYZ=          -2294.1109 ZZZX=          -1979.1979
+ ZZZY=          -1652.7039 XXYY=           5910.0567 XXZZ=           5909.4628 YYZZ=           2908.7845
+ XXYZ=          -2375.5672 YYXZ=          -1212.6679 ZZXY=           -764.6450
+ N-N= 1.165075292043D+03 E-N=-2.049812286243D+03  KE= 3.770528658273D+02
+ Leave Link  601 at Wed Jul 29 18:51:53 2015, MaxMem= 3221225472 cpu:       0.3
+ (Enter /cm/shared/apps/gaussian/gdvH23dev/gdv/l9999.exe)
+
+ Test job not archived.
+ 1\1\GINC-C8000-04\SP\RB3LYP TD-FC\CC-pVTZ\C14H17N1O2\DPADULA\29-Jul-20
+ 15\0\\#p b3lyp cc-pVTZ td eet=coup IOp(2/12=3) nosymm\\coupling 0001 -
+  0002\\0,1\C,0,-1.44979401,0.90100225,0.40844033\C,0,-2.7055892,1.0888
+ 2296,2.88314648\C,0,-2.28340026,1.99746353,0.66070372\C,0,-1.23000991,
+ -0.07042692,1.39489133\C,0,-1.85209309,0.00712344,2.63569294\C,0,-2.91
+ 514247,2.06925487,1.9182094\H,0,-1.67802913,-0.75173903,3.3935961\H,0,
+ -3.57333862,2.90900152,2.13233411\H,0,-3.20600501,1.17457531,3.8444195
+ 3\N,0,-2.53190879,2.96965316,-0.32197619\H,0,-2.90696647,3.83328467,0.
+ 05269058\H,0,-1.74076502,3.16345869,-0.92475822\H,0,-0.9094711,0.69494
+ 778,-0.51315433\H,0,-0.54695119,-0.85186634,1.07185539\C,0,0.78379964,
+ 0.5042312,-0.48940753\C,0,3.36181321,0.05376956,0.44755127\C,0,1.83725
+ 22,1.26600357,-1.00679164\C,0,1.01144613,-0.45817797,0.49104549\C,0,2.
+ 30477714,-0.69754217,0.97034572\C,0,3.12996769,1.02950948,-0.53148612\
+ H,0,3.97394433,1.59589014,-0.90855686\H,0,4.37741429,-0.10299757,0.792
+ 60757\O,0,2.43042135,-1.66880531,1.93112545\O,0,1.50330883,2.20694373,
+ -1.95175023\C,0,2.55382716,2.9498609,-2.54416719\H,0,3.2662248,2.29616
+ 127,-3.06572851\H,0,3.09722207,3.54933823,-1.80079511\H,0,2.08146137,3
+ .61749017,-3.26779907\C,0,3.72852309,-1.95240879,2.42056214\H,0,4.3971
+ 0653,-2.29526237,1.61890892\H,0,3.60640902,-2.75172076,3.15430462\H,0,
+ 4.17733649,-1.07731116,2.91057867\H,0,-0.25949002,0.57957192,-0.773883
+ 28\H,0,0.10677248,-0.96410875,0.80830823\\Version=ES64L-GDVRevH.23\HF=
+ 0.\RMSD=0.000e+00\PG=C01 [X(C14H17N1O2)]\\@
+
+
+ THE TRULY SUCCESSFUL PERFORMANCE OF RESEARCHES IN
+ INORGANIC CHEMISTRY IS POSSIBLE ONLY TO ONE WHO IS NOT
+ ONLY A THEORETICAL CHEMIST, BUT ALSO AN ACCOMPLISHED
+ ANALYST AND, MOREOVER, NOT MERELY A PRACTICALLY TRAINED,
+ MECHANICAL WORKER, BUT A THINKING CREATIVE ARTIST.
+   --  CLEMENS WINKLER, BER. 33, 1697(1900)
+ Job cpu time:  0 days 15 hours 32 minutes 60.0 seconds.
+ File lengths (MBytes):  RWF=     96 Int=      0 D2E=      0 Chk=     16 Scr=      1
+ Normal termination of Gaussian DV at Wed Jul 29 18:51:53 2015.

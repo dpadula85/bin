@@ -351,7 +351,7 @@ class input_file:
         y_com = y_com / tot_mass
         z_com = z_com / tot_mass
 
-        return (x_com, y_com, z_com)
+        return [x_com, y_com, z_com]
 
     def write_job(self, opts_dict=None):
         '''Writes a G09 input for the next calculation. Options for the new
@@ -713,7 +713,7 @@ class output_file:
         y_com = y_com / tot_mass
         z_com = z_com / tot_mass
 
-        return (x_com, y_com, z_com)
+        return [x_com, y_com, z_com]
 
     def set_options(self, job=None):
         '''Sets the default options for a G09 job.'''
@@ -1015,7 +1015,7 @@ class td_output_file(output_file):
         self.mu_vel, self.mu_len = self.get_mu()
         self.m = self.get_mag()
 
-        results = {'numer of states': self.nstates,
+        results = {'number of states': self.nstates,
                    'excitation energies': self.es_energies,
                    'excitation wavelenghts': self.es_wavelengths,
                    'oscillator strengths': self.f_osc,
@@ -1056,10 +1056,91 @@ class td_output_file(output_file):
 # to extract data from G09 coupling calculations.
 #
 class V_output_file(output_file):
-  '''A class describing G09 optimization logfiles.'''
+    '''A class describing G09 optimization logfiles.'''
 
-  def __init__(self, outfile):
-    output_file.__init__(self, outfile)
+    def __init__(self, outfile):
+        output_file.__init__(self, outfile)
+        self.results = self.get_results()
+
+
+    def get_dim(self):
+
+        ncoup = 0
+        Dstates = 0
+        Astates = 0
+
+        with open(self.file, 'r') as f:
+            for line in f:
+
+                if "TOTAL COUPLING" in line:
+                    ncoup += 1
+                    Ds = int(line.split()[4]) 
+                    As = int(line.split()[6]) 
+                    if Ds > Dstates:
+                        Dstates = Ds
+
+                    if As > Astates:
+                        Astates = As
+
+        return ncoup, Dstates, Astates
+
+#   Example:
+# 
+#   EET :: (  1) -> (  1)
+#   Donor state      1; Transition energy         4.9826 eV
+#   Acceptor state   1; Transition energy         4.8147 eV
+#                       Energy difference         0.1679 eV
+#     > Coulomb term    D:   1 A:   1 =      -0.025149 eV;     -202.8410 cm-1
+#     > HF exchange     D:   1 A:   1 =       0.002906 eV;       23.4378 cm-1
+#     > XC term         D:   1 A:   1 =       0.002198 eV;       17.7285 cm-1
+#     > Overlap term    D:   1 A:   1 =      -0.000009 eV;       -0.0764 cm-1
+#     > TOTAL COUPLING  D:   1 A:   1 =      -0.020055 eV;     -161.7511 cm-1
+#
+    
+    def get_coulomb_coup(self):
+
+        M = np.zeros((self.Dstates, self.Astates))
+        with open(self.file, 'r') as f:
+            for line in f:
+
+                if "Coulomb term" in line:
+                    Dstate = int(line.split()[4]) - 1
+                    Astate = int(line.split()[6]) - 1
+                    coup = float(line.split()[10])
+                    M[Astate,Dstate] = coup
+
+        return M
+
+
+    def get_tot_coup(self):
+
+        M = np.zeros((self.Dstates, self.Astates))
+        with open(self.file, 'r') as f:
+            for line in f:
+
+                if "TOTAL COUPLING" in line:
+                    Dstate = int(line.split()[4]) - 1
+                    Astate = int(line.split()[6]) - 1
+                    coup = float(line.split()[10])
+                    M[Astate,Dstate] = coup
+
+        return M
+
+
+    def get_results(self):
+        '''Returns the results of the coupling calculation.'''
+
+        self.ncoup, self.Dstates, self.Astates = self.get_dim()
+        self.coulomb = self.get_coulomb_coup()
+        self.tot = self.get_tot_coup()
+
+        results = {'number of couplings': self.ncoup,
+                   'Donor states': self.Dstates,
+                   'Acceptor states': self.Astates,
+                   'Coulomb couplings': self.coulomb,
+                   'Total couplings': self.tot}
+
+        return results
 #
 #
 # ===============================
@@ -1213,6 +1294,31 @@ def translate(struct, dx=0.0, dy=0.0, dz=0.0):
             in final]
 
     return final
+
+#
+# ===================
+#  Forster Couplings
+# ===================
+#
+def forster(td_output_file1, td_output_file2):
+    '''Returns the matrix of Forster couplings between the excited states of
+    td_output_file1 and td_output_file2, which are objects of the
+    td_output_file class defined above.'''
+
+    com1 = np.asarray(td_output_file1.get_com())
+    com2 = np.asarray(td_output_file2.get_com())
+
+    n1 = td_output_file1.nstates
+    n2 = td_output_file2.nstates
+
+    M = np.zeros((n1,n2))
+    for i in range(n1):
+        for j in range(n2):
+            Dip1 = td_output_file1.mu_len[i]
+            Dip2 = td_output_file1.mu_len[j]
+            pass 
+    
+    return M
 
 #
 # =========================
