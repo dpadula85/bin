@@ -9,14 +9,14 @@
 set WDir = "~/Dropbox/CV/latex" 
 set refs = 'yes'
 set publist = 'yes'
-set join = 'no'
+set join = 'yes'
 
 #
 # tex files for cv, and publication list
 #
-set cv_file = "$WDir/Padula_cv.tex"
-set pub_file = "$WDir/Padula_pubs.tex"
-set pres_file = "$WDir/Padula_pres.tex"
+set cv_file = "Padula_cv.tex"
+set pub_file = "Padula_pubs.tex"
+set pres_file = "Padula_pres.tex"
 
 #
 # Screen print of options
@@ -82,7 +82,7 @@ if ( $publist == 'yes' ) then
     pdfunite ${pub_file:r}.pdf ${pres_file:r}.pdf tmp.pdf
 
     if ( $join == 'yes' ) then
-        pdfunite ${cv_file:r}.pdf tmp.pdf final.pdf
+        pdftk A="${cv_file:r}.pdf" B=tmp.pdf cat A1-1 A2-2 B1-1 B2-2 B3-3 A3-3 output final.pdf
         rm tmp.pdf
         mv final.pdf ${cv_file:r}.pdf
         echo "Your output is in ${cv_file:r}.pdf"
