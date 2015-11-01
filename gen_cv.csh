@@ -9,7 +9,12 @@
 set WDir = "~/Dropbox/CV/latex" 
 set refs = 'yes'
 set publist = 'yes'
-set join = 'yes'
+
+if ( $1 == '' ) then
+    set join = 'yes'
+else
+    set join = $1
+endif
 
 #
 # tex files for cv, and publication list
@@ -85,11 +90,11 @@ if ( $publist == 'yes' ) then
         pdftk A="${cv_file:r}.pdf" B=tmp.pdf cat A1-1 A2-2 B1-1 B2-2 B3-3 A3-3 output final.pdf
         rm tmp.pdf
         mv final.pdf ${cv_file:r}.pdf
-        echo "Your output is in ${cv_file:r}.pdf"
+        echo "Your output is in $WDir/${cv_file:r}.pdf"
 
     else
         mv tmp.pdf Padula_pub.pdf
-        echo "Your output is in ${cv_file:r}.pdf and in $WDir/Padula_pub.pdf"
+        echo "Your output is in $WDir/${cv_file:r}.pdf and in $WDir/Padula_pub.pdf"
 
     endif
 
