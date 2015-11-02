@@ -97,10 +97,12 @@ if ( $publist == 'yes' ) then
         pdftk A="${cv_file:r}.pdf" B=tmp.pdf cat A1-1 A2-2 B1-1 B2-2 B3-3 A3-3 output final.pdf
         rm tmp.pdf
         mv final.pdf ${cv_file:r}.pdf
+        cp ${cv_file:r}.pdf ../
         echo "Your output is in $WDir/${cv_file:r}.pdf"
 
     else
         mv tmp.pdf Padula_pub.pdf
+        cp ${cv_file:r}.pdf Padula_pub.pdf ../
         echo "Your output is in $WDir/${cv_file:r}.pdf and in $WDir/Padula_pub.pdf"
 
     endif
