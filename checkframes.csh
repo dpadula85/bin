@@ -7,7 +7,7 @@
 # set end = $2
 
 set WDir = `pwd`
-set framelist = `ls -dltr $WDir/00* | awk '{print $NF}' | tr -d /`
+set framelist = `\ls -dltr $WDir/00* | awk -F "/" '{print $NF}' | sort -n` 
 set reslist = `awk '{print $2}' $WDir/reslist.in`
 set ResIDi = `awk '{print $1}' $WDir/couplist.in`
 set check = `expr $#reslist + $#ResIDi`
