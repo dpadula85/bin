@@ -23,7 +23,7 @@ set framelist = `seq -w $start $end`
 #
 # Uncomment to resubmit incomplete frames from framelog file
 #
-#set framelist = `grep -i incomplete $WDir/framelog | awk '{print $2}'`
+#set framelist = `grep -i "incomplete" $WDir/framelog | awk '{print $2}'`
 
 #
 # Cycle over frames
