@@ -23,7 +23,7 @@ set framelist = `seq -w $start $end`
 #
 # Uncomment to resubmit incomplete frames from framelog file
 #
-#set framelist = `cat $WDir/framelog | grep -i incomplete | awk '{print $2}'`
+#set framelist = `grep -i "incomplete" $WDir/framelog | awk '{print $2}'`
 
 #
 # Cycle over frames
@@ -39,7 +39,7 @@ while ( $i <= $#framelist )
   #
   # Uncomment to resubmit incomplete frames
   #
-  #cat logbook | grep -i successfully > tmp
+  #grep -i "successfully" logbook > tmp
   #mv tmp logbook
 
   #
@@ -98,7 +98,7 @@ while ( $i <= $#framelist )
   if ( $dosite == 1 ) then
 
     if ( -e logbook ) then
-      set propdonelist = `cat logbook | grep -i prop | grep -i successfully | awk '{print $2}'`
+      set propdonelist = `grep -i "prop" logbook | grep -i "successfully" | awk '{print $2}'`
     else
       set propdonelist = ()
 
@@ -109,10 +109,10 @@ while ( $i <= $#framelist )
       #
       # Set variables to store line and values of memory and nproc
       #      
-      set lineproc = `cat $res/$res.com | grep -i -n nproc | cut -d : -f1`
-      set proc = `cat $res/$res.com | grep -i -n nproc | cut -d = -f2`
-      set linemem = `cat $res/$res.com | grep -i -n mem | cut -d : -f1`
-      set memfile = `cat $res/$res.com | grep -i -n mem | cut -d = -f2 | sed 's/[A-Za-z]*//g'`
+      set lineproc = `grep -i -n "nproc" $res/$res.com | cut -d : -f1`
+      set proc = `grep -i -n "nproc" $res/$res.com | cut -d = -f2`
+      set linemem = `grep -i -n "mem" $res/$res.com | cut -d : -f1`
+      set memfile = `grep -i -n "mem" $res/$res.com | cut -d = -f2 | sed 's/[A-Za-z]*//g'`
 
       #
       # Check if the values set in the files correspond to the ones
@@ -147,10 +147,10 @@ while ( $i <= $#framelist )
       #
       # Set variables to store line and values of memory and nproc
       #      
-      set lineproc = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n nproc | cut -d : -f1`
-      set proc = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n nproc | cut -d = -f2`
-      set linemem = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n mem | cut -d : -f1`
-      set memfile = `cat V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | grep -i -n nproc | cut -d = -f2 | sed 's/[A-Za-z]*//g'`
+      set lineproc = `grep -i -n "nproc" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | cut -d : -f1`
+      set proc = `grep -i -n "nproc" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | cut -d = -f2`
+      set linemem = `grep -i -n "mem" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com |  cut -d : -f1`
+      set memfile = `grep -i -n "mem" V_$ResIDi[$count].$ResIDj[$count]/V_$ResIDi[$count].$ResIDj[$count].com | cut -d = -f2 | sed 's/[A-Za-z]*//g'`
 
       #
       # Check if the values set in the files correspond to the ones
