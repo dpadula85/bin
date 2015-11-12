@@ -1,1 +1,1 @@
-../exat/src/mdanalyzer.py
+/home/software/molecolab_tools/exat/src/mdanalyzer.py
