@@ -66,6 +66,15 @@ def rot_mat_z(theta):
     return Rz
 
 
+def transl_mat(v):
+
+    # Define the transformation matrix for a translation
+    T = np.eye(4)
+    T[-1,:3] = v
+
+    return T
+
+
 def v1v2_angle(v1, v2):
 
     dotprod = np.dot(v1, v2)
