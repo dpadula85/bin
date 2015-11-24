@@ -155,7 +155,6 @@ def write_PDB(pdbout, coords):
     # For better organization of the output writing
     # coords must be a list of lists:
     # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
-    # Each atom is a list of four elements: atomic weight/symbol, and x, y, z coordinates.
 
     fmt = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
     resname = 'PRF'
@@ -180,6 +179,12 @@ def write_PDB(pdbout, coords):
                 atom[0] = ELEMENTS[atom[0]].symbol
                 atom_name = "%s%d" % (atom[0], k)
                 f.write(fmt % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
+
+            # At the end of each molecule
+            f.write('TER')
+
+        # At the end of the file
+        f.write('END')
 
     return
 

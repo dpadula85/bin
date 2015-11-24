@@ -128,6 +128,7 @@ def write_PDB(pdbout, coords):
 
             # At the end of each molecule
             f.write('TER')
+
         # At the end of the file
         f.write('END')
 
