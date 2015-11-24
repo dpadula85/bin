@@ -126,6 +126,11 @@ def write_PDB(pdbout, coords):
                 atom_name = "%s%d" % (atom[0], k)
                 f.write(fmt % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
 
+            # At the end of each molecule
+            f.write('TER')
+        # At the end of the file
+        f.write('END')
+
     return
 
 

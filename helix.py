@@ -76,6 +76,7 @@ def helix_points(radius, turns, step, ppt, helicity='r'):
 
 def ellipse_points(radius, turns, step, ppt, skew_angle=0., helicity='r'):
 
+    # When skew_angle = 0, ellipse_points = helix_points
     angles = np.arange(0, 360 * turns, 360 / ppt) 
     points = np.array([]).reshape(0,3)
     # points = np.vstack((points, np.array([0., 0., 0.])))
@@ -154,6 +155,7 @@ def write_PDB(pdbout, coords):
     # For better organization of the output writing
     # coords must be a list of lists:
     # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
+    # Each atom is a list of four elements: atomic weight/symbol, and x, y, z coordinates.
 
     fmt = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
     resname = 'PRF'
