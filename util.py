@@ -30,6 +30,21 @@ def dict_compare(dictA, dictB):
     return dictB
 
 
+def refframe(A, B, C):
+
+    x = (B - A) / np.linalg.norm(B - A)
+
+    # Define the point P on x whose perpendicular to x passes through C
+    P = A + np.dot((C - A), x) * x
+    y = (C - P) / np.linalg.norm(C - P)
+
+    z = np.cross(x, y)
+
+    ref = np.array([x, y, z])
+
+    return ref
+
+
 def rot_mat_x(theta):
 
     theta = np.radians(theta)
@@ -89,7 +104,7 @@ def write_PDB(pdbout, coords):
     # coords must be a list of lists:
     # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
 
-    fmt = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
+    line = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
     resname = 'MOL'
 
     with open(pdbout, 'w') as f:
@@ -111,7 +126,7 @@ def write_PDB(pdbout, coords):
                 i += 1
                 atom[0] = ELEMENTS[atom[0]].symbol
                 atom_name = "%s%d" % (atom[0], k)
-                f.write(fmt % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
+                f.write(line % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
 
             # At the end of each molecule
             f.write('TER')
