@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+import sys
 import numpy as np
 from elements import ELEMENTS
 
@@ -24,6 +26,13 @@ energy_conversion = {'au'       : 1,
 # and dictB is the one passed to the function.
 # We want to compare dictA and dictB. We want to add to dictB all the missing 
 # keys in dictA with their value.
+
+def checkfile(filename):
+
+    if not os.path.isfile(filename):
+        print("\nFile %s not found!\n" % filename)
+        sys.exit()
+
 
 def dict_compare(dictA, dictB):
 

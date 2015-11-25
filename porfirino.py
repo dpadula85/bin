@@ -76,6 +76,11 @@ def get_struct(infile):
 if __name__ == '__main__':
 
     print
+    print u.banner(ch='=', length=80)
+    print u.banner(text=sys.argv[0], ch='=', length=80)
+    print u.banner(ch='=', length=80)
+    print
+
     args = options()
 
     cartesian = np.eye(3)
@@ -99,10 +104,12 @@ if __name__ == '__main__':
 
     if args.g09ref:
         # Reference structure from a G09 optimization
+        u.checkfile(args.g09ref)
         opt = get_struct(args.g09ref)
 
     else:
         # Load reference structure
+        u.checkfile(args.ref)
         opt = np.loadtxt(args.ref)
 
 
@@ -228,4 +235,6 @@ if __name__ == '__main__':
     np.savetxt('mol.txt', final[:,1:], fmt='%10.6f')
     sh.move('mol.txt', 'DeVoe')
 
+    print
+    print u.banner(ch='=', length=80)
     print
