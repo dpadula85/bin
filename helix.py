@@ -236,7 +236,7 @@ if __name__ == '__main__':
     # final = final[final[:,2].argsort()]
     final_save = np.c_[np.ones(len(final)), final]
     u.write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
-    print("Output saved in %s_S%d%s_B%d%s" % (args.output, ps, hs, pb, hb))
+    print("Output saved in %s_S%d%s_B%d%s.xyz" % (args.output, ps, hs, pb, hb))
 
     print
     print u.banner(ch='=', length=80)
