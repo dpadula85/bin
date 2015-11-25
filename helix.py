@@ -3,6 +3,8 @@
 import numpy as np
 import argparse as arg
 
+import util as u
+
 # Parameters that define a helix
 # r : radius of the helix
 # turns : number of turns to compute
@@ -115,26 +117,6 @@ def circle_points(radius, ppt):
     return points
 
 
-def rot_mat_z(theta):
-
-    theta = np.radians(theta)
-    Rz = np.zeros((4,4))
-    Rz[0] = np.array([np.cos(theta), -1*np.sin(theta), 0., 0.])
-    Rz[1] = np.array([np.sin(theta), np.cos(theta), 0., 0.])
-    Rz[2] = np.array([0., 0., 1., 0.])
-    Rz[3] = np.array([0., 0., 0., 1.])
-
-    return Rz
-
-
-def v1v2_angle(v1, v2):
-
-    dotprod = np.dot(v1, v2)
-    theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
-
-    return theta
-
-
 def dist(p1, p2, normal=None):
     '''Returns a tuple containing the distance between two points
     and the distance on the plane whose normal is supplied.'''
@@ -145,66 +127,14 @@ def dist(p1, p2, normal=None):
 
     d = p2 - p1
     dplane = d - np.dot(d, normal)*normal
-    theta = v1v2_angle(d, dplane)
+    theta = u.v1v2_angle(d, dplane)
 
     return np.linalg.norm(d), np.linalg.norm(dplane), theta
 
 
-def write_PDB(pdbout, coords):
-
-    # For better organization of the output writing
-    # coords must be a list of lists:
-    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
-
-    fmt = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
-    resname = 'PRF'
-
-    with open(pdbout, 'w') as f:
-
-        # i : total atom counter
-        # j : residue counter
-        # k : atom in molecule counter
-        i = 0
-        j = 0
-
-        for molecule in coords:
-
-            j += 1
-            k = 0
-
-            for atom in molecule:
-
-                k += 1
-                i += 1
-                atom[0] = ELEMENTS[atom[0]].symbol
-                atom_name = "%s%d" % (atom[0], k)
-                f.write(fmt % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
-
-            # At the end of each molecule
-            f.write('TER')
-
-        # At the end of the file
-        f.write('END')
-
-    return
-
-
-def write_XYZ(xyzout, coords):
-
-    # Here coords is just an np.array
-    line = '%2s %10.6f %10.6f %10.6f'
-
-    with open(xyzout, 'w') as f:
-
-        f.write('%d\n' % len(coords))
-        f.write('Title\n')
-        np.savetxt(f, coords, fmt=line)
-
-    return
-
-
 if __name__ == '__main__':
 
+    print
     args = options()
 
     r = args.radius
@@ -233,7 +163,8 @@ if __name__ == '__main__':
     # s_helix = ellipse_points(r, turns, ss, ps, 5, 'l')
     # s_helix = circle_points(r, ps)
     s_helix_save = np.c_[np.ones(len(s_helix)), s_helix]
-    write_XYZ('helix_%d_%s.xyz' % (ps, hs), s_helix_save)
+    u.write_XYZ('helix_%d%s.xyz' % (ps, hs), s_helix_save)
+    print("S helix saved in helix_%d%s.xyz" % (ps, hs))
 
     # Take two adjacent points on this helix and calculate
     # their distance and their distance onto the x-y plane.
@@ -241,6 +172,7 @@ if __name__ == '__main__':
     ps2 = s_helix[1]
     ds, dsxy, theta = dist(ps1, ps2)
     print("S Helix: d = %5.2f A  dxy = %5.2f A  theta = %6.2f" % (ds, dsxy, theta))
+    print
 
     # Initialize the array to store B helices
     final = np.array([]).reshape(0,3)
@@ -260,9 +192,8 @@ if __name__ == '__main__':
         b_helix = np.c_[b_helix, np.ones(len(b_helix))]
 
         # Generate 4x4 transformation matrices
-        Rz = rot_mat_z(angle)
-        T = np.eye(4)
-        T[-1,:3] = np.array([0., 0., point[2]])
+        Rz = u.rot_mat_z(angle)
+        T = u.transl_mat(np.array([0., 0., point[2]]))
 
         # Transform the helix
         transformed = np.dot(b_helix, Rz)
@@ -286,9 +217,12 @@ if __name__ == '__main__':
     # for easier selection of a small portion of the tube
     # in VMD
     b_helix_save = np.c_[np.ones(len(final[:pb*turns])), final[:pb*turns]]
-    write_XYZ('helix_%d_%s.xyz' % (pb, hb), b_helix_save)
+    u.write_XYZ('helix_%d%s.xyz' % (pb, hb), b_helix_save)
+    print("B helix saved in helix_%d%s.xyz" % (pb, hb))
+    print
 
     # final = final[final[:,2].argsort()]
     final_save = np.c_[np.ones(len(final)), final]
-    write_XYZ('%s.xyz' % args.output, final_save)
+    u.write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
     print("Output saved in %s" % args.output)
+    print

@@ -7,6 +7,7 @@ import argparse as arg
 import shutil as sh
 
 from elements import ELEMENTS
+import util as u
 
 def options():
     '''Defines the options of the script.'''
@@ -44,30 +45,6 @@ def options():
     return args
 
 
-def rot_mat_z(theta):
-
-    theta = np.radians(theta)
-    Rz = np.zeros((4,4))
-    Rz[0] = np.array([np.cos(theta), -1*np.sin(theta), 0., 0.])
-    Rz[1] = np.array([np.sin(theta), np.cos(theta), 0., 0.])
-    Rz[2] = np.array([0., 0., 1., 0.])
-    Rz[3] = np.array([0., 0., 0., 1.])
-
-    return Rz
-
-
-def rot_mat_y(theta):
-
-    theta = np.radians(theta)
-    Ry = np.zeros((4,4))
-    Ry[0] = np.array([np.cos(theta), 0., np.sin(theta), 0.])
-    Ry[1] = np.array([0., 1., 0., 0.])
-    Ry[2] = np.array([-1*np.sin(theta), 0., np.cos(theta), 0.])
-    Ry[3] = np.array([0., 0., 0., 1.])
-
-    return Ry
-
-
 def get_struct(infile):
 
     structure = []
@@ -96,61 +73,9 @@ def get_struct(infile):
     return np.asarray(structure)
 
 
-def write_PDB(pdbout, coords):
-
-    # For better organization of the output writing
-    # coords must be a list of lists:
-    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
-
-    fmt = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
-    resname = 'PRF'
-
-    with open(pdbout, 'w') as f:
-
-        # i : total atom counter
-        # j : residue counter
-        # k : atom in molecule counter
-        i = 0
-        j = 0
-
-        for molecule in coords:
-
-            j += 1
-            k = 0
-
-            for atom in molecule:
-
-                k += 1
-                i += 1
-                atom[0] = ELEMENTS[atom[0]].symbol
-                atom_name = "%s%d" % (atom[0], k)
-                f.write(fmt % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
-
-            # At the end of each molecule
-            f.write('TER')
-
-        # At the end of the file
-        f.write('END')
-
-    return
-
-
-def write_XYZ(xyzout, coords):
-
-    # Here coords is just an np.array
-    line = '%2s %10.6f %10.6f %10.6f'
-
-    with open(xyzout, 'w') as f:
-
-        f.write('%d\n' % len(coords))
-        f.write('Title\n')
-        np.savetxt(f, coords, fmt=line)
-
-    return
-
-
 if __name__ == '__main__':
 
+    print
     args = options()
 
     cartesian = np.eye(3)
@@ -192,8 +117,8 @@ if __name__ == '__main__':
     # Build the 4x4 rotation matrix for the rotation
     # of the reference structure about the z-axis
     theta = args.theta
-    R = rot_mat_y(theta) 
-    # R = rot_mat_z(theta) 
+    R = u.rot_mat_y(theta) 
+    # R = u.rot_mat_z(theta) 
 
     # Rotation of the reference structure about its z axis.
     # Default is 0 degrees.
@@ -237,8 +162,7 @@ if __name__ == '__main__':
         R = np.c_[R, np.array([0., 0., 0., 1.])]
     
         # Build the 4x4 translation matrix
-        T = np.eye(4)
-        T[-1,:3] = center
+        T = u.transl_mat(center)
    
         # Transform the coordinates. First rotation, then translation
         transformed = np.dot(struct, R)
@@ -255,11 +179,11 @@ if __name__ == '__main__':
 
     # Here the for cycle is finished!!
     if args.savepdb:
-        write_PDB('%s.pdb' % args.output, final_structure)
+        u.write_PDB('%s.pdb' % args.output, final_structure)
         print("Output saved in %s.pdb" % args.output)
 
     if args.savexyz:
-        write_XYZ('%s.xyz' % args.output, final)
+        u.write_XYZ('%s.xyz' % args.output, final)
         print("Output saved in %s.xyz" % args.output)
 
     #
@@ -303,3 +227,5 @@ if __name__ == '__main__':
     # Mol file
     np.savetxt('mol.txt', final[:,1:], fmt='%10.6f')
     sh.move('mol.txt', 'DeVoe')
+
+    print
