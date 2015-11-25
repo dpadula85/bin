@@ -136,7 +136,7 @@ if __name__ == '__main__':
 
     print
     print u.banner(ch='=', length=80)
-    print u.banner(text=sys.argv[0], ch='=', length=80)
+    print u.banner(text='helix.py', ch=' ', length=80)
     print u.banner(ch='=', length=80)
     print
 
