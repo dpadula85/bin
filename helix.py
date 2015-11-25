@@ -163,13 +163,20 @@ if __name__ == '__main__':
     uz = cartesian[2]
 
     # Generate S helix and save its structure
-    s_helix = helix_points(r, 1, ss, ps, hs)
-    s_helix = s_helix[:-2]
+    s_helix = helix_points(r, 1.5, ss, ps, hs)
+
+    if hs == 'r':
+        s_helix = s_helix[:ps + 2]
+
+    elif hs == 'l':
+        s_helix = s_helix[:ps -2]
+
     # s_helix = ellipse_points(r, turns, ss, ps, 5, 'l')
     # s_helix = circle_points(r, ps)
     s_helix_save = np.c_[np.ones(len(s_helix)), s_helix]
-    u.write_XYZ('helix_%d%s.xyz' % (ps, hs), s_helix_save)
-    print("S helix saved in helix_%d%s.xyz" % (ps, hs))
+
+    u.write_XYZ('helix_S%d%s.xyz' % (ps, hs), s_helix_save)
+    print("S helix saved in helix_S%d%s.xyz" % (ps, hs))
 
     # Take two adjacent points on this helix and calculate
     # their distance and their distance onto the x-y plane.
@@ -222,8 +229,8 @@ if __name__ == '__main__':
     # for easier selection of a small portion of the tube
     # in VMD
     b_helix_save = np.c_[np.ones(len(final[:pb*turns])), final[:pb*turns]]
-    u.write_XYZ('helix_%d%s.xyz' % (pb, hb), b_helix_save)
-    print("B helix saved in helix_%d%s.xyz" % (pb, hb))
+    u.write_XYZ('helix_B%d%s.xyz' % (pb, hb), b_helix_save)
+    print("B helix saved in helix_B%d%s.xyz" % (pb, hb))
     print
 
     # final = final[final[:,2].argsort()]
