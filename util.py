@@ -141,7 +141,7 @@ def write_PDB(pdbout, coords):
                 f.write(line % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
 
             # At the end of each molecule
-            f.write('TER')
+            f.write('TER\n')
 
         # At the end of the file
         f.write('END')
