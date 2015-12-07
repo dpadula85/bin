@@ -23,6 +23,10 @@ def options():
 
     parser.add_argument('--c2', default=['2'], nargs='+', help='''Columns containing the data''')
 
+    parser.add_argument('-t', '--title', type=str, default=None, help='''Name of the property to be plotted.''')
+
+    parser.add_argument('-u', '--unit', type=str, default=None, help='''Unit of the property to be plotted.''')
+
     parser.add_argument('-s', '--save', help='''Save the plot as an image.
     Specify the extension.''')
 
@@ -69,7 +73,7 @@ def extend_compact_list(idxs):
     return extended
 
 
-def plot_data(x, y):
+def plot_data(x, y, title=None, unit=None):
 
     avg = np.average(y)
     sigma = np.std(y)
@@ -94,6 +98,13 @@ def plot_data(x, y):
     ax0.set_xlabel('Snapshot', size=14)
     ax0.set_xlim(x.min(), x.max())
     ax0.plot(x, y)
+
+    if title:
+        title = title.title()
+        if unit:
+            ax0.set_ylabel('%s (%s)' % (title, unit), size=14)
+        else:
+            ax0.set_ylabel('%s' % title, size=14)
 
     # Get y scale to set the same for the histogram
     ylim_low, ylim_high = ax0.get_ylim()
@@ -130,6 +141,8 @@ if __name__ == '__main__':
     args = options()
 
     f = args.filename
+    title = args.title
+    unit = args.unit
     basename = f.split('.')[0]
     checkfile(f)
     data = np.loadtxt(f)
@@ -144,7 +157,7 @@ if __name__ == '__main__':
 
         y = data[:,col]
 
-        fig, avg, sigma, ymin, ymax = plot_data(x, y)
+        fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
 
         print(u.banner(text="DATA ANALYSIS - COL %d" % (col + 1), ch="=", length=60))
         print
