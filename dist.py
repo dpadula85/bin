@@ -93,7 +93,7 @@ def plot_data(x, y, title=None, unit=None):
     fig = plt.figure(figsize=(12, 9)) 
     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1]) 
 
-    # Evolution along the trajectory
+    # Trajectory axis
     ax0 = plt.subplot(gs[0])
     ax0.set_xlabel('Snapshot', size=14)
     ax0.set_xlim(x.min(), x.max())
@@ -129,7 +129,6 @@ def plot_data(x, y, title=None, unit=None):
     gau_line = ax1.plot(gau_fit, bins, '--', linewidth=2, color='red', label='Gaussian fit')
     plt.legend(loc=1).draw_frame(False)
 
-
     plt.tight_layout()
 
     return fig, avg, sigma, ymin, ymax
@@ -161,29 +160,14 @@ if __name__ == '__main__':
 
         print(u.banner(text="DATA ANALYSIS - COL %d" % (col + 1), ch="=", length=60))
         print
-        print(" > Average  : %10.4f" % avg)
-        print(" > Std Dev. : %10.4f" % sigma)
-        print(" > Min      : %10.4f" % ymin)
-        print(" > Max      : %10.4f" % ymax)
+        print(" > Avg.      : %10.4f" % avg)
+        print(" > Std. Dev. : %10.4f" % sigma)
+        print(" > Min.      : %10.4f" % ymin)
+        print(" > Max.      : %10.4f" % ymax)
         print
 
         # Save plot as vector image
         if args.save:
-
-            # Option 1
-            # QT backend
-            # manager = plt.get_current_fig_manager()
-            # manager.window.showMaximized()
-
-            # Option 2
-            # TkAgg backend
-            manager = plt.get_current_fig_manager()
-            manager.resize(*manager.window.maxsize())
-
-            # Option 3
-            # WX backend
-            # manager = plt.get_current_fig_manager()
-            # manager.frame.Maximize(True)
 
             print(" > Saving plot for COL %d..." % (col + 1))
             print
@@ -192,6 +176,9 @@ if __name__ == '__main__':
         # Show the plot
         if args.show:
 
+            # Uncomment the two linex of the backend in use to generate a
+            # maximized-window plot
+
             # Option 1
             # QT backend
             # manager = plt.get_current_fig_manager()
@@ -199,13 +186,14 @@ if __name__ == '__main__':
 
             # Option 2
             # TkAgg backend
-            manager = plt.get_current_fig_manager()
-            manager.resize(*manager.window.maxsize())
+            # manager = plt.get_current_fig_manager()
+            # manager.resize(*manager.window.maxsize())
 
             # Option 3
             # WX backend
             # manager = plt.get_current_fig_manager()
             # manager.frame.Maximize(True)
+
             print(" > Showing plot for COL %d..." % (col + 1))
             print
             plt.show()
