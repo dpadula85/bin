@@ -1,0 +1,198 @@
+#!/usr/bin/python
+
+import os
+import sys
+import numpy as np
+import argparse as arg
+import matplotlib.pyplot as plt
+from matplotlib import gridspec
+import matplotlib.mlab as mlab
+
+import util as u
+
+
+def options():
+    '''Defines the options of the script.'''
+
+    parser = arg.ArgumentParser(description='Plots a nice graph for MD properties.')
+
+    # Optional arguments
+    parser.add_argument('-f', '--filename', default='data.dat', help='''File data.dat from mdanalyzer.''')
+
+    parser.add_argument('--c1', default=1, type=int, help='''Column for the progression of the property.''')
+
+    parser.add_argument('--c2', default=['2'], nargs='+', help='''Columns containing the data''')
+
+    parser.add_argument('-s', '--save', help='''Save the plot as an image.
+    Specify the extension.''')
+
+    parser.add_argument('--show', help='''Show the plot in an external window.''',
+    default=False, action='store_true')
+
+    args = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit()
+
+    return args
+
+
+def checkfile(filename):
+
+    if not os.path.isfile(filename):
+        print u.banner(text='ERROR', ch='=', length=80)
+        print(" File %s not found!" % filename)
+        sys.exit()
+
+
+def extend_compact_list(idxs):
+
+    extended = []
+
+    # Uncomment this line if idxs is a string and not a list
+    # idxs = idxs.split()
+
+    for idx in idxs:
+
+        to_extend = idx.split('-')
+
+        if len(to_extend) > 1:
+
+            sel =  map(int, to_extend)
+            extended += range(sel[0],sel[1]+1,1)
+
+        else:
+        
+            extended.append(int(idx))
+
+    return extended
+
+
+def plot_data(x, y):
+
+    avg = np.average(y)
+    sigma = np.std(y)
+    ymin  = y.min() 
+    ymax  = y.max()
+
+    # Try to get automatically the order of magnitude of the data
+    # to set reasonable bins for histogram plot
+    # om = round(np.log10(abs(avg)) - np.log10(5.5) + 0.5)
+    # step = 10**om / 100.
+    # decs = int(abs(np.log10(step)))
+
+    # Set bins range with step
+    # bins = np.around((np.arange(ymin, ymax, step)), decimals=decs)
+
+    # Two subplots, unpack the axes array immediately
+    fig = plt.figure(figsize=(12, 9)) 
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1]) 
+
+    # Evolution along the trajectory
+    ax0 = plt.subplot(gs[0])
+    ax0.set_xlabel('Snapshot', size=14)
+    ax0.set_xlim(x.min(), x.max())
+    ax0.plot(x, y)
+
+    # Get y scale to set the same for the histogram
+    ylim_low, ylim_high = ax0.get_ylim()
+
+    # Average line and legend
+    avg_line = ax0.plot(x, np.array([avg] * len(x)), '--', linewidth=2, color='black', label='avg.')
+    plt.legend(loc=1).draw_frame(False)
+
+    # Set options for the histogram plot and plot the average line
+    ax1 = plt.subplot(gs[1])
+    ax1.set_ylim(ylim_low, ylim_high)
+    ax1.set_yticklabels([])
+    ax1.set_xlabel('Count', size=14)
+    ax1.axhline(avg, linestyle='dashed', linewidth=2, color='black')
+
+    # Distribution histograms, the graph will be rotated by 90 deg
+    n, bins, patches = ax1.hist(y, bins=50, orientation='horizontal', histtype='step', color='blue')
+
+    # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
+    scale_factor = (bins[1] - bins[0]) * len(y)
+    gau_fit = mlab.normpdf(bins, avg, sigma) * scale_factor
+    gau_line = ax1.plot(gau_fit, bins, '--', linewidth=2, color='red', label='Gaussian fit')
+    plt.legend(loc=1).draw_frame(False)
+
+
+    plt.tight_layout()
+
+    return fig, avg, sigma, ymin, ymax
+
+
+if __name__ == '__main__':
+
+    print
+    args = options()
+
+    f = args.filename
+    basename = f.split('.')[0]
+    checkfile(f)
+    data = np.loadtxt(f)
+
+    # Get columns to process and convert it to python numeration
+    c1 = args.c1 - 1
+    c2 = map(lambda x: x - 1, extend_compact_list(args.c2))
+
+    x = data[:,c1]
+
+    for col in c2:
+
+        y = data[:,col]
+
+        fig, avg, sigma, ymin, ymax = plot_data(x, y)
+
+        print(u.banner(text="DATA ANALYSIS - COL %d" % (col + 1), ch="=", length=60))
+        print
+        print(" > Average  : %10.4f" % avg)
+        print(" > Std Dev. : %10.4f" % sigma)
+        print(" > Min      : %10.4f" % ymin)
+        print(" > Max      : %10.4f" % ymax)
+        print
+
+        # Save plot as vector image
+        if args.save:
+
+            # Option 1
+            # QT backend
+            # manager = plt.get_current_fig_manager()
+            # manager.window.showMaximized()
+
+            # Option 2
+            # TkAgg backend
+            manager = plt.get_current_fig_manager()
+            manager.resize(*manager.window.maxsize())
+
+            # Option 3
+            # WX backend
+            # manager = plt.get_current_fig_manager()
+            # manager.frame.Maximize(True)
+
+            print(" > Saving plot for COL %d..." % (col + 1))
+            print
+            plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save), dpi=1200)
+
+        # Show the plot
+        if args.show:
+
+            # Option 1
+            # QT backend
+            # manager = plt.get_current_fig_manager()
+            # manager.window.showMaximized()
+
+            # Option 2
+            # TkAgg backend
+            manager = plt.get_current_fig_manager()
+            manager.resize(*manager.window.maxsize())
+
+            # Option 3
+            # WX backend
+            # manager = plt.get_current_fig_manager()
+            # manager.frame.Maximize(True)
+            print(" > Showing plot for COL %d..." % (col + 1))
+            print
+            plt.show()
