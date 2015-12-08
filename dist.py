@@ -8,8 +8,6 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import matplotlib.mlab as mlab
 
-import util as u
-
 
 def options():
     '''Defines the options of the script.'''
@@ -21,14 +19,13 @@ def options():
 
     parser.add_argument('--c1', default=1, type=int, help='''Column for the progression of the property.''')
 
-    parser.add_argument('--c2', default=['2'], nargs='+', help='''Columns containing the data''')
+    parser.add_argument('--c2', default=['2'], nargs='+', help='''Columns containing the data.''')
 
     parser.add_argument('-t', '--title', type=str, default=None, help='''Name of the property to be plotted.''')
 
     parser.add_argument('-u', '--unit', type=str, default=None, help='''Unit of the property to be plotted.''')
 
-    parser.add_argument('-s', '--save', help='''Save the plot as an image.
-    Specify the extension.''')
+    parser.add_argument('-s', '--save', help='''Save the plot as an image. Specify the extension.''')
 
     parser.add_argument('--show', help='''Show the plot in an external window.''',
     default=False, action='store_true')
@@ -42,10 +39,50 @@ def options():
     return args
 
 
+def banner(text=None, ch='=', length=78):
+    """Return a banner line centering the given text.
+    
+        "text" is the text to show in the banner. None can be given to have
+            no text.
+        "ch" (optional, default '=') is the banner line character (can
+            also be a short string to repeat).
+        "length" (optional, default 78) is the length of banner to make.
+
+    Examples:
+        >>> banner("Peggy Sue")
+        '================================= Peggy Sue =================================='
+        >>> banner("Peggy Sue", ch='-', length=50)
+        '------------------- Peggy Sue --------------------'
+        >>> banner("Pretty pretty pretty pretty Peggy Sue", length=40)
+        'Pretty pretty pretty pretty Peggy Sue'
+    """
+    if text is None:
+        return ch * length
+
+    elif len(text) + 2 + len(ch)*2 > length:
+        # Not enough space for even one line char (plus space) around text.
+        return text
+
+    else:
+        remain = length - (len(text) + 2)
+        prefix_len = remain / 2
+        suffix_len = remain - prefix_len
+    
+        if len(ch) == 1:
+            prefix = ch * prefix_len
+            suffix = ch * suffix_len
+
+        else:
+            prefix = ch * (prefix_len/len(ch)) + ch[:prefix_len%len(ch)]
+            suffix = ch * (suffix_len/len(ch)) + ch[:suffix_len%len(ch)]
+
+        return prefix + ' ' + text + ' ' + suffix
+
+
 def checkfile(filename):
 
     if not os.path.isfile(filename):
-        print u.banner(text='ERROR', ch='=', length=80)
+        print(banner(text='ERROR', ch='=', length=80))
         print(" File %s not found!" % filename)
         sys.exit()
 
@@ -158,7 +195,7 @@ if __name__ == '__main__':
 
         fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
 
-        print(u.banner(text="DATA ANALYSIS - COL %d" % (col + 1), ch="=", length=60))
+        print(banner("DATA ANALYSIS - COL %d" % (col + 1), "=", 60))
         print
         print(" > Avg.      : %10.4f" % avg)
         print(" > Std. Dev. : %10.4f" % sigma)
