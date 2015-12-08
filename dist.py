@@ -15,7 +15,7 @@ def options():
     parser = arg.ArgumentParser(description='Plots a nice graph for MD properties.')
 
     # Optional arguments
-    parser.add_argument('-f', '--filename', default='data.dat', help='''File data.dat from mdanalyzer.''')
+    parser.add_argument('filename', nargs='?', default='data.dat', help='''File data.dat from mdanalyzer.''')
 
     parser.add_argument('--c1', default=1, type=int, help='''Column for the progression of the property.''')
 
