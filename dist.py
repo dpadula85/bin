@@ -7,6 +7,7 @@ import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import matplotlib.mlab as mlab
+from scipy.stats import norm
 
 
 def options():
@@ -117,6 +118,8 @@ def plot_data(x, y, title=None, unit=None):
     ymin  = y.min() 
     ymax  = y.max()
 
+    nbins = np.log2(len(y)) + 1
+
     # Try to get automatically the order of magnitude of the data
     # to set reasonable bins for histogram plot
     # om = round(np.log10(abs(avg)) - np.log10(5.5) + 0.5)
@@ -132,39 +135,44 @@ def plot_data(x, y, title=None, unit=None):
 
     # Trajectory axis
     ax0 = plt.subplot(gs[0])
-    ax0.set_xlabel('Snapshot', size=14)
+    ax0.set_xlabel('Snapshot', size=22)
     ax0.set_xlim(x.min(), x.max())
+    ax0.tick_params(axis='both', which='major', labelsize=18)
     ax0.plot(x, y)
 
     if title:
         title = title.title()
         if unit:
-            ax0.set_ylabel('%s (%s)' % (title, unit), size=14)
+            ax0.set_ylabel('%s (%s)' % (title, unit), size=22)
         else:
-            ax0.set_ylabel('%s' % title, size=14)
+            ax0.set_ylabel('%s' % title, size=22)
 
     # Get y scale to set the same for the histogram
     ylim_low, ylim_high = ax0.get_ylim()
 
     # Average line and legend
     avg_line = ax0.plot(x, np.array([avg] * len(x)), '--', linewidth=2, color='black', label='avg.')
-    plt.legend(loc=1).draw_frame(False)
+    plt.legend(loc=1, fontsize=18).draw_frame(False)
 
     # Set options for the histogram plot and plot the average line
     ax1 = plt.subplot(gs[1])
     ax1.set_ylim(ylim_low, ylim_high)
     ax1.set_yticklabels([])
-    ax1.set_xlabel('Count', size=14)
+    ax1.set_xlabel('Count', size=22)
+    ax1.tick_params(axis='x', which='major', labelsize=18)
     ax1.axhline(avg, linestyle='dashed', linewidth=2, color='black')
 
     # Distribution histograms, the graph will be rotated by 90 deg
-    n, bins, patches = ax1.hist(y, bins=50, orientation='horizontal', histtype='step', color='blue')
+    n, bins, patches = ax1.hist(y, bins=nbins, orientation='horizontal', histtype='step', color='blue')
 
     # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
     scale_factor = (bins[1] - bins[0]) * len(y)
-    gau_fit = mlab.normpdf(bins, avg, sigma) * scale_factor
-    gau_line = ax1.plot(gau_fit, bins, '--', linewidth=2, color='red', label='Gaussian fit')
-    plt.legend(loc=1).draw_frame(False)
+    lim1 = bins.min()
+    lim2 = bins.max()
+    fitx = np.linspace(lim1, lim2, 100)
+    gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
+    gau_line = ax1.plot(gau_fit, fitx, '--', linewidth=2, color='red', label='Gaussian fit')
+    plt.legend(loc=1, fontsize=18).draw_frame(False)
 
     plt.tight_layout()
 
@@ -208,7 +216,7 @@ if __name__ == '__main__':
 
             print(" > Saving plot for COL %d..." % (col + 1))
             print
-            plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save), dpi=1200)
+            plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save), dpi=1200, transparent=True)
 
         # Show the plot
         if args.show:
