@@ -6,7 +6,6 @@ import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
-import matplotlib.mlab as mlab
 from scipy.stats import norm
 
 
