@@ -117,22 +117,14 @@ def plot_data(x, y, title=None, unit=None):
     ymin  = y.min() 
     ymax  = y.max()
 
+    # Sturges' formula for number of bins
     nbins = np.log2(len(y)) + 1
-
-    # Try to get automatically the order of magnitude of the data
-    # to set reasonable bins for histogram plot
-    # om = round(np.log10(abs(avg)) - np.log10(5.5) + 0.5)
-    # step = 10**om / 100.
-    # decs = int(abs(np.log10(step)))
-
-    # Set bins range with step
-    # bins = np.around((np.arange(ymin, ymax, step)), decimals=decs)
 
     # Two subplots, unpack the axes array immediately
     fig = plt.figure(figsize=(12, 9)) 
     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1]) 
 
-    # Trajectory axis
+    # Trajectory subplot
     ax0 = plt.subplot(gs[0])
     ax0.set_xlabel('Snapshot', size=22)
     ax0.set_xlim(x.min(), x.max())
@@ -150,10 +142,10 @@ def plot_data(x, y, title=None, unit=None):
     ylim_low, ylim_high = ax0.get_ylim()
 
     # Average line and legend
-    avg_line = ax0.plot(x, np.array([avg] * len(x)), '--', linewidth=2, color='black', label='avg.')
+    ax0.axhline(avg, linestyle='dashed', linewidth=2, color='black', label='avg.')
     plt.legend(loc=1, fontsize=18).draw_frame(False)
 
-    # Set options for the histogram plot and plot the average line
+    # Histogram subplot
     ax1 = plt.subplot(gs[1])
     ax1.set_ylim(ylim_low, ylim_high)
     ax1.set_yticklabels([])
