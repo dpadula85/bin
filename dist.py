@@ -180,17 +180,27 @@ if __name__ == '__main__':
     unit = args.unit
     basename = f.split('.')[0]
     checkfile(f)
-    data = np.loadtxt(f)
 
     # Get columns to process and convert it to python numeration
     c1 = args.c1 - 1
     c2 = map(lambda x: x - 1, extend_compact_list(args.c2))
 
-    x = data[:,c1]
+    data = np.loadtxt(f)
+
+    if data.ndim == 1:
+        x = np.arange(1, len(data) + 1)
+        c2 = [0]
+
+    else:
+        x = data[:,c1]
 
     for col in c2:
+        
+        try:
+            y = data[:,col]
 
-        y = data[:,col]
+        except IndexError:
+            y = data
 
         fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
 
