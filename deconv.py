@@ -16,6 +16,9 @@ def options():
     # Optional arguments
     parser.add_argument('-f', '--filename', help='''File data.dat from mdanalyzer.''')
 
+    parser.add_argument('-a', '--accuracy', type=float, default=10., help='''Tolerance
+    interval for the detection of another maximum/minimum along the x axis.''')
+
     args = parser.parse_args()
 
     return args
@@ -40,12 +43,16 @@ if __name__ == '__main__':
 
     args = options()
 
+    acc = args.accuracy
     data = np.loadtxt(args.filename)
+
+    # Get DataSet and add it to the plot
     x = data[:,0]
     y = data[:,1]
+    plt.plot(x, y, lw=2, color='black', label='Data Set')
 
     # Find maxima and minima in the dataset
-    _max, _min = pd.peakdetect(y, x, 10, 0.30)
+    _max, _min = pd.peakdetect(y, x, acc, 0.30)
     peaks = _max + _min
     peaks.sort(key=lambda x: x[0])
 
@@ -54,28 +61,32 @@ if __name__ == '__main__':
     print(" > Found %d peaks:" % len(peaks))
     print
 
-    result = {}
     for i, p in enumerate(peaks, start=1):
 
         xm = p[0]
         ym = p[1]
+
+        # Fit the peak with a Gaussian
         A = 50.0
         avg = xm
         sigma = 3
         parms = np.array([A, avg, sigma])
         popt, y_fitted = fit_peak(x, y, parms)
-        result[i] = y_fitted
+
+        # Summary of the fitting procedure
         print(u.banner("Peak %d" % i, "=", 30))
         print(" > Area  : %10.2f" % popt[0])
         print(" > Max   : %10.2f" % popt[1])
         print(" > Sigma : %10.2f" % popt[2])
         print
 
-    plt.plot(x, y, lw=2, color='black', label='Data Set')
-    for i, peak in result.iteritems():
+        # Add data to the plot
+        marker = plt.plot(xm, ym, 'o', ms=8, label='Det. Max. %d' % i)
+        col = marker[0].get_color()
+        peak = plt.plot(x, y_fitted, color=col, lw=2, linestyle='dashed', label='Deconv. Peak %d' % i)
 
-        plt.plot(x, peak, lw=2, linestyle='dashed', label='Peak %d' % i)
 
-    plt.legend()
-    plt.show()
+    if len(peaks) > 0:
+        plt.legend().draw_frame(False)
+        plt.show()
     pass
