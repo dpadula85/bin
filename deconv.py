@@ -73,6 +73,7 @@ if __name__ == '__main__':
     peaks = _max + _min
     peaks.sort(key=lambda x: x[0])
 
+    print
     print(u.banner("Deconvolution", "=", 60))
     print
     print(" > Found %d peaks:" % len(peaks))
