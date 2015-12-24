@@ -121,36 +121,36 @@ def plot_data(x, y, title=None, unit=None):
     nbins = np.log2(len(y)) + 1
 
     # Two subplots, unpack the axes array immediately
-    fig = plt.figure(figsize=(12, 9)) 
-    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1]) 
+    fig = plt.figure(figsize=(16, 12)) 
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1]) 
 
     # Trajectory subplot
     ax0 = plt.subplot(gs[0])
-    ax0.set_xlabel('Snapshot', size=22)
+    ax0.set_xlabel('Data Set', size=26)
     ax0.set_xlim(x.min(), x.max())
-    ax0.tick_params(axis='both', which='major', labelsize=18)
+    ax0.tick_params(axis='both', which='major', labelsize=24)
     ax0.plot(x, y)
 
     if title:
         title = title.title()
         if unit:
-            ax0.set_ylabel('%s (%s)' % (title, unit), size=22)
+            ax0.set_ylabel('%s (%s)' % (title, unit), size=26)
         else:
-            ax0.set_ylabel('%s' % title, size=22)
+            ax0.set_ylabel('%s' % title, size=26)
 
     # Get y scale to set the same for the histogram
     ylim_low, ylim_high = ax0.get_ylim()
 
     # Average line and legend
     ax0.axhline(avg, linestyle='dashed', linewidth=2, color='black', label='avg.')
-    plt.legend(loc=1, fontsize=18).draw_frame(False)
+    plt.legend(loc=1, fontsize=24).draw_frame(False)
 
     # Histogram subplot
     ax1 = plt.subplot(gs[1])
     ax1.set_ylim(ylim_low, ylim_high)
     ax1.set_yticklabels([])
-    ax1.set_xlabel('Count', size=22)
-    ax1.tick_params(axis='x', which='major', labelsize=18)
+    ax1.set_xlabel('Count', size=26)
+    ax1.tick_params(axis='x', which='major', labelsize=24)
     ax1.axhline(avg, linestyle='dashed', linewidth=2, color='black')
 
     # Distribution histograms, the graph will be rotated by 90 deg
@@ -163,7 +163,7 @@ def plot_data(x, y, title=None, unit=None):
     fitx = np.linspace(lim1, lim2, 100)
     gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
     gau_line = ax1.plot(gau_fit, fitx, '--', linewidth=2, color='red', label='Gaussian fit')
-    plt.legend(loc=1, fontsize=18).draw_frame(False)
+    plt.legend(loc=1, fontsize=24).draw_frame(False)
 
     plt.tight_layout()
 

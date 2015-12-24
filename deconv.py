@@ -19,6 +19,9 @@ def options():
     parser.add_argument('-a', '--accuracy', type=float, default=10., help='''Tolerance
     interval for the detection of another maximum/minimum along the x axis.''')
 
+    parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor'], default='gau',
+    help='''Type of function for the deconvolution of experimental peaks.''')
+
     args = parser.parse_args()
 
     return args
@@ -28,13 +31,26 @@ def gaussian_peak(x, *parms):
 
     A, avg, sigma = parms
 
-    return A * np.exp(-(x-avg)**2/(2.*sigma**2))
+    return A * np.exp( -(x - avg)**2 / (2. * sigma**2))
 
 
-def fit_peak(x, y, guess):
+def lorentzian_peak(x, *parms):
+
+    A, avg, gamma = parms
+
+    return A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2) 
+
+
+def fit_peak(x, y, guess, function='gau'):
     
-    popt, pcov = curve_fit(gaussian_peak, x, y, p0=guess)
-    y_fitted = gaussian_peak(x, *popt)
+    if function == 'gau':
+        function = gaussian_peak
+
+    elif function == 'lor':
+        function = lorentzian_peak
+
+    popt, pcov = curve_fit(function, x, y, p0=guess)
+    y_fitted = function(x, *popt)
 
     return popt, y_fitted
 
@@ -44,6 +60,7 @@ if __name__ == '__main__':
     args = options()
 
     acc = args.accuracy
+    lineshape = args.lineshape
     data = np.loadtxt(args.filename)
 
     # Get DataSet and add it to the plot
@@ -66,12 +83,12 @@ if __name__ == '__main__':
         xm = p[0]
         ym = p[1]
 
-        # Fit the peak with a Gaussian
+        # Fit the peak with a function
         A = 50.0
         avg = xm
         sigma = 3
         parms = np.array([A, avg, sigma])
-        popt, y_fitted = fit_peak(x, y, parms)
+        popt, y_fitted = fit_peak(x, y, parms, lineshape)
 
         # Summary of the fitting procedure
         print(u.banner("Peak %d" % i, "=", 30))

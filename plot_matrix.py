@@ -42,7 +42,9 @@ def options():
 
 def doplot(coeff, colormap=None):
 
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
+    fig = plt.figure(figsize=(16, 16))
+    ax = plt.subplot()
 
     if not colormap:
         im = ax.pcolor(coeff)
