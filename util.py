@@ -1,18 +1,5 @@
 #!/usr/bin/env python
 
-# DeVoe.py: calculation of UV and ECD spectra by DeVoe approach.
-# Copyright (C) 2015  Daniele Padula dpadula85@yahoo.it
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import os
 import sys
 import numpy as np
@@ -106,6 +93,8 @@ def compact_extended_list(idxs, factor=0):
 
 
 def refframe(A, B, C):
+    '''Returns a reference frame where the x axis goes from A to B, the y axis
+    passes through C and the z axis is built accordingly.'''
 
     x = (B - A) / np.linalg.norm(B - A)
 
@@ -120,13 +109,32 @@ def refframe(A, B, C):
     return ref
 
 
+def refframe_var(A, B, C):
+    '''Returns a reference frame where A, B and C are contained in the x-y plane,
+    A is the origin, the x axis goes from A to B, the y axis is directed towards
+    C and the z axis is built accordingly.'''
+
+    x = (B - A) / np.linalg.norm(B - A)
+
+    # Build a temporary y axis to find the real z axis passing through A and
+    # perpendicular to the plane defined by A, B and C.
+    tmpy = (C - A) / np.linalg.norm(C - A)
+
+    z = np.cross(x, tmpy)
+    y = np.cross(z, x)
+
+    ref = np.array([x, y, z])
+
+    return ref
+
+
 def rot_mat_x(theta):
 
     theta = np.radians(theta)
     Rx = np.zeros((4,4))
     Rx[0] = np.array([1., 0., 0., 0.])
     Rx[1] = np.array([0., np.cos(theta), -1*np.sin(theta), 0.])
-    Rx[2] = np.array([0.,cnp.sin(theta), np.cos(theta), 0.])
+    Rx[2] = np.array([0., np.sin(theta), np.cos(theta), 0.])
     Rx[3] = np.array([0., 0., 0., 1.])
 
     return Rx
@@ -156,6 +164,25 @@ def rot_mat_z(theta):
     return Rz
 
 
+def rot(axis, theta):
+    '''Returns the rotation matrix for the clockwise rotation about
+    axis by theta according to Rodrigues' formula.'''
+
+    axis = axis / np.linalg.norm(axis)
+    theta = np.radians(theta)
+
+    # Define axis' cross-product matrix
+    K = np.zeros((3,3))
+    K[0] = [       0, -axis[2],  axis[1]]
+    K[1] = [ axis[2],        0, -axis[0]]
+    K[2] = [-axis[1],  axis[0],        0]
+
+    I = np.eye(3)
+    R = I + np.sin(theta) * K + (1 - np.cos(theta)) * np.linalg.matrix_power(K, 2)
+
+    return R
+
+
 def transl_mat(v):
 
     # Define the transformation matrix for a translation
@@ -163,6 +190,21 @@ def transl_mat(v):
     T[-1,:3] = v
 
     return T
+
+
+def rototransl(axis, theta, T):
+    '''Returns a 4x4 rototranslation matrix, where the rotation part is given
+    by the clockwise rotation about axis by theta, and the
+    translation by the vector T.'''
+
+    R = rot(axis, theta)
+    R = np.vstack([R, np.array([0., 0., 0.])])
+    R = np.c_[R, np.array([0., 0., 0., 1.])]
+    T_mat = transl_mat(T)
+
+    R[-1,:] = T_mat[-1,:]
+
+    return R
 
 
 def v1v2_angle(v1, v2):
@@ -264,7 +306,6 @@ def banner(text=None, ch='=', length=78):
             suffix = ch * (suffix_len/len(ch)) + ch[:suffix_len%len(ch)]
 
         return prefix + ' ' + text + ' ' + suffix
-
 
 
 if __name__ == '__main__':
