@@ -11,7 +11,7 @@ import util as u
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='Deconvolutes Experimental Data in Gaussian Peaks.')
+    parser = arg.ArgumentParser(description='Deconvolutes Experimental Data in separated Peaks.')
 
     # Optional arguments
     parser.add_argument('-f', '--filename', help='''File data.dat from mdanalyzer.''')
