@@ -121,7 +121,7 @@ if __name__ == '__main__':
     plt.plot(x, y, lw=2, color='black', label='Data Set')
 
     # Find maxima and minima in the dataset
-    peaks = findpeak(x, y)
+    peaks = findpeaks(x, y)
 
     print
     print(banner("Deconvolution", "=", 60))
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
         # Summary of the fitting procedure
         print(banner("Peak %d" % i, "=", 30))
-        print(" > Area  : %10.2f" % popt[0])
+        print(" > Area  : %10.2f" % np.abs(popt[0]))
         print(" > Max   : %10.2f" % popt[1])
         print(" > Sigma : %10.2f" % popt[2])
         print
