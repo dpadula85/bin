@@ -21,8 +21,8 @@ def options():
 
     parser.add_argument('--c2', default=['2'], nargs='+', help='''Columns containing the data.''')
 
-    parser.add_argument('--concatenate', default=False, action='store_true', help='''Concatenate the data
-    from all specified columns in a cumulative data set.''')
+    parser.add_argument('--merge', default=False, action='store_true', help='''Merge the data from all
+    specified columns in --c2 option in a cumulative data set.''')
 
     parser.add_argument('-t', '--title', type=str, default=None, help='''Name of the property to be plotted.''')
 
@@ -203,7 +203,7 @@ if __name__ == '__main__':
         try:
             y = data[:,col]
 
-            if args.concatenate:
+            if args.merge:
                 
                 if len(tot) == 0:
                     tot = y
@@ -214,7 +214,7 @@ if __name__ == '__main__':
         except IndexError:
             y = data
 
-        if not args.concatenate:
+        if not args.merge:
             fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
 
             print(banner("DATA ANALYSIS - COL %d" % (col + 1), "=", 60))
@@ -257,7 +257,7 @@ if __name__ == '__main__':
             print
             plt.show()
 
-    if args.concatenate:
+    if args.merge:
         fig, avg, sigma, ymin, ymax = plot_data(np.arange(1, len(tot) + 1), tot, title, unit)
     
         print(banner("DATA ANALYSIS - COLS %d-%d" % (min(c2) + 1, max(c2) + 1), "=", 60))
@@ -300,4 +300,3 @@ if __name__ == '__main__':
         print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
         print
         plt.show()
-
