@@ -259,7 +259,8 @@ if __name__ == '__main__':
 
     # Here we're out of the for cycle! Process the merged data if a merge was required.
     if args.merge:
-        fig, avg, sigma, ymin, ymax = plot_data(np.arange(1, len(tot) + 1), tot, title, unit)
+        x = np.arange(1, len(tot) + 1)
+        fig, avg, sigma, ymin, ymax = plot_data(x, tot, title, unit)
     
         print(banner("DATA ANALYSIS - COLS %d-%d" % (min(c2) + 1, max(c2) + 1), "=", 60))
         print
