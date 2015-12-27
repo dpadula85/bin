@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
@@ -17,6 +18,10 @@ def options():
 
     # parser.add_argument('-a', '--accuracy', type=float, default=10., help='''Tolerance
     # interval for the detection of another maximum/minimum along the x axis.''')
+
+    parser.add_argument('--fit', choices=['single', 'global'], default='single',
+    help='''Type of fit to use. Single : each peak fitted alone, Global : whole data set fitted; the components
+    are also plotted.''')
 
     parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor'], default='gau',
     help='''Type of function for the deconvolution of experimental peaks.''')
@@ -93,6 +98,32 @@ def lorentzian_peak(x, *parms):
     return A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2) 
 
 
+def sum_gaussians(x, *parms):
+
+    y = np.zeros_like(x)
+
+    for i in range(0, len(parms), 3):
+        A = parms[i]
+        avg = parms[i + 1]
+        wid = parms[i + 2]
+        y = y + A * np.exp( -((x - avg)/wid)**2)
+
+    return y
+
+
+def sum_lorentzians(x, *parms):
+
+    y = np.zeros_like(x)
+
+    for i in range(0, len(parms), 3):
+        A = parms[i]
+        avg = parms[i + 1]
+        gamma = parms[i + 2]
+        y = y + (A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2))
+
+    return y
+
+
 def fit_peak(x, y, guess, function='gau'):
     
     if function == 'gau':
@@ -129,6 +160,7 @@ if __name__ == '__main__':
     print(" > Found %d peaks:" % len(peaks))
     print
 
+    totguess = np.array([])
     for i, p in enumerate(peaks, start=1):
 
         xm = p[0]
@@ -139,22 +171,83 @@ if __name__ == '__main__':
         avg = xm
         sigma = 3
         parms = np.array([A, avg, sigma])
-        popt, y_fitted = fit_peak(x, y, parms, lineshape)
-
-        # Summary of the fitting procedure
-        print(banner("Peak %d" % i, "=", 30))
-        print(" > Area  : %10.2f" % np.abs(popt[0]))
-        print(" > Max   : %10.2f" % popt[1])
-        print(" > Sigma : %10.2f" % popt[2])
-        print
+        totguess = np.r_[totguess, parms]
 
         # Add data to the plot
         marker = plt.plot(xm, ym, 'o', ms=8, label='Det. Max. %d' % i)
         col = marker[0].get_color()
-        peak = plt.plot(x, y_fitted, color=col, lw=2, linestyle='dashed', label='Deconv. Peak %d' % i)
 
+        if args.fit == 'single':
+
+            # Fit the single maximum with a function
+            popt, y_fitted = fit_peak(x, y, parms, lineshape)
+
+            # Summary of the fitting procedure
+            print(banner("Peak %d" % i, "=", 30))
+            print(" > Area  : %10.2f" % np.abs(popt[0]))
+            print(" > Max   : %10.2f" % popt[1])
+            print(" > Sigma : %10.2f" % popt[2])
+            print
+
+            peak = plt.plot(x, y_fitted, color=col, lw=2, linestyle='dashed', label='Deconv. Peak %d' % i)
+
+    # Here we're out of the for cycle! Do operations for the global fit
+    if args.fit == 'global':
+
+        if lineshape == 'gau':
+
+            try:
+                popt, pcov = curve_fit(sum_gaussians, x, y, p0=totguess)
+
+            except RuntimeError:
+                print(banner("ERROR", "=", 60))
+                print(" Curve fitting failed!")
+                sys.exit()
+
+            y_totfit = sum_gaussians(x, *popt)
+
+        elif lineshape == 'lor':
+
+            try:
+                popt, pcov = curve_fit(sum_lorentzians, x, y, p0=totguess)
+
+            except RuntimeError:
+                print(banner("ERROR", "=", 60))
+                print(" Curve fitting failed!")
+                sys.exit()
+
+            y_totfit = sum_lorentzians(x, *popt)
+
+        tot = plt.plot(x, y_totfit, color='black', lw=3, linestyle='dashed', label='Total fit')
+
+        plt.gca().set_color_cycle(None)
+
+        if lineshape == 'gau':
+            funct = gaussian_peak
+
+        elif lineshape == 'lor':
+            funct = lorentzian_peak
+
+        j = 1
+        for i in range(0, len(totguess), 3):
+
+            A = popt[i]
+            avg = popt[i + 1]
+            wid = popt[i + 2]
+            parms = np.array([A, avg, wid])
+
+            y_fitted = funct(x, *parms)
+            peak = plt.plot(x, y_fitted, lw=2, linestyle='dashed', label='Component %d' % j)
+
+            # Summary of the fitting procedure
+            print(banner("Component %d" % j, "=", 30))
+            print(" > Area  : %10.2f" % np.abs(guess[0]))
+            print(" > Max   : %10.2f" % guess[1])
+            print(" > Sigma : %10.2f" % guess[2])
+            print
+
+            j += 1
 
     if len(peaks) > 0:
         plt.legend().draw_frame(False)
         plt.show()
-    pass
