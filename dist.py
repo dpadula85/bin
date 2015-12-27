@@ -225,38 +225,39 @@ if __name__ == '__main__':
             print(" > Max.      : %10.4f" % ymax)
             print
 
-        # Save plot as vector image
-        if args.save:
+            # Save plot as vector image
+            if args.save:
 
-            print(" > Saving plot for COL %d..." % (col + 1))
-            print
-            plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save), dpi=1200, transparent=True)
+                print(" > Saving plot for COL %d..." % (col + 1))
+                print
+                plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save), dpi=1200, transparent=True)
 
-        # Show the plot
-        if args.show:
+            # Show the plot
+            if args.show:
 
-            # Uncomment the two linex of the backend in use to generate a
-            # maximized-window plot
+                # Uncomment the two linex of the backend in use to generate a
+                # maximized-window plot
 
-            # Option 1
-            # QT backend
-            # manager = plt.get_current_fig_manager()
-            # manager.window.showMaximized()
+                # Option 1
+                # QT backend
+                # manager = plt.get_current_fig_manager()
+                # manager.window.showMaximized()
 
-            # Option 2
-            # TkAgg backend
-            # manager = plt.get_current_fig_manager()
-            # manager.resize(*manager.window.maxsize())
+                # Option 2
+                # TkAgg backend
+                # manager = plt.get_current_fig_manager()
+                # manager.resize(*manager.window.maxsize())
 
-            # Option 3
-            # WX backend
-            # manager = plt.get_current_fig_manager()
-            # manager.frame.Maximize(True)
+                # Option 3
+                # WX backend
+                # manager = plt.get_current_fig_manager()
+                # manager.frame.Maximize(True)
 
-            print(" > Showing plot for COL %d..." % (col + 1))
-            print
-            plt.show()
+                print(" > Showing plot for COL %d..." % (col + 1))
+                print
+                plt.show()
 
+    # Here we're out of the for cycle! Process the merged data if a merge was required.
     if args.merge:
         fig, avg, sigma, ymin, ymax = plot_data(np.arange(1, len(tot) + 1), tot, title, unit)
     
@@ -269,34 +270,34 @@ if __name__ == '__main__':
         print
         pass
 
-    # Save plot as vector image
-    if args.save:
-    
-        print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
-        print
-        plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
-    
-    # Show the plot
-    if args.show:
-    
-        # Uncomment the two linex of the backend in use to generate a
-        # maximized-window plot
-    
-        # Option 1
-        # QT backend
-        # manager = plt.get_current_fig_manager()
-        # manager.window.showMaximized()
-    
-        # Option 2
-        # TkAgg backend
-        # manager = plt.get_current_fig_manager()
-        # manager.resize(*manager.window.maxsize())
-    
-        # Option 3
-        # WX backend
-        # manager = plt.get_current_fig_manager()
-        # manager.frame.Maximize(True)
-    
-        print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
-        print
-        plt.show()
+        # Save plot as vector image
+        if args.save:
+        
+            print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+            print
+            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
+        
+        # Show the plot
+        if args.show:
+        
+            # Uncomment the two linex of the backend in use to generate a
+            # maximized-window plot
+        
+            # Option 1
+            # QT backend
+            # manager = plt.get_current_fig_manager()
+            # manager.window.showMaximized()
+        
+            # Option 2
+            # TkAgg backend
+            # manager = plt.get_current_fig_manager()
+            # manager.resize(*manager.window.maxsize())
+        
+            # Option 3
+            # WX backend
+            # manager = plt.get_current_fig_manager()
+            # manager.frame.Maximize(True)
+        
+            print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+            print
+            plt.show()
