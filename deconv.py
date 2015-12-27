@@ -106,7 +106,7 @@ def sum_gaussians(x, *parms):
         A = parms[i]
         avg = parms[i + 1]
         sigma = parms[i + 2]
-        y = y + A * np.exp( -((x - avg)/sigma)**2)
+        y += A * np.exp( -(x - avg)**2/ (2. * sigma**2))
 
     return y
 
@@ -119,7 +119,7 @@ def sum_lorentzians(x, *parms):
         A = parms[i]
         avg = parms[i + 1]
         gamma = parms[i + 2]
-        y = y + (A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2))
+        y += A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2)
 
     return y
 
@@ -149,6 +149,8 @@ if __name__ == '__main__':
     # Get DataSet and add it to the plot
     x = data[:,0]
     y = data[:,1]
+    title = "%s fit" % args.fit
+    plt.title(title.title())
     plt.plot(x, y, lw=2, color='black', label='Data Set')
 
     # Find maxima and minima in the dataset
@@ -166,14 +168,14 @@ if __name__ == '__main__':
         xm = p[0]
         ym = p[1]
 
-        # Fit the peak with a function
+        # Set the initial guess for the fitting procedure
         A = 50.0
         avg = xm
         sigma = 3
         parms = np.array([A, avg, sigma])
         totguess = np.r_[totguess, parms]
 
-        # Add data to the plot
+        # Add points for the maxima and minima to the plot
         marker = plt.plot(xm, ym, 'o', ms=8, label='Det. Max. %d' % i)
         col = marker[0].get_color()
 
@@ -189,11 +191,14 @@ if __name__ == '__main__':
             print(" > Sigma : %10.2f" % popt[2])
             print
 
+            # Plot the result of the fitting
             peak = plt.plot(x, y_fitted, color=col, lw=2, linestyle='dashed', label='Deconv. Peak %d' % i)
 
     # Here we're out of the for cycle! Do operations for the global fit
     if args.fit == 'global':
 
+        # Fit the data set with a sum of n functions, where n is the
+        # number of peaks found by the findpeaks function
         if lineshape == 'gau':
 
             try:
@@ -218,6 +223,7 @@ if __name__ == '__main__':
 
             y_totfit = sum_lorentzians(x, *popt)
 
+        # Plot the function that fits experimental data
         tot = plt.plot(x, y_totfit, color='black', lw=3, linestyle='dashed', label='Total fit')
 
         plt.gca().set_color_cycle(None)
@@ -228,6 +234,8 @@ if __name__ == '__main__':
         elif lineshape == 'lor':
             funct = lorentzian_peak
 
+        # Plot the single functions constituting the sum function that fits
+        # the experimental data set
         j = 1
         for i in range(0, len(totguess), 3):
 
@@ -241,9 +249,9 @@ if __name__ == '__main__':
 
             # Summary of the fitting procedure
             print(banner("Component %d" % j, "=", 30))
-            print(" > Area  : %10.2f" % np.abs(guess[0]))
-            print(" > Max   : %10.2f" % guess[1])
-            print(" > Sigma : %10.2f" % guess[2])
+            print(" > Area  : %10.2f" % np.abs(parms[0]))
+            print(" > Max   : %10.2f" % parms[1])
+            print(" > Sigma : %10.2f" % parms[2])
             print
 
             j += 1
