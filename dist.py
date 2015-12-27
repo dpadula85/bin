@@ -219,6 +219,7 @@ if __name__ == '__main__':
 
             print(banner("DATA ANALYSIS - COL %d" % (col + 1), "=", 60))
             print
+            print(" > Data Set  : %10d" % len(y))
             print(" > Avg.      : %10.4f" % avg)
             print(" > Std. Dev. : %10.4f" % sigma)
             print(" > Min.      : %10.4f" % ymin)
@@ -264,6 +265,7 @@ if __name__ == '__main__':
     
         print(banner("DATA ANALYSIS - COLS %d-%d" % (min(c2) + 1, max(c2) + 1), "=", 60))
         print
+        print(" > Data Set  : %10d" % len(tot))
         print(" > Avg.      : %10.4f" % avg)
         print(" > Std. Dev. : %10.4f" % sigma)
         print(" > Min.      : %10.4f" % ymin)
