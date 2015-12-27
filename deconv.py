@@ -84,21 +84,7 @@ def findpeaks(x, y):
     return peaks
 
 
-def gaussian_peak(x, *parms):
-
-    A, avg, sigma = parms
-
-    return A * np.exp( -(x - avg)**2 / (2. * sigma**2))
-
-
-def lorentzian_peak(x, *parms):
-
-    A, avg, gamma = parms
-
-    return A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2) 
-
-
-def sum_gaussians(x, *parms):
+def gaussians(x, *parms):
 
     y = np.zeros_like(x)
 
@@ -111,7 +97,7 @@ def sum_gaussians(x, *parms):
     return y
 
 
-def sum_lorentzians(x, *parms):
+def lorentzians(x, *parms):
 
     y = np.zeros_like(x)
 
@@ -122,20 +108,6 @@ def sum_lorentzians(x, *parms):
         y += A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2)
 
     return y
-
-
-def fit_peak(x, y, guess, function='gau'):
-    
-    if function == 'gau':
-        function = gaussian_peak
-
-    elif function == 'lor':
-        function = lorentzian_peak
-
-    popt, pcov = curve_fit(function, x, y, p0=guess)
-    y_fitted = function(x, *popt)
-
-    return popt, y_fitted
 
 
 if __name__ == '__main__':
@@ -171,8 +143,8 @@ if __name__ == '__main__':
         # Set the initial guess for the fitting procedure
         A = 50.0
         avg = xm
-        sigma = 3
-        parms = np.array([A, avg, sigma])
+        wid = 3
+        parms = np.array([A, avg, wid])
         totguess = np.r_[totguess, parms]
 
         # Add points for the maxima and minima to the plot
@@ -181,8 +153,15 @@ if __name__ == '__main__':
 
         if args.fit == 'single':
 
+            if lineshape == 'gau':
+                funct = gaussians
+
+            elif lineshape == 'lor':
+                funct = lorentzians
+
             # Fit the single maximum with a function
-            popt, y_fitted = fit_peak(x, y, parms, lineshape)
+            popt, pcov = curve_fit(funct, x, y, p0=parms)
+            y_fitted = funct(x, *popt)
 
             # Summary of the fitting procedure
             print(banner("Peak %d" % i, "=", 30))
@@ -202,26 +181,26 @@ if __name__ == '__main__':
         if lineshape == 'gau':
 
             try:
-                popt, pcov = curve_fit(sum_gaussians, x, y, p0=totguess)
+                popt, pcov = curve_fit(gaussians, x, y, p0=totguess)
 
             except RuntimeError:
                 print(banner("ERROR", "=", 60))
                 print(" Curve fitting failed!")
                 sys.exit()
 
-            y_totfit = sum_gaussians(x, *popt)
+            y_totfit = gaussians(x, *popt)
 
         elif lineshape == 'lor':
 
             try:
-                popt, pcov = curve_fit(sum_lorentzians, x, y, p0=totguess)
+                popt, pcov = curve_fit(lorentzians, x, y, p0=totguess)
 
             except RuntimeError:
                 print(banner("ERROR", "=", 60))
                 print(" Curve fitting failed!")
                 sys.exit()
 
-            y_totfit = sum_lorentzians(x, *popt)
+            y_totfit = lorentzians(x, *popt)
 
         # Plot the function that fits experimental data
         tot = plt.plot(x, y_totfit, color='black', lw=3, linestyle='dashed', label='Total fit')
@@ -229,10 +208,10 @@ if __name__ == '__main__':
         plt.gca().set_color_cycle(None)
 
         if lineshape == 'gau':
-            funct = gaussian_peak
+            funct = gaussians
 
         elif lineshape == 'lor':
-            funct = lorentzian_peak
+            funct = lorentzians
 
         # Plot the single functions constituting the sum function that fits
         # the experimental data set
