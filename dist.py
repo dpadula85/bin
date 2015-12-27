@@ -12,7 +12,7 @@ from scipy.stats import norm
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='Plots a nice graph for MD properties.')
+    parser = arg.ArgumentParser(description='Plots a nice graph for MD properties.', formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
     parser.add_argument('filename', nargs='?', default='data.dat', help='''File data.dat from mdanalyzer.''')
