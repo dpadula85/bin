@@ -116,6 +116,13 @@ if __name__ == '__main__':
 
     # acc = args.accuracy
     lineshape = args.lineshape
+
+    if lineshape == 'gau':
+        funct = gaussians
+
+    elif lineshape == 'lor':
+        funct = lorentzians
+
     data = np.loadtxt(args.filename)
 
     # Get DataSet and add it to the plot
@@ -153,12 +160,6 @@ if __name__ == '__main__':
 
         if args.fit == 'single':
 
-            if lineshape == 'gau':
-                funct = gaussians
-
-            elif lineshape == 'lor':
-                funct = lorentzians
-
             # Fit the single maximum with a function
             popt, pcov = curve_fit(funct, x, y, p0=parms)
             y_fitted = funct(x, *popt)
@@ -178,40 +179,19 @@ if __name__ == '__main__':
 
         # Fit the data set with a sum of n functions, where n is the
         # number of peaks found by the findpeaks function
-        if lineshape == 'gau':
+        try:
+            popt, pcov = curve_fit(funct, x, y, p0=totguess)
 
-            try:
-                popt, pcov = curve_fit(gaussians, x, y, p0=totguess)
+        except RuntimeError:
+            print(banner("ERROR", "=", 60))
+            print(" Curve fitting failed!")
+            sys.exit()
 
-            except RuntimeError:
-                print(banner("ERROR", "=", 60))
-                print(" Curve fitting failed!")
-                sys.exit()
-
-            y_totfit = gaussians(x, *popt)
-
-        elif lineshape == 'lor':
-
-            try:
-                popt, pcov = curve_fit(lorentzians, x, y, p0=totguess)
-
-            except RuntimeError:
-                print(banner("ERROR", "=", 60))
-                print(" Curve fitting failed!")
-                sys.exit()
-
-            y_totfit = lorentzians(x, *popt)
+        y_totfit = funct(x, *popt)
 
         # Plot the function that fits experimental data
         tot = plt.plot(x, y_totfit, color='black', lw=3, linestyle='dashed', label='Total fit')
-
         plt.gca().set_color_cycle(None)
-
-        if lineshape == 'gau':
-            funct = gaussians
-
-        elif lineshape == 'lor':
-            funct = lorentzians
 
         # Plot the single functions constituting the sum function that fits
         # the experimental data set
