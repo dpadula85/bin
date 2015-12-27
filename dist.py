@@ -21,6 +21,9 @@ def options():
 
     parser.add_argument('--c2', default=['2'], nargs='+', help='''Columns containing the data.''')
 
+    parser.add_argument('--concatenate', default=False, action='store_true', help='''Concatenate the data
+    from all specified columns in a cumulative data set.''')
+
     parser.add_argument('-t', '--title', type=str, default=None, help='''Name of the property to be plotted.''')
 
     parser.add_argument('-u', '--unit', type=str, default=None, help='''Unit of the property to be plotted.''')
@@ -194,23 +197,33 @@ if __name__ == '__main__':
     else:
         x = data[:,c1]
 
+    tot = np.array([])
     for col in c2:
         
         try:
             y = data[:,col]
 
+            if args.concatenate:
+                
+                if len(tot) == 0:
+                    tot = y
+
+                else:
+                    tot = np.r_[tot, y]
+
         except IndexError:
             y = data
 
-        fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
+        if not args.concatenate:
+            fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
 
-        print(banner("DATA ANALYSIS - COL %d" % (col + 1), "=", 60))
-        print
-        print(" > Avg.      : %10.4f" % avg)
-        print(" > Std. Dev. : %10.4f" % sigma)
-        print(" > Min.      : %10.4f" % ymin)
-        print(" > Max.      : %10.4f" % ymax)
-        print
+            print(banner("DATA ANALYSIS - COL %d" % (col + 1), "=", 60))
+            print
+            print(" > Avg.      : %10.4f" % avg)
+            print(" > Std. Dev. : %10.4f" % sigma)
+            print(" > Min.      : %10.4f" % ymin)
+            print(" > Max.      : %10.4f" % ymax)
+            print
 
         # Save plot as vector image
         if args.save:
@@ -243,3 +256,48 @@ if __name__ == '__main__':
             print(" > Showing plot for COL %d..." % (col + 1))
             print
             plt.show()
+
+    if args.concatenate:
+        fig, avg, sigma, ymin, ymax = plot_data(np.arange(1, len(tot) + 1), tot, title, unit)
+    
+        print(banner("DATA ANALYSIS - COLS %d-%d" % (min(c2) + 1, max(c2) + 1), "=", 60))
+        print
+        print(" > Avg.      : %10.4f" % avg)
+        print(" > Std. Dev. : %10.4f" % sigma)
+        print(" > Min.      : %10.4f" % ymin)
+        print(" > Max.      : %10.4f" % ymax)
+        print
+        pass
+
+    # Save plot as vector image
+    if args.save:
+    
+        print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+        print
+        plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
+    
+    # Show the plot
+    if args.show:
+    
+        # Uncomment the two linex of the backend in use to generate a
+        # maximized-window plot
+    
+        # Option 1
+        # QT backend
+        # manager = plt.get_current_fig_manager()
+        # manager.window.showMaximized()
+    
+        # Option 2
+        # TkAgg backend
+        # manager = plt.get_current_fig_manager()
+        # manager.resize(*manager.window.maxsize())
+    
+        # Option 3
+        # WX backend
+        # manager = plt.get_current_fig_manager()
+        # manager.frame.Maximize(True)
+    
+        print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+        print
+        plt.show()
+
