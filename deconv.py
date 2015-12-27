@@ -105,8 +105,8 @@ def sum_gaussians(x, *parms):
     for i in range(0, len(parms), 3):
         A = parms[i]
         avg = parms[i + 1]
-        wid = parms[i + 2]
-        y = y + A * np.exp( -((x - avg)/wid)**2)
+        sigma = parms[i + 2]
+        y = y + A * np.exp( -((x - avg)/sigma)**2)
 
     return y
 
