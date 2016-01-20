@@ -26,6 +26,11 @@ def options():
     parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor'], default='gau',
     help='''Type of function for the deconvolution of experimental peaks.''')
 
+    parser.add_argument('-t', '--thresh', type=float, help='''Threshold to ignore data.''')
+
+    parser.add_argument( '-s', '--search', default=False, action='store_true',
+    help='''Search for both maxima and minima (default: maxima only).''')
+
     args = parser.parse_args()
 
     return args
@@ -71,14 +76,17 @@ def banner(text=None, ch='=', length=78):
         return prefix + ' ' + text + ' ' + suffix
 
 
-def findpeaks(x, y):
+def findpeaks(x, y, minima=False):
 
     _max = signal.argrelmax(y, order=5)[0]
-    _min = signal.argrelmin(y, order=5)[0]
     maxs = [[x[p], y[p]] for p in _max]
-    mins = [[x[p], y[p]] for p in _min]
+    peaks = maxs
 
-    peaks = maxs + mins
+    if minima:
+        _min = signal.argrelmin(y, order=5)[0]
+        mins = [[x[p], y[p]] for p in _min]
+        peaks = maxs + mins
+
     peaks.sort(key=lambda x: x[0])
 
     return peaks
@@ -114,7 +122,11 @@ if __name__ == '__main__':
 
     args = options()
 
-    # acc = args.accuracy
+    if not args.thresh:
+        thresh = 0.0
+    else:
+        thresh = args.thresh
+
     lineshape = args.lineshape
 
     if lineshape == 'gau':
@@ -128,12 +140,16 @@ if __name__ == '__main__':
     # Get DataSet and add it to the plot
     x = data[:,0]
     y = data[:,1]
+    filtered_y = np.copy(y)
+    idxs = np.abs(filtered_y) < thresh
+    filtered_y[idxs] = 0.0
+
     title = "%s fit" % args.fit
     plt.title(title.title())
-    plt.plot(x, y, lw=2, color='black', label='Data Set')
+    plt.plot(x, y, lw=1, color='black', label='Data Set')
 
     # Find maxima and minima in the dataset
-    peaks = findpeaks(x, y)
+    peaks = findpeaks(x, filtered_y, args.search)
 
     print
     print(banner("Deconvolution", "=", 60))
@@ -161,7 +177,7 @@ if __name__ == '__main__':
         if args.fit == 'single':
 
             # Fit the single maximum with a function
-            popt, pcov = curve_fit(funct, x, y, p0=parms)
+            popt, pcov = curve_fit(funct, x, filtered_y, p0=parms)
             y_fitted = funct(x, *popt)
 
             # Summary of the fitting procedure
@@ -180,7 +196,7 @@ if __name__ == '__main__':
         # Fit the data set with a sum of n functions, where n is the
         # number of peaks found by the findpeaks function
         try:
-            popt, pcov = curve_fit(funct, x, y, p0=totguess)
+            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess)
 
         except RuntimeError:
             print(banner("ERROR", "=", 60))
@@ -190,7 +206,7 @@ if __name__ == '__main__':
         y_totfit = funct(x, *popt)
 
         # Plot the function that fits experimental data
-        tot = plt.plot(x, y_totfit, color='black', lw=3, linestyle='dashed', label='Total fit')
+        tot = plt.plot(x, y_totfit, color='black', lw=4, linestyle='dashed', label='Total fit')
         plt.gca().set_color_cycle(None)
 
         # Plot the single functions constituting the sum function that fits
@@ -208,9 +224,9 @@ if __name__ == '__main__':
 
             # Summary of the fitting procedure
             print(banner("Component %d" % j, "=", 30))
-            print(" > Area  : %10.2f" % np.abs(parms[0]))
+            print(" > Area  : %10.2e" % np.abs(parms[0]))
             print(" > Max   : %10.2f" % parms[1])
-            print(" > Sigma : %10.2f" % parms[2])
+            print(" > Sigma : %10.2f" % np.abs(parms[2]))
             print
 
             j += 1
