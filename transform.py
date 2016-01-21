@@ -19,7 +19,7 @@ def options():
 
     parser.add_argument('-n', '--nunits', type=int, default=1, help='''Number of times to repeat the unit.''')
 
-    parser.add_argument('-d', '--distance', type=float, default=4., help='''Distance between close units.''')
+    parser.add_argument('-d', '--distance', type=float, default=0., help='''Distance between close units.''')
 
     parser.add_argument('-dd', '--dd', default=False, action='store_true', help='''Increase distance for each unit.''')
 
