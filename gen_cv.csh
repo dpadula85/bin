@@ -90,19 +90,15 @@ if ( $publist == 'yes' ) then
     endif
 
     pdflatex -interaction=nonstopmode $pub_file > /dev/null
-    pdflatex -interaction=nonstopmode $pres_file > /dev/null
-    pdfunite ${pub_file:r}.pdf ${pres_file:r}.pdf tmp.pdf
 
     if ( $join == 'yes' ) then
-        pdftk A="${cv_file:r}.pdf" B=tmp.pdf cat A1-1 A2-2 B1-1 B2-2 B3-3 A3-3 output final.pdf
-        rm tmp.pdf
+        pdftk A="${cv_file:r}.pdf" B="${pub_file:r}.pdf" cat A1-1 A2-2 B1-1 B2-2 B3-3 A3-3 output final.pdf
         mv final.pdf ${cv_file:r}.pdf
         cp ${cv_file:r}.pdf ../
         echo "Your output is in $WDir/${cv_file:r}.pdf"
 
     else
-        mv tmp.pdf Padula_pub.pdf
-        cp ${cv_file:r}.pdf Padula_pub.pdf ../
+        cp ${cv_file:r}.pdf Padula_pubs.pdf ../
         echo "Your output is in $WDir/${cv_file:r}.pdf and in $WDir/Padula_pub.pdf"
 
     endif

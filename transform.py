@@ -15,7 +15,7 @@ def options():
     # Optional arguments
     parser.add_argument('-f', '--filename', help='''Input structure.''')
 
-    parser.add_argument('-sf', '--format', help='''Format of the input structure.''')
+    parser.add_argument('-sf', '--sf', choices=['g09in', 'pdb', 'mol2', 'xyz'], help='''Format of the input structure.''')
 
     parser.add_argument('-n', '--nunits', type=int, default=1, help='''Number of times to repeat the unit.''')
 
@@ -25,7 +25,7 @@ def options():
 
     parser.add_argument('-a', '--angle', type=float, default=5., help='''Angle between close units.''')
 
-    parser.add_argument('-ax', '--axis', choices=['x', 'y', 'z'], help='''Propagation axis for the repetition of the units.''')
+    parser.add_argument('-ax', '--axis', choices=['x', 'y', 'z'], default='x', help='''Propagation axis for the repetition of the units.''')
 
     parser.add_argument('-o', '--output', type=str, default='out', help='''Output prefix.''')
 
@@ -34,9 +34,17 @@ def options():
     return args
 
 
+def checkfile(filename):
+
+    if not os.path.isfile(filename):
+        print("File %s not found!" % filename)
+        sys.exit()
+
+
 def parse_G09_input(infile):
     '''Returns the structure.'''
 
+    checkfile(infile)
     structure = []
     opt = 0
 
@@ -60,6 +68,99 @@ def parse_G09_input(infile):
                 structure.append([atom, atom_x, atom_y, atom_z])
 
     return structure
+
+
+def parse_PDB(pdb_file):
+
+    checkfile(pdb_file)
+
+    atom_names = []
+    atoms = []
+    res_names = []
+    res_ids = []
+    atom_coord = []
+
+    with open(pdb_file) as f:
+
+        for line in f:
+
+            # Read Atoms
+            if line[0:4] == 'ATOM' or line[0:6] == 'HETATM':
+
+                atom_names.append(line[12:15])
+                atom = line[12:15]
+                atom = ''.join([i for i in atom if not i.isdigit()]).strip()
+                atoms.append(atom)
+                res_names.append(line[17:19])
+
+                try:
+                    res_ids.append(int(line[22:25]))
+
+                except ValueError:
+                    res_ids.append(None)
+
+                x = float(line[30:37])
+                y = float(line[38:45])
+                z = float(line[46:53])
+                atom_coord.append([x, y, z])
+
+    struct = [ [ el[0], el[1][0], el[1][1], el[1][2] ] for el in zip(atoms, atom_coord) ]
+    return struct
+
+
+def parse_XYZ(xyz_file):
+
+    checkfile(xyz_file)
+    struct = np.genfromtxt(xyz_file, skiprows=2, dtype=None)
+
+    return struct.tolist()
+
+
+def parse_MOL2(mol2_file):
+
+    checkfile(mol2_file)
+
+    atom_names = []
+    atom_types = []
+    atoms = []
+    res_names = []
+    res_ids = []
+    atom_coord = []
+
+    with open(mol2_file) as f:
+
+        while True:
+
+            line = f.readline()
+
+            if not line:
+                break
+
+            # Read initial lines
+            if line[0:17] == '@<TRIPOS>MOLECULE':
+                f.readline()
+                info = f.readline().split()
+                NAtoms = int(info[0])
+                try:
+                    NRes = int(info[2])
+                except:
+                    NRes = 1
+
+            # Read Atoms
+            elif  line[0:13] == '@<TRIPOS>ATOM':
+                for i in range(NAtoms):
+
+                    data = f.readline().split()
+                    
+                    # save data for the old one
+                    atom_names.append(data[1])
+                    atom = ''.join([i for i in data[1] if not i.isdigit()]).strip()
+                    atoms.append(atom)
+                    atom_types.append(data[5])
+                    atom_coord.append(map(float, data[2:5]))
+
+    struct = [ [ el[0], el[1][0], el[1][1], el[1][2] ] for el in zip(atoms, atom_coord) ]
+    return struct
 
 
 def write_PDB(pdbout, coords):
@@ -148,6 +249,7 @@ if __name__ == '__main__':
 
     args = options()
     infile = args.filename
+    sf = args.sf
     nunits = args.nunits
     distance = args.distance
     angle = args.angle
@@ -165,7 +267,21 @@ if __name__ == '__main__':
     elif axis == 'z':
         axis = cartesian[2]
 
-    m = parse_G09_input(infile)
+    #
+    # Get structure
+    #
+    if sf == 'mol2':
+        m = parse_MOL2(infile)
+
+    elif sf == 'pdb':
+        m = parse_PDB(infile)
+
+    elif sf == 'xyz':
+        m = parse_XYZ(infile)
+
+    elif sf == 'g09in':
+        m = parse_G09_input(infile)
+
     natoms = len(m)
     struct = np.array([ [atom[1], atom[2], atom[3]] for atom in m ])
     atoms = [ atom[0] for atom in m ]
