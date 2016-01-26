@@ -268,6 +268,105 @@ def write_XYZ(xyzout, coords):
     return
 
 
+def parse_MOL2(mol2file):
+
+    with open(mol2file) as f:
+        FoundAt = False
+        while True:
+            line = f.readline()
+            if not line:
+                break
+
+            # skip comments
+            elif line[0] == '#':
+                continue
+            
+            # Read initial lines
+            elif line[0:17] == '@<TRIPOS>MOLECULE':
+                f.readline()
+                info = f.readline().split()
+                NAtoms = int(info[0])
+                try:
+                    NRes = int(info[2])
+                except:
+                    NRes = 1
+
+                atom_names = []
+                atom_types = []
+                res_names = []
+                res_ids = []
+                atom_coord = []
+
+            # Read Atoms
+            elif  line[0:13] == '@<TRIPOS>ATOM':
+                for i in range(NAtoms):
+                    data = f.readline().split()
+                    
+                    # The following code creates this structure:
+                    # res_names and res_ids are plain lists, and the elements
+                    # appear only once per residue.
+                    # atom_names, type and coord are lists of lists. Each sublist
+                    # corresponds to a residue and contains all the info
+                    # for  on the atoms in that residue.
+
+                    # Special case for the first residue
+                    try:
+                        res_ids[-1]
+                    except IndexError:
+                        res_ids.append(int(data[6]))
+                    
+                    # Special case for the first residue
+                    try:
+                        res_names[-1]
+                    except IndexError:
+                        res_names.append(data[7])
+                    
+                    # Check id: new residue or old one
+                    # if in new residue
+                    if int(data[6]) != res_ids[-1]:
+                        res_ids.append(int(data[6]))
+                        res_names.append(data[7])
+                        
+                        # save data for the old one
+                        atom_names.append(names)
+                        atom_types.append(types)
+                        atom_coord.append(coords)
+                    
+                        # initialize data for the new one
+                        names = [data[1]]
+                        types = [data[5]]
+                        # coords = [data[2:5]]
+                        coords = map(float, data[2:5])
+                        coords = [coords]
+                    
+                    # if still in the old residue
+                    else:
+                    
+                        # save data for the new atom
+                        try:
+                            names.append(data[1])
+                            types.append(data[5])
+                            coords.append(map(float, data[2:5]))
+                    
+                        # unless no atom has been saved before
+                        except:
+                            names = [data[1]]
+                            types = [data[5]]
+                            # coords = [data[2:5]]
+                            coords = map(float, data[2:5])
+                            coords = [coords]
+
+                FoundAt = True
+                if FoundAt:
+                    # save data for the last residue 
+                    atom_names.append(names)
+                    atom_types.append(types)
+                    atom_coord.append(coords)
+
+
+    return atom_names, atom_types, res_names, res_ids, atom_coord
+
+
 def banner(text=None, ch='=', length=78):
     """Return a banner line centering the given text.
     
