@@ -41,6 +41,10 @@ def checkfile(filename):
         sys.exit()
 
 
+def flatten(lst):
+    return sum( ([x] if not isinstance(x, list) else flatten(x) for x in lst), [] )
+
+
 def parse_G09_input(infile):
     '''Returns the structure.'''
 
@@ -104,7 +108,7 @@ def parse_PDB(pdb_file):
                 z = float(line[46:53])
                 atom_coord.append([x, y, z])
 
-    struct = [ [ el[0], el[1][0], el[1][1], el[1][2] ] for el in zip(atoms, atom_coord) ]
+    struct = [ flatten(list(el)) for el in zip(atoms, atom_coord) ]
     return struct
 
 
@@ -159,7 +163,7 @@ def parse_MOL2(mol2_file):
                     atom_types.append(data[5])
                     atom_coord.append(map(float, data[2:5]))
 
-    struct = [ [ el[0], el[1][0], el[1][1], el[1][2] ] for el in zip(atoms, atom_coord) ]
+    struct = [ flatten(list(el)) for el in zip(atoms, atom_coord) ]
     return struct
 
 
