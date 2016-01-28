@@ -222,9 +222,9 @@ def banner(text=None, ch='=', length=78):
 if __name__ == '__main__':
 
     print
-    print banner(ch='=', length=80)
-    print banner(text='helix.py', ch=' ', length=80)
-    print banner(ch='=', length=80)
+    print(banner(ch='=', length=80))
+    print(banner(text='helix.py', ch=' ', length=80))
+    print(banner(ch='=', length=80))
     print
 
     args = options()
@@ -256,7 +256,8 @@ if __name__ == '__main__':
         s_helix = circle_points(r, ps)
 
     else:
-        s_helix = ellipse_points(r, 1.05, ss, ps, skew, hs)
+        # s_helix = ellipse_points(r, 1, ss, ps, skew, hs)
+        s_helix = ellipse_points(r, turns, ss, ps, skew, hs)
 
     if hs == 'r':
         s_helix = s_helix[:ps + 2]
@@ -268,8 +269,13 @@ if __name__ == '__main__':
     # s_helix = circle_points(r, ps)
     s_helix_save = np.c_[np.ones(len(s_helix)), s_helix]
 
-    write_XYZ('helix_S%d%s.xyz' % (ps, hs), s_helix_save)
-    print("S helix saved in helix_S%d%s.xyz" % (ps, hs))
+    if skew != 0.:
+        u.write_XYZ('helix_S%d%s_Sk%d.xyz' % (ps, hs, skew), s_helix_save)
+        print("S helix saved in helix_S%d%s.xyz" % (ps, hs))
+
+    else:
+        u.write_XYZ('helix_S%d%s.xyz' % (ps, hs), s_helix_save)
+        print("S helix saved in helix_S%d%s.xyz" % (ps, hs))
 
     # Take two adjacent points on this helix and calculate
     # their distance and their distance onto the x-y plane.
@@ -327,9 +333,14 @@ if __name__ == '__main__':
 
     # final = final[final[:,2].argsort()]
     final_save = np.c_[np.ones(len(final)), final]
-    write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
-    print("Output saved in %s_S%d%s_B%d%s" % (args.output, ps, hs, pb, hb))
+    if skew != 0.:
+        u.write_XYZ('%s_S%d%sSk%d_B%d%s_.xyz' % (args.output, ps, hs, skew, pb, hb), final_save)
+        print("Output saved in %s_S%d%sSk%d_B%d%s.xyz" % (args.output, ps, hs, skew, pb, hb))
+
+    else:
+        u.write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
+        print("Output saved in %s_S%d%s_B%d%s.xyz" % (args.output, ps, hs, pb, hb))
 
     print
-    print(banner(ch='=', length=80))
+    print(u.banner(ch='=', length=80))
     print
