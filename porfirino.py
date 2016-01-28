@@ -213,28 +213,28 @@ if __name__ == '__main__':
 
     # Dipoles
     # N atoms are 9, 14, 19, 24
-    # The molecule has 92 atoms
-    NA, NB, NC, ND = 9, 14, 19, 24
+    # meso C atoms are 1, 2, 3, 4
+    # The molecule has 92 atoms, 64 without H atoms
+    CA, CB, CC, CD = 1, 2, 3, 4 
     natoms = len(struct)
     with open('dipoles.txt', 'w') as f:
 
-        while NA < len(final):
+        while CA < len(final):
 
-            f.write("%5d %5d 0 0. 0\n" % (NA, NC))
-            f.write("%5d %5d 0 0. 1\n" % (NA, NC))
-            f.write("%5d %5d 0 0. 1\n" % (NB, ND))
+            f.write("%5d %5d 0 0. 0\n" % (CA, CC))
+            f.write("%5d %5d 0 0. 1\n" % (CA, CC))
+            f.write("%5d %5d 0 0. 1\n" % (CB, CD))
 
-            NA += natoms
-            NB += natoms
-            NC += natoms
-            ND += natoms
+            CA += natoms
+            CB += natoms
+            CC += natoms
+            CD += natoms
 
     sh.move('dipoles.txt', 'DeVoe')
 
     # Mol file
     np.savetxt('mol.txt', final[:,1:], fmt='%10.6f')
     sh.move('mol.txt', 'DeVoe')
-
     print
-    print u.banner(ch='=', length=80)
+    print(u.banner(ch='=', length=80))
     print
