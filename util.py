@@ -92,6 +92,10 @@ def compact_extended_list(idxs, factor=0):
     return compact
 
 
+def flatten(lst):
+    return sum( ([x] if not isinstance(x, list) else flatten(x) for x in lst), [] )
+
+
 def refframe(A, B, C):
     '''Returns a reference frame where the x axis goes from A to B, the y axis
     passes through C and the z axis is built accordingly.'''
