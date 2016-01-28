@@ -7,7 +7,6 @@ import argparse as arg
 import shutil as sh
 
 from elements import ELEMENTS
-import util as u
 
 def options():
     '''Defines the options of the script.'''
@@ -45,6 +44,14 @@ def options():
     return args
 
 
+def checkfile(filename):
+
+    if not os.path.isfile(filename):
+        print(banner(text='ERROR', ch='#', length=80))
+        print("File %s not found!" % filename)
+        sys.exit()
+
+
 def get_struct(infile):
 
     structure = []
@@ -73,12 +80,114 @@ def get_struct(infile):
     return np.asarray(structure)
 
 
+def write_PDB(pdbout, coords):
+
+    # For better organization of the output writing
+    # coords must be a list of lists:
+    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
+
+    line = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
+    resname = 'MOL'
+
+    with open(pdbout, 'w') as f:
+
+        # i : total atom counter
+        # j : residue counter
+        # k : atom in molecule counter
+        i = 0
+        j = 0
+
+        for molecule in coords:
+
+            j += 1
+            k = 0
+
+            for atom in molecule:
+
+                k += 1
+                i += 1
+                atom[0] = ELEMENTS[atom[0]].symbol
+                atom_name = "%s%d" % (atom[0], k)
+                f.write(line % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
+
+            # At the end of each molecule
+            f.write('TER\n')
+
+        # At the end of the file
+        f.write('END')
+
+    return
+
+
+def write_XYZ(xyzout, coords):
+
+    # Here coords is just an np.array
+    line = '%2s %10.6f %10.6f %10.6f'
+
+    with open(xyzout, 'w') as f:
+
+        f.write('%d\n' % len(coords))
+        f.write('Title\n')
+        np.savetxt(f, coords, fmt=line)
+
+    return
+
+
+def transl_mat(v):
+
+    # Define the transformation matrix for a translation
+    T = np.eye(4)
+    T[-1,:3] = v
+
+    return T
+
+
+def banner(text=None, ch='=', length=78):
+    """Return a banner line centering the given text.
+    
+        "text" is the text to show in the banner. None can be given to have
+            no text.
+        "ch" (optional, default '=') is the banner line character (can
+            also be a short string to repeat).
+        "length" (optional, default 78) is the length of banner to make.
+
+    Examples:
+        >>> banner("Peggy Sue")
+        '================================= Peggy Sue =================================='
+        >>> banner("Peggy Sue", ch='-', length=50)
+        '------------------- Peggy Sue --------------------'
+        >>> banner("Pretty pretty pretty pretty Peggy Sue", length=40)
+        'Pretty pretty pretty pretty Peggy Sue'
+    """
+    if text is None:
+        return ch * length
+
+    elif len(text) + 2 + len(ch)*2 > length:
+        # Not enough space for even one line char (plus space) around text.
+        return text
+
+    else:
+        remain = length - (len(text) + 2)
+        prefix_len = remain / 2
+        suffix_len = remain - prefix_len
+    
+        if len(ch) == 1:
+            prefix = ch * prefix_len
+            suffix = ch * suffix_len
+
+        else:
+            prefix = ch * (prefix_len/len(ch)) + ch[:prefix_len%len(ch)]
+            suffix = ch * (suffix_len/len(ch)) + ch[:suffix_len%len(ch)]
+
+        return prefix + ' ' + text + ' ' + suffix
+
+
 if __name__ == '__main__':
 
     print
-    print u.banner(ch='=', length=80)
-    print u.banner(text='porfirino.py', ch=' ', length=80)
-    print u.banner(ch='=', length=80)
+    print(banner(ch='=', length=80))
+    print(banner(text='porfirino.py', ch=' ', length=80))
+    print(banner(ch='=', length=80))
     print
 
     args = options()
@@ -104,12 +213,12 @@ if __name__ == '__main__':
 
     if args.g09ref:
         # Reference structure from a G09 optimization
-        u.checkfile(args.g09ref)
+        checkfile(args.g09ref)
         opt = get_struct(args.g09ref)
 
     else:
         # Load reference structure
-        u.checkfile(args.ref)
+        checkfile(args.ref)
         opt = np.loadtxt(args.ref)
 
 
@@ -169,7 +278,7 @@ if __name__ == '__main__':
         R = np.c_[R, np.array([0., 0., 0., 1.])]
     
         # Build the 4x4 translation matrix
-        T = u.transl_mat(center)
+        T = transl_mat(center)
    
         # Transform the coordinates. First rotation, then translation
         transformed = np.dot(struct, R)
@@ -186,11 +295,11 @@ if __name__ == '__main__':
 
     # Here the for cycle is finished!!
     if args.savepdb:
-        u.write_PDB('%s.pdb' % args.output, final_structure)
+        write_PDB('%s.pdb' % args.output, final_structure)
         print("Output saved in %s.pdb" % args.output)
 
     if args.savexyz:
-        u.write_XYZ('%s.xyz' % args.output, final)
+        write_XYZ('%s.xyz' % args.output, final)
         print("Output saved in %s.xyz" % args.output)
 
     #
@@ -236,5 +345,5 @@ if __name__ == '__main__':
     np.savetxt('mol.txt', final[:,1:], fmt='%10.6f')
     sh.move('mol.txt', 'DeVoe')
     print
-    print(u.banner(ch='=', length=80))
+    print(banner(ch='=', length=80))
     print
