@@ -39,6 +39,12 @@ def options():
     parser.add_argument('--pb', default=72, type=float, help='''
     Points per turn to calculate for B helix.''')
 
+    parser.add_argument('--skew', default=0, type=float, help='''
+    Skew angle for S helix.''')
+
+    parser.add_argument('--flat', action='store_true', default=False,
+    help='''Flatten S helix to a circle.''')
+
     parser.add_argument('-o', '--output', default='tube', help='''
     Root of the name of the output file.''')
 
@@ -151,6 +157,7 @@ if __name__ == '__main__':
     ratio = args.ratio
     hs = args.hs
     hb = args.hb
+    skew = args.skew
 
     if hs == 'r':
         factor = -1
@@ -163,7 +170,12 @@ if __name__ == '__main__':
     uz = cartesian[2]
 
     # Generate S helix and save its structure
-    s_helix = helix_points(r, 1.5, ss, ps, hs)
+
+    if args.flat:
+        s_helix = circle_points(r, ps)
+
+    else:
+        s_helix = ellipse_points(r, 1.05, ss, ps, skew, hs)
 
     if hs == 'r':
         s_helix = s_helix[:ps + 2]
@@ -184,7 +196,6 @@ if __name__ == '__main__':
     ps2 = s_helix[1]
     ds, dsxy, theta = dist(ps1, ps2)
     print("S Helix: d = %5.2f A  dxy = %5.2f A  theta = %6.2f" % (ds, dsxy, theta))
-    print
 
     # Initialize the array to store B helices
     final = np.array([]).reshape(0,3)
@@ -236,8 +247,8 @@ if __name__ == '__main__':
     # final = final[final[:,2].argsort()]
     final_save = np.c_[np.ones(len(final)), final]
     u.write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
-    print("Output saved in %s_S%d%s_B%d%s.xyz" % (args.output, ps, hs, pb, hb))
+    print("Output saved in %s_S%d%s_B%d%s" % (args.output, ps, hs, pb, hb))
 
     print
-    print u.banner(ch='=', length=80)
+    print(u.banner(ch='=', length=80))
     print
