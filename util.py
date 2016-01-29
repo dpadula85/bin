@@ -10,8 +10,6 @@ from elements import ELEMENTS
 verbosity = False
 
 # Dictionary for energy conversion
-# The key should be of the form u_a2u_b, where u_a and u_b are two different
-# units
 
 
 energy_conversion = {'au'       : 1,
@@ -212,6 +210,7 @@ def rototransl(axis, theta, T):
 
 
 def v1v2_angle(v1, v2):
+    '''Returns the angle between two vectors.'''
 
     dotprod = np.dot(v1, v2)
     theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
@@ -220,7 +219,7 @@ def v1v2_angle(v1, v2):
 
 
 def angle(A, B, C):
-    '''Returns the bond angle defined by atoms ABS.'''
+    '''Returns the bond angle defined by atoms ABC.'''
 
     ab = B - A
     bc = C - B
