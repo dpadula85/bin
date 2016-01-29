@@ -167,11 +167,11 @@ def rot_mat_z(theta):
 
 
 def rot(axis, theta):
-    '''Returns the rotation matrix for the clockwise rotation about
+    '''Returns the rotation matrix for the anticlockwise rotation about
     axis by theta according to Rodrigues' formula.'''
 
     axis = axis / np.linalg.norm(axis)
-    theta = np.radians(theta)
+    theta = -1 * np.radians(theta)
 
     # Define axis' cross-product matrix
     K = np.zeros((3,3))
@@ -196,7 +196,7 @@ def transl_mat(v):
 
 def rototransl(axis, theta, T):
     '''Returns a 4x4 rototranslation matrix, where the rotation part is given
-    by the clockwise rotation about axis by theta, and the
+    by the anticlockwise rotation about axis by theta, and the
     translation by the vector T.'''
 
     R = rot(axis, theta)
