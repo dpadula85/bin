@@ -219,11 +219,39 @@ def v1v2_angle(v1, v2):
     return theta
 
 
+def angle(A, B, C):
+    '''Returns the bond angle defined by atoms ABS.'''
+
+    ab = B - A
+    bc = C - B
+
+    return v1v2_angle(ab, bc)
+
+
+def dihedral(A, B, C, D):
+    '''Returns the dihedral angle between the planes containing bonds AB and CD.'''
+
+    ab = B - A
+    bc = C - B
+    cd = D - C
+    
+    c1 = np.cross(ab, bc)
+    n1 = c1 / np.linalg.norm(c1)
+    c2 = np.cross(bc, cd)
+    n2 = c2 / np.linalg.norm(c2)
+    m1 = np.cross(n1, bc)
+    x = np.dot(n1, n2) 
+    y = np.dot(m1, n2)
+
+    return np.arctan2(y, x) * 180 / np.pi
+
+
 def write_PDB(pdbout, coords):
 
     # For better organization of the output writing
-    # coords must be a list of lists:
-    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
+    # coords must be a list of lists of lists:
+    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]],
+    # where atXmolY is a list of four elements: symbol (or atomic number) and x, y, z coordinates
 
     line = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
     resname = 'MOL'
@@ -273,6 +301,13 @@ def write_XYZ(xyzout, coords):
 
 
 def parse_MOL2(mol2file):
+    '''The following code creates this structure:
+    res_names and res_ids are plain lists, and the elements
+    appear only once per residue.
+    atom_names, type and coord are lists of lists. Each sublist
+    corresponds to a residue and contains all the info
+    for  on the atoms in that residue.'''
+
 
     with open(mol2file) as f:
         FoundAt = False
@@ -306,13 +341,6 @@ def parse_MOL2(mol2file):
                 for i in range(NAtoms):
                     data = f.readline().split()
                     
-                    # The following code creates this structure:
-                    # res_names and res_ids are plain lists, and the elements
-                    # appear only once per residue.
-                    # atom_names, type and coord are lists of lists. Each sublist
-                    # corresponds to a residue and contains all the info
-                    # for  on the atoms in that residue.
-
                     # Special case for the first residue
                     try:
                         res_ids[-1]
