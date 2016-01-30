@@ -43,6 +43,9 @@ def options():
     parser.add_argument('--flat', action='store_true', default=False,
     help='''Flatten S helix to a circle.''')
 
+    parser.add_argument('--alt', action='store_true', default=False,
+    help='''B helices depart from alternate points on S helix.''')
+
     parser.add_argument('-o', '--output', default='tube', help='''
     Root of the name of the output file.''')
 
@@ -239,6 +242,7 @@ if __name__ == '__main__':
     hs = args.hs
     hb = args.hb
     skew = args.skew
+    alt = args.alt
 
     if hs == 'r':
         factor = -1
@@ -270,11 +274,11 @@ if __name__ == '__main__':
     s_helix_save = np.c_[np.ones(len(s_helix)), s_helix]
 
     if skew != 0.:
-        u.write_XYZ('helix_S%d%s_Sk%d.xyz' % (ps, hs, skew), s_helix_save)
+        write_XYZ('helix_S%d%s_Sk%d.xyz' % (ps, hs, skew), s_helix_save)
         print("S helix saved in helix_S%d%s.xyz" % (ps, hs))
 
     else:
-        u.write_XYZ('helix_S%d%s.xyz' % (ps, hs), s_helix_save)
+        write_XYZ('helix_S%d%s.xyz' % (ps, hs), s_helix_save)
         print("S helix saved in helix_S%d%s.xyz" % (ps, hs))
 
     # Take two adjacent points on this helix and calculate
@@ -289,6 +293,10 @@ if __name__ == '__main__':
 
     i = 0
     for point in s_helix:
+
+        if alt and i % 2 != 0:
+            i += 1
+            continue
 
         # I gotta generate a helix starting in point
         # To do this, I generate the helix in the global reference
@@ -334,13 +342,13 @@ if __name__ == '__main__':
     # final = final[final[:,2].argsort()]
     final_save = np.c_[np.ones(len(final)), final]
     if skew != 0.:
-        u.write_XYZ('%s_S%d%sSk%d_B%d%s_.xyz' % (args.output, ps, hs, skew, pb, hb), final_save)
+        write_XYZ('%s_S%d%sSk%d_B%d%s_.xyz' % (args.output, ps, hs, skew, pb, hb), final_save)
         print("Output saved in %s_S%d%sSk%d_B%d%s.xyz" % (args.output, ps, hs, skew, pb, hb))
 
     else:
-        u.write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
+        write_XYZ('%s_S%d%s_B%d%s.xyz' % (args.output, ps, hs, pb, hb), final_save)
         print("Output saved in %s_S%d%s_B%d%s.xyz" % (args.output, ps, hs, pb, hb))
 
     print
-    print(u.banner(ch='=', length=80))
+    print(banner(ch='=', length=80))
     print
