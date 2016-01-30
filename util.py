@@ -130,6 +130,11 @@ def refframe_var(A, B, C):
     return ref
 
 
+def symm_mat(M):
+    '''Symmetrize an upper- or lower diagonal matrix.'''
+    return M + M.T - np.diag(M.diagonal())
+
+
 def rot_mat_x(theta):
 
     theta = np.radians(theta)
