@@ -172,14 +172,11 @@ def rot(axis, theta):
 
     axis = axis / np.linalg.norm(axis)
     theta = -1 * np.radians(theta)
+    I = np.eye(3)
 
     # Define axis' cross-product matrix
-    K = np.zeros((3,3))
-    K[0] = [       0, -axis[2],  axis[1]]
-    K[1] = [ axis[2],        0, -axis[0]]
-    K[2] = [-axis[1],  axis[0],        0]
+    K = np.cross(I, axis)
 
-    I = np.eye(3)
     R = I + np.sin(theta) * K + (1 - np.cos(theta)) * np.linalg.matrix_power(K, 2)
 
     return R
@@ -194,7 +191,7 @@ def transl_mat(v):
     return T
 
 
-def rototransl(axis, theta, T):
+def rototransl(axis, theta, T=np.zeros(3)):
     '''Returns a 4x4 rototranslation matrix, where the rotation part is given
     by the anticlockwise rotation about axis by theta, and the
     translation by the vector T.'''
@@ -309,7 +306,10 @@ def parse_MOL2(mol2file):
 
 
     with open(mol2file) as f:
+
         FoundAt = False
+        FoundBond = False
+
         while True:
             line = f.readline()
             if not line:
@@ -324,6 +324,7 @@ def parse_MOL2(mol2file):
                 f.readline()
                 info = f.readline().split()
                 NAtoms = int(info[0])
+                NBonds = int(info[1])
                 try:
                     NRes = int(info[2])
                 except:
@@ -334,6 +335,8 @@ def parse_MOL2(mol2file):
                 res_names = []
                 res_ids = []
                 atom_coord = []
+                Ib1 = []
+                Ib2 = []
 
             # Read Atoms
             elif  line[0:13] == '@<TRIPOS>ATOM':
@@ -394,8 +397,54 @@ def parse_MOL2(mol2file):
                     atom_types.append(types)
                     atom_coord.append(coords)
 
+            elif line[0:13] == '@<TRIPOS>BOND':
+                for i in range(NBonds):
+                    data = f.readline().split()[1:3]
+                    Ib1 += [int(data[0])]
+                    Ib2 += [int(data[1])]
 
-    return atom_names, atom_types, res_names, res_ids, atom_coord
+                FoundBond = True
+
+            elif  line[0:21] == '@<TRIPOS>SUBSTRUCTURE':
+                if FoundAt and FoundBond:
+                    break 
+
+    # Build Connectivity Matrix
+    Conn = np.zeros((NAtoms, 9), dtype=int)
+    for i in range(NBonds):
+        Idx1 = np.argmax(Conn[Ib1[i]-1] == 0)
+        Idx2 = np.argmax(Conn[Ib2[i]-1] == 0)
+        Conn[Ib1[i]-1][Idx1] = Ib2[i]
+        Conn[Ib2[i]-1][Idx2] = Ib1[i]
+
+    return atom_names, atom_types, res_names, res_ids, atom_coord, Conn
+
+
+def get_group(D, connectivity, visited=None, C=None):
+    '''Returns the list of the indexes of the group of atoms connected
+    to atom D, given the connectivity matrix. Atom C is optional and
+    should be linked to D as well. C is useful to get all the atoms
+    connected to D excluding the portion in which C is included.
+    However, atom C is included in the list returned.
+    This function is useful to define the groups of atoms which should
+    undergo a certain transformation, for example for a dihedral scan.'''
+
+    if not visited:
+        if C:
+            visited = [C, D]
+        else:
+            visited = [D]
+
+    for atom in connectivity[D]:
+
+        if atom != 0 and atom - 1 not in visited:
+            visited.append(atom - 1)
+            get_group(atom - 1, connectivity, visited)
+            
+        if atom - 1 in visited:
+            continue
+
+    return sorted(visited)
 
 
 def banner(text=None, ch='=', length=78):
