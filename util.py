@@ -196,7 +196,7 @@ def transl_mat(v):
     return T
 
 
-def rototransl(axis, theta, T=np.zeros(3)):
+def rototransl(axis, theta, T=None)):
     '''Returns a 4x4 rototranslation matrix, where the rotation part is given
     by the anticlockwise rotation about axis by theta, and the
     translation by the vector T.'''
@@ -204,7 +204,8 @@ def rototransl(axis, theta, T=np.zeros(3)):
     R = rot(axis, theta)
     R = np.vstack([R, np.array([0., 0., 0.])])
     R = np.c_[R, np.array([0., 0., 0., 1.])]
-    T_mat = transl_mat(T)
+    if T:
+        T_mat = transl_mat(T)
 
     R[-1,:] = T_mat[-1,:]
 
