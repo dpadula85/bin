@@ -196,7 +196,7 @@ def transl_mat(v):
     return T
 
 
-def rototransl(axis, theta, T=None)):
+def rototransl(axis, theta, T=None):
     '''Returns a 4x4 rototranslation matrix, where the rotation part is given
     by the anticlockwise rotation about axis by theta, and the
     translation by the vector T.'''
@@ -445,7 +445,7 @@ def get_group(D, connectivity, visited=None, C=None):
 
         if atom != 0 and atom - 1 not in visited:
             visited.append(atom - 1)
-            get_group(atom - 1, connectivity, visited)
+            visited = get_group(atom - 1, connectivity, visited)
             
         if atom - 1 in visited:
             continue
