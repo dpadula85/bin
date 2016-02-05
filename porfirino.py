@@ -27,8 +27,11 @@ def options():
     parser.add_argument('-g', '--g09ref', help='''
     G09 optimization for reference geometry.''')
 
-    parser.add_argument('-t', '--theta', default=0, type=float, help='''
+    parser.add_argument('-t', '--theta', default=[0.], nargs='+', type=float, help='''
     Angle for the rotation of the reference structure about its z axis.''')
+
+    parser.add_argument('-a', '--axis', default=['z'], choices=['x', 'y', 'z'], nargs='+',
+    type=str, help='''Angle for the rotation of the reference structure about its z axis.''')
 
     parser.add_argument('-o', '--output', default='final', help='''
     Root name of the .xyz and/or .pdb file to save.''')
@@ -133,6 +136,22 @@ def write_XYZ(xyzout, coords):
     return
 
 
+def rot(axis, theta):
+    '''Returns the rotation matrix for the anticlockwise rotation about
+    axis by theta according to Rodrigues' formula.'''
+
+    axis = axis / np.linalg.norm(axis)
+    theta = -1 * np.radians(theta)
+    I = np.eye(3)
+
+    # Define axis' cross-product matrix
+    K = np.cross(I, axis)
+
+    R = I + np.sin(theta) * K + (1 - np.cos(theta)) * np.linalg.matrix_power(K, 2)
+
+    return R
+
+
 def transl_mat(v):
 
     # Define the transformation matrix for a translation
@@ -140,6 +159,22 @@ def transl_mat(v):
     T[-1,:3] = v
 
     return T
+
+
+def rototransl(axis, theta, T=None):
+    '''Returns a 4x4 rototranslation matrix, where the rotation part is given
+    by the anticlockwise rotation about axis by theta, and the
+    translation by the vector T.'''
+
+    R = rot(axis, theta)
+    R = np.vstack([R, np.array([0., 0., 0.])])
+    R = np.c_[R, np.array([0., 0., 0., 1.])]
+    if T:
+        T_mat = transl_mat(T)
+
+    R[-1,:] = T_mat[-1,:]
+
+    return R
 
 
 def banner(text=None, ch='=', length=78):
@@ -231,15 +266,28 @@ if __name__ == '__main__':
     struct = np.c_[struct, np.ones(len(struct))]
 
     # Build the 4x4 rotation matrix for the rotation
-    # of the reference structure about the z-axis
+    # and rotate the structure
+    axis = args.axis
     theta = args.theta
-    R = u.rot_mat_y(theta) 
-    # R = u.rot_mat_z(theta) 
+    if len(theta) != len(axis) and len(theta) == 1:
+        theta = theta * len(axis)
 
-    # Rotation of the reference structure about its z axis.
-    # Default is 0 degrees.
-    struct = np.dot(struct, R)
+    for i in range(len(axis)):
+
+        ax = axis[i]
+        t = theta[i]
+
+        if ax == 'x':
+            ax = ux
+        elif ax == 'y':
+            ax = uy
+        elif ax == 'z':
+            ax = uz
+
+        R = rototransl(ax, t)
+        struct = np.dot(struct, R)
     
+    # Initialize results arrays
     final = np.array([]).reshape(0,4)
     final_structure = []
 

@@ -164,9 +164,9 @@ if __name__ == '__main__':
         ym = p[1]
 
         # Set the initial guess for the fitting procedure
-        A = 50.0
+        A = 10000.0
         avg = xm
-        wid = 3
+        wid = 1000
         parms = np.array([A, avg, wid])
         totguess = np.r_[totguess, parms]
 
@@ -232,5 +232,5 @@ if __name__ == '__main__':
             j += 1
 
     if len(peaks) > 0:
-        plt.legend().draw_frame(False)
+        plt.legend(loc=2).draw_frame(False)
         plt.show()
