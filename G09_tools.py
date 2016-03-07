@@ -141,7 +141,7 @@ if __name__ == '__main__':
             for chrom1 in dirs[:]:
                 for chrom2 in filter(lambda x: x != chrom1, dirs):
 
-                    #print chrom1, chrom2
+                    # print chrom1, chrom2
                     G09_files.gen_coup(chrom1, chrom2, G09_opts)
 
                 # Remove chrom1 to avoid equivalent couple chrom2.chrom1

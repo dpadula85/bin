@@ -103,13 +103,20 @@ def write_PDB(pdbout, coords):
         for molecule in coords:
 
             j += 1
-            k = 0
+            counter_dict = {}
 
             for atom in molecule:
 
-                k += 1
                 i += 1
                 atom[0] = ELEMENTS[atom[0]].symbol
+
+                try:
+                    counter_dict[atom[0]] += 1
+
+                except KeyError:
+                    counter_dict[atom[0]] = 1
+
+                k = counter_dict[atom[0]]
                 atom_name = "%s%d" % (atom[0], k)
                 f.write(line % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
 
