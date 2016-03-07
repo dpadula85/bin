@@ -251,9 +251,8 @@ def dihedral(A, B, C, D):
 def write_PDB(pdbout, coords):
 
     # For better organization of the output writing
-    # coords must be a list of lists of lists:
-    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]],
-    # where atXmolY is a list of four elements: symbol (or atomic number) and x, y, z coordinates
+    # coords must be a list of lists:
+    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
 
     line = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
     resname = 'MOL'
@@ -269,13 +268,20 @@ def write_PDB(pdbout, coords):
         for molecule in coords:
 
             j += 1
-            k = 0
+            counter_dict = {}
 
             for atom in molecule:
 
-                k += 1
                 i += 1
                 atom[0] = ELEMENTS[atom[0]].symbol
+
+                try:
+                    counter_dict[atom[0]] += 1
+
+                except KeyError:
+                    counter_dict[atom[0]] = 1
+
+                k = counter_dict[atom[0]]
                 atom_name = "%s%d" % (atom[0], k)
                 f.write(line % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
 
