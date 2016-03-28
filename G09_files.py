@@ -236,7 +236,7 @@ class input_file:
         '''Returns the charge.'''
 
         # Pattern describing the charge-multiplicity line
-        pattern = re.compile('(\d\s\d)')
+        pattern = re.compile('(-?\d\s\d)')
 
         with open(self.file, 'r') as f:
             for line in f:
@@ -255,7 +255,8 @@ class input_file:
         '''Returns the multiplicity.'''
 
         # Pattern describing the charge-multiplicity line
-        pattern = re.compile('(\d\s\d)')
+        # pattern = re.compile('(\d\s\d)')
+        pattern = re.compile('(-?\d\s\d)')
 
         with open(self.file, 'r') as f:
             for line in f:
@@ -277,7 +278,8 @@ class input_file:
         opt = 0
 
         # Pattern describing the charge-multiplicity line
-        pattern = re.compile('(\d\s\d)')
+        # pattern = re.compile('(\d\s\d)')
+        pattern = re.compile('(-?\d\s\d)')
 
         with open(self.file, 'r') as f:
             for line in f:
@@ -305,7 +307,8 @@ class input_file:
         # solvation spheres etc).
 
         # Pattern describing the charge-multiplicity line
-        pattern = re.compile('(\d\s\d)')
+        # pattern = re.compile('(\d\s\d)')
+        pattern = re.compile('(-?\d\s\d)')
 
         opt = 0
         switch = 0
