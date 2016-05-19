@@ -39,13 +39,13 @@ delta0 = np.sqrt(w) * x0
 E0 = 29600 #/ ev2wn
 Er = 0.5 * w * delta0**2
 
-q1 = q2 = np.linspace(-2*delta0, 2*delta0, 200)
+q1 = q2 = np.linspace(-2*delta0, 2*delta0, 50)
 x, y = np.meshgrid(q1, q2)
 
 #
 # Options
 #
-fig = plt.figure(figsize=(10,10))
+fig = plt.figure(figsize=(30,30))
 gs = gridspec.GridSpec(2, 2)
 gs.update(wspace=0.05, hspace=0.05)
 
@@ -123,4 +123,5 @@ ax2.plot(q_min, z7, color='cyan', lw=2, label='A1')
 z8 = H_ES_ad2(E0, w, delta0, q1, -q1)
 ax2.plot(q_min, z8, color='orange', lw=2, label='A2')
 
+# plt.savefig('diab.svg', dpi=1200, transparent=True, size=(30,30))
 plt.show()
