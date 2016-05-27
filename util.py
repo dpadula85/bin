@@ -37,6 +37,16 @@ def checkfile(filename):
         sys.exit()
 
 
+def skiplines(openfile, nlines=0):
+    '''Skips nlines + 1 lines in openfile. In other words, if nlines=0 it will
+    go to the next line.'''
+
+    for i in range(nlines):
+        next(openfile)
+
+    return next(openfile)
+
+
 def dict_compare(dictA, dictB):
 
     for k in dictA.viewkeys() - dictB.viewkeys():
@@ -214,9 +224,18 @@ def rototransl(axis, theta, T=None):
 
 def v1v2_angle(v1, v2):
     '''Returns the angle between two vectors.'''
+    # Remember that the angle between a plane and a vector equals
+    # 90 - alpha, where alpha is the angle between the vector and
+    # the normal to the plane. To obtain such an angle, you could
+    # do angle = 90 - v1v2_angle(v1, np.cross(x, y)), where x, y
+    # are the two vectors that define the plane.
 
-    dotprod = np.dot(v1, v2)
-    theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
+    # dotprod = np.dot(v1, v2)
+    # theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
+
+    cos = np.dot(v1, v2)
+    sin = np.linalg.norm(np.cross(v1, v2))
+    theta = np.degrees(np.arctan2(sin, cos))
 
     return theta
 
