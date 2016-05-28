@@ -2,11 +2,13 @@
 
 import os
 import sys
+import warnings
 import numpy as np
 from itertools import groupby
 
 from elements import ELEMENTS
 
+warnings.filterwarnings("error")
 verbosity = False
 
 # Dictionary for energy conversion
@@ -230,12 +232,11 @@ def v1v2_angle(v1, v2):
     # do angle = 90 - v1v2_angle(v1, np.cross(x, y)), where x, y
     # are the two vectors that define the plane.
 
-    # dotprod = np.dot(v1, v2)
-    # theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
-
-    cos = np.dot(v1, v2)
-    sin = np.linalg.norm(np.cross(v1, v2))
-    theta = np.degrees(np.arctan2(sin, cos))
+    dotprod = np.dot(v1, v2)
+    try:
+        theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
+    except:
+        theta = 0.0
 
     return theta
 
