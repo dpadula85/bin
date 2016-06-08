@@ -1,0 +1,1 @@
+/home/chem/mssmsg/zsh/bin/zsh
