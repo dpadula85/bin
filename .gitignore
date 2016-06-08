@@ -1,7 +1,5 @@
-DFT_methods.pyc
-G09_files.pyc
-util.pyc
-elements.pyc
-peakdetect.pyc
+*.pyc
 MarvinSketch64
+MarvinSketch
+zsh
 SpecDis.ini
