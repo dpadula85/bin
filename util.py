@@ -484,8 +484,8 @@ def kabsch(struct1, struct2):
 
     # Modify structures to get rid of the atomic symbol or number and convert
     # to np.array
-    struct1 = np.array([ [atom[1], atom[2], atom[3]] for atom in struct1 ])    
-    struct2 = np.array([ [atom[1], atom[2], atom[3]] for atom in struct2 ])    
+    struct1 = np.array([ [atom[0], atom[1], atom[2]] for atom in struct1 ])    
+    struct2 = np.array([ [atom[0], atom[1], atom[2]] for atom in struct2 ])    
 
     # check for consistency in number of atoms
     assert len(struct1) == len(struct2)
@@ -521,13 +521,13 @@ def kabsch(struct1, struct2):
     RMSD = np.sqrt(abs(RMSD / L))
 
     # The rotation matrix U is simply V*Wt
-    # U = np.dot(V, Wt)
+    U = np.dot(V, Wt)
  
     # rotate and translate the molecule
-    # struct2 = np.dot((struct2), U)
-    # struct2 = struct2 + com1
+    struct2 = np.dot((struct2), U)
+    struct2 = struct2 + com1
 
-    return RMSD
+    return struct2, U
 
 
 def banner(text=None, ch='=', length=78):
