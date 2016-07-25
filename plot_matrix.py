@@ -58,6 +58,7 @@ def doplot(coeff, colormap=None):
 
         cm = mpl.colors.ListedColormap(colormap)
         im = ax.pcolor(coeff, cmap=cm)
+        # im = ax.pcolor(coeff, cmap='hot')
 
     fig.colorbar(im)
     
