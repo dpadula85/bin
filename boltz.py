@@ -30,5 +30,5 @@ if __name__ == '__main__':
     DeltaE = (data - data.min()) * au2kcalmol
     pop = np.exp(-DeltaE / (k*T)) / np.sum(np.exp(-DeltaE / (k*T)))
     results = np.c_[data, DeltaE, pop*100]
-    header = "\n%9s %9s %9s\n" % ("Energy (au)", "DeltaE (Kcal/mol)", "Pop. (%)")
+    header = "\n%11s %17s %9s\n" % ("Energy (au)", "DeltaE (Kcal/mol)", "Pop. (%)")
     np.savetxt(sys.stdout, results, header=header, fmt="%13.5f %17.4f %9.2f")
