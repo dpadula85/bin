@@ -5,7 +5,7 @@ import textwrap
 import numpy as np
 import argparse as arg
 from os.path import splitext
-from scipy.optimize import minimize, leastsq
+from scipy.optimize import minimize
 
 def options():
     '''Defines the options of the script.'''
