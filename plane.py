@@ -10,12 +10,15 @@ from scipy.optimize import minimize
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='Fits a plane to a molecule', formatter_class=arg.ArgumentDefaultsHelpFormatter)
+    parser = arg.ArgumentParser(description='Fits a plane to a molecule',
+            formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
-    parser.add_argument('-f', '--filename', type=str, required=True, help='''File containing the molecular geometry.''')
+    parser.add_argument('-f', '--filename', type=str, required=True,
+            help='''File containing the molecular geometry in xyz format.''')
 
-    parser.add_argument('-s', '--sel', nargs='+', type=str, default=None, help='''Atom selection for the plane calculation.''')
+    parser.add_argument('-s', '--sel', nargs='+', type=str, default=None,
+            help='''Atom selection for the plane calculation.''')
 
     args = parser.parse_args()
 
@@ -86,7 +89,7 @@ def plane(x, y, parms):
 def error(parms, x, y, z):
 
     target = plane(x, y, parms)
-    err = np.sqrt(np.sum((target - z)**2) / len(x))
+    err = np.sqrt(np.mean((target - z)**2))
 
     return err
 
@@ -145,5 +148,7 @@ if __name__ == "__main__":
 
         f.write("mol new %s type xyz\n" % args.filename)
         f.write("draw color yellow\n")
-        f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" % (xx[0][0], yy[0][0], zz[0][0], xx[0][1], yy[0][1], zz[0][1], xx[1][0], yy[1][0], zz[1][0]))
-        f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" % (xx[1][1], yy[1][1], zz[1][1], xx[1][0], yy[1][0], zz[1][0], xx[0][1], yy[0][1], zz[0][1]))
+        f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" %
+                (xx[0][0], yy[0][0], zz[0][0], xx[0][1], yy[0][1], zz[0][1], xx[1][0], yy[1][0], zz[1][0]))
+        f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" %
+                (xx[1][1], yy[1][1], zz[1][1], xx[1][0], yy[1][0], zz[1][0], xx[0][1], yy[0][1], zz[0][1]))
