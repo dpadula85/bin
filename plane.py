@@ -15,7 +15,7 @@ def options():
 
     # Optional arguments
     parser.add_argument('-f', '--filename', type=str, required=True,
-            help='''File containing the molecular geometry in xyz format.''')
+            help='''File containing the molecular geometry in G09 format.''')
 
     parser.add_argument('-s', '--sel', nargs='+', type=str, default=None,
             help='''Atom selection for the plane calculation.''')
@@ -76,6 +76,36 @@ def format_selection(intlist):
     return s
 
 
+def parse_log(logfile):
+
+    structure = []
+    opt = 0
+    with open(logfile, 'r') as f:
+        for line in f:
+            if "Optimization completed" in line:
+                opt = 1
+    
+            # It could be Standard or Input orientation
+            # depending on nosymm keyword
+            if "orientation:" in line and opt == 1:
+                # Skip the head-of-table lines (4 lines)
+                next(f)
+                next(f)
+                next(f)
+                next(f)
+                curr_line = next(f).split()
+                while len(curr_line) == 6:
+                    atom_n = int(curr_line[1])
+                    atom_x = float(curr_line[3])
+                    atom_y = float(curr_line[4])
+                    atom_z = float(curr_line[5])
+                    structure.append([atom_n, atom_x, atom_y, atom_z])
+                    curr_line = next(f).split()
+                opt = 0
+    
+    return np.array(structure)
+
+
 def plane(x, y, parms):
 
     a = parms[0]
@@ -101,12 +131,18 @@ if __name__ == "__main__":
 
     # Read Data
     outpref = splitext(args.filename)[0]
+
+    struct = parse_log(args.filename)
+    with open("%s.xyz" % outpref, 'w') as f:
+        f.write("%d\n" % len(struct))
+        f.write("\n")
+        np.savetxt(f, struct, fmt="%3d %14.8f %14.8f %14.8f")
     
     if args.sel:
         idxs = process_selection(args.sel)
-        points = np.loadtxt(args.filename, skiprows=2)[idxs,1:]
+        points = struct[idxs,1:]
     else:
-        points = np.loadtxt(args.filename, skiprows=2)[:,1:]
+        points = struct[:,1:]
 
     x = points[:,0]
     y = points[:,1]
@@ -146,7 +182,7 @@ if __name__ == "__main__":
     # Save vmd script plotting the plane and the molecule
     with open("%s.vmd" % outpref, 'w') as f:
 
-        f.write("mol new %s type xyz\n" % args.filename)
+        f.write("mol new %s.xyz type xyz\n" % outpref)
         f.write("draw color yellow\n")
         f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" %
                 (xx[0][0], yy[0][0], zz[0][0], xx[0][1], yy[0][1], zz[0][1], xx[1][0], yy[1][0], zz[1][0]))
