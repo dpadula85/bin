@@ -188,7 +188,7 @@ if __name__ == '__main__':
     c1 = args.c1 - 1
     c2 = map(lambda x: x - 1, extend_compact_list(args.c2))
 
-    data = np.loadtxt(f)
+    data = np.genfromtxt(f)
 
     if data.ndim == 1:
         x = np.arange(1, len(data) + 1)
