@@ -452,6 +452,113 @@ def parse_MOL2(mol2file):
     return atom_names, atom_types, res_names, res_ids, atom_coord, Conn
 
 
+def parse_PDB(pdbfile):
+
+    with open(pdbfile) as f:
+
+        FoundAt = False
+        FoundBond = False
+        atom_idxs = []
+        atom_names = []
+        chain_idxs = []
+        res_names = []
+        res_ids = []
+        atom_coords = []
+        atom_symbols = []
+        Ib1 = []
+        Ib2 = []
+
+        for line in f:
+
+            # Read Atoms
+            if line[0:6] == 'ATOM  ' or line[0:6] == 'HETATM':
+
+                atom_idx = int(line[6:11])
+                atom_name = line[11:16].strip()
+                chain_idx = line[16].strip()
+                res_name = line[17:20].strip()
+                chain_idx = line[21].strip()
+                res_id = int(line[22:26])
+                coor = map(float, line[30:54].split())
+                atom_symbol = line[76:78].strip()
+
+
+                # Special case for the first residue
+                try:
+                    res_ids[-1]
+                except IndexError:
+                    res_ids.append(res_id)
+    
+                # Special case for the first residue
+                try:
+                    res_names[-1]
+                except IndexError:
+                    res_names.append(res_name)
+                
+                # Check id: new residue or old one
+                # if in new residue
+                if res_id != res_ids[-1]:
+                    res_ids.append(res_id)
+                    res_names.append(res_name)
+
+                    # save the old ones
+                    atom_idxs.append(idxs)
+                    atom_names.append(names)
+                    atom_coords.append(coords)
+                    atom_symbols.append(symbols)
+                    
+                    # initialize data for the new one
+                    idxs = [atom_idx]
+                    names = [atom_name]
+                    coords = [coor]
+                    symbols = [atom_symbol]
+
+                # if still in the old residue
+                else:
+                
+                    # save data for the new atom
+                    try:
+                        idxs.append(atom_idx)
+                        names.append(atom_name)
+                        coords.append(coor)
+                        symbols.append(atom_symbol)
+                
+                    # unless no atom has been saved before
+                    except:
+                        idxs = [atom_idx]
+                        names = [atom_name]
+                        coords = [coor]
+                        symbols = [atom_symbol]
+
+            # TO DO
+            elif line[0:6] == 'CONECT':
+                Ib1 += [int(line[6:11])]
+                Ib2 += [int(line[11:16])]
+
+        # save data for the last residue 
+        atom_idxs.append(idxs)
+        atom_names.append(names)
+        atom_coords.append(coords)
+        atom_symbols.append(symbols)
+
+    # Build Connectivity Matrix
+    NAtoms = sum([ len(i) for i in atom_idxs ])
+    NBonds = len(Ib1)
+    Conn = np.zeros((NAtoms, 4), dtype=int)
+    for i in range(NBonds):
+
+        try:
+            Idx1 = np.argmax(Conn[Ib1[i]] == 0)
+            Idx2 = np.argmax(Conn[Ib2[i]] == 0)
+            Conn[Ib1[i]][Idx1] = Ib2[i]
+            Conn[Ib2[i]][Idx2] = Ib1[i]
+
+        except IndexError:
+            pass
+
+    return atom_idxs, atom_names, res_names, res_ids, atom_coords, atom_symbols, Conn
+
+
 def get_group(D, connectivity, visited=None, C=None):
     '''Returns the list of the indexes of the group of atoms connected
     to atom D, given the connectivity matrix. Atom C is optional and
