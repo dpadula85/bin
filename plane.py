@@ -183,7 +183,8 @@ if __name__ == "__main__":
     with open("%s.vmd" % outpref, 'w') as f:
 
         f.write("mol new %s.xyz type xyz\n" % outpref)
-        f.write("draw color yellow\n")
+        f.write("draw material Transparent\n")
+        f.write("draw color black\n")
         f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" %
                 (xx[0][0], yy[0][0], zz[0][0], xx[0][1], yy[0][1], zz[0][1], xx[1][0], yy[1][0], zz[1][0]))
         f.write("draw triangle {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f} {%7.4f %7.4f %7.4f}\n" %
