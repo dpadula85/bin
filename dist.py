@@ -181,7 +181,7 @@ if __name__ == '__main__':
     f = args.filename
     title = args.title
     unit = args.unit
-    basename = f.split('.')[0]
+    basename = f.split('.')[:-1]
     checkfile(f)
 
     # Get columns to process and convert it to python numeration
