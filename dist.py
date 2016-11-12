@@ -122,7 +122,8 @@ def plot_data(x, ys, cols=None, title=None, unit=None):
         cols = [0]
 
     # Two subplots, unpack the axes array immediately
-    fig = plt.figure(figsize=(16, 12)) 
+    # fig = plt.figure(figsize=(16, 12)) 
+    fig = plt.figure(figsize=(11.69, 8.27)) 
     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
     stats = np.array([]).reshape(0,4)
 
