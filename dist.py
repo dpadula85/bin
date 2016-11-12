@@ -24,6 +24,9 @@ def options():
     parser.add_argument('--merge', default=False, action='store_true', help='''Merge the data from all
     specified columns in --c2 option in a cumulative data set.''')
 
+    parser.add_argument('--compare', default=False, action='store_true', help='''Plot all data from all
+    specified columns in --c2 option together.''')
+
     parser.add_argument('-t', '--title', type=str, default=None, help='''Name of the property to be plotted.''')
 
     parser.add_argument('-u', '--unit', type=str, default=None, help='''Unit of the property to be plotted.''')
@@ -113,69 +116,91 @@ def extend_compact_list(idxs):
     return extended
 
 
-def plot_data(x, y, title=None, unit=None):
+def plot_data(x, ys, cols=None, title=None, unit=None):
 
-    avg = np.average(y)
-    sigma = np.std(y)
-    ymin  = y.min() 
-    ymax  = y.max()
-
-    # Sturges' formula for number of bins
-    nbins = np.log2(len(y)) + 1
+    if not cols:
+        cols = [0]
 
     # Two subplots, unpack the axes array immediately
     fig = plt.figure(figsize=(16, 12)) 
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1]) 
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
+    stats = np.array([]).reshape(0,4)
 
-    # Trajectory subplot
-    ax0 = plt.subplot(gs[0])
-    ax0.set_xlabel('Data Set', size=26)
-    ax0.set_xlim(x.min(), x.max())
-    ax0.tick_params(axis='both', which='major', labelsize=24)
-    ax0.plot(x, y)
+    for col in cols:
 
-    if title:
-        title = title.title()
-        if unit:
-            ax0.set_ylabel('%s (%s)' % (title, unit), size=26)
-        else:
-            ax0.set_ylabel('%s' % title, size=26)
+        y = ys[:,col]
 
-    # Get y scale to set the same for the histogram
-    ylim_low, ylim_high = ax0.get_ylim()
+        avg = np.average(y)
+        sigma = np.std(y)
+        ymin  = y.min() 
+        ymax  = y.max()
 
-    # Average line and legend
-    ax0.axhline(avg, linestyle='dashed', linewidth=2, color='black', label='avg.')
-    plt.legend(loc=1, fontsize=24).draw_frame(False)
+        stat = np.array([avg, sigma, ymin, ymax])
+        stats = np.vstack((stats, stat))
 
-    # Histogram subplot
-    ax1 = plt.subplot(gs[1])
-    ax1.set_ylim(ylim_low, ylim_high)
-    ax1.set_yticklabels([])
-    ax1.set_xlabel('Count', size=26)
-    ax1.tick_params(axis='x', which='major', labelsize=24)
-    ax1.axhline(avg, linestyle='dashed', linewidth=2, color='black')
+        # Sturges' formula for number of bins
+        nbins = np.log2(len(y)) + 1
 
-    # Distribution histograms, the graph will be rotated by 90 deg
-    n, bins, patches = ax1.hist(y, bins=nbins, orientation='horizontal', histtype='step', color='blue')
+        #
+        # Trajectory subplot
+        #
+        ax0 = plt.subplot(gs[0])
+        ax0.set_xlabel('Data Set', size=26)
+        ax0.set_xlim(x.min(), x.max())
+        ax0.tick_params(axis='both', which='major', labelsize=24)
+        line = ax0.plot(x, y, label="Col %d" % (col + 1))
+        clr = line[0].get_color()
+        ax0.minorticks_on()
 
-    # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
-    scale_factor = (bins[1] - bins[0]) * len(y)
-    lim1 = bins.min()
-    lim2 = bins.max()
-    fitx = np.linspace(lim1, lim2, 100)
-    gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
-    gau_line = ax1.plot(gau_fit, fitx, '--', linewidth=2, color='red', label='Gaussian fit')
-    plt.legend(loc=1, fontsize=24).draw_frame(False)
+        if title:
+            title = title.title()
+            if unit:
+                ax0.set_ylabel('%s (%s)' % (title, unit), size=26)
+            else:
+                ax0.set_ylabel('%s' % title, size=26)
 
-    plt.tight_layout()
+        # Get y scale to set the same for the histogram
+        ylim_low, ylim_high = ax0.get_ylim()
 
-    return fig, avg, sigma, ymin, ymax
+        # Average line
+        ax0.axhline(avg, linestyle='dashed', linewidth=2, color=clr)
+
+        #
+        # Histogram subplot
+        #
+        ax1 = plt.subplot(gs[1])
+        ax1.set_ylim(ylim_low, ylim_high)
+        ax1.set_yticklabels([])
+        ax1.minorticks_on()
+        ax1.set_xlabel('Count', size=26)
+        ax1.tick_params(axis='x', which='major', labelsize=24)
+        ax1.tick_params(axis='x', which='minor', bottom='off')
+        ax1.tick_params(axis='x', which='minor', top='off')
+        ax1.axhline(avg, linestyle='dashed', linewidth=2, color=clr)
+
+        # Distribution histograms, the graph will be rotated by 90 deg
+        n, bins, patches = ax1.hist(y, bins=nbins, orientation='horizontal',
+                                    histtype='bar', rwidth=0.75, hatch='//',
+                                    fill=False, color=clr, edgecolor=clr)
+
+        # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
+        scale_factor = (bins[1] - bins[0]) * len(y)
+        lim1 = bins.min() - bins.min() * 0.1
+        lim2 = bins.max() + bins.max() * 0.1
+        fitx = np.linspace(lim1, lim2, 1000)
+        gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
+        gau_line = ax1.plot(gau_fit, fitx, '-', linewidth=2, color=clr)
+
+    ax0.legend(bbox_to_anchor=(0.75, 1.06), loc=10, ncol=len(cols),
+               borderaxespad=0, fontsize=24).draw_frame(False)
+
+    # plt.tight_layout()
+
+    return fig, stats
 
 
 if __name__ == '__main__':
 
-    print
     args = options()
 
     f = args.filename
@@ -191,40 +216,99 @@ if __name__ == '__main__':
     data = np.genfromtxt(f)
 
     if data.ndim == 1:
+        data = data.reshape(data.shape[0], 1)
         x = np.arange(1, len(data) + 1)
         c2 = [0]
 
     else:
         x = data[:,c1]
 
-    tot = np.array([])
-    for col in c2:
+    if args.compare:
+
+        fig, stat = plot_data(x, data, c2, title, unit)
+
+        # Save plot as vector image
+        if args.save:
         
-        try:
-            y = data[:,col]
-
-            if args.merge:
-                
-                if len(tot) == 0:
-                    tot = y
-
-                else:
-                    tot = np.r_[tot, y]
-
-        except IndexError:
-            y = data
-
-        if not args.merge:
-            fig, avg, sigma, ymin, ymax = plot_data(x, y, title, unit)
-
-            print(banner("DATA ANALYSIS - COL %d" % (col + 1), "=", 60))
+            print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
             print
-            print(" > Data Set  : %10d" % len(y))
-            print(" > Avg.      : %10.4f" % avg)
-            print(" > Std. Dev. : %10.4f" % sigma)
-            print(" > Min.      : %10.4f" % ymin)
-            print(" > Max.      : %10.4f" % ymax)
+            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
+        
+        # Show the plot
+        if args.show:
+        
+            # Uncomment the two linex of the backend in use to generate a
+            # maximized-window plot
+        
+            # Option 1
+            # QT backend
+            # manager = plt.get_current_fig_manager()
+            # manager.window.showMaximized()
+        
+            # Option 2
+            # TkAgg backend
+            # manager = plt.get_current_fig_manager()
+            # manager.resize(*manager.window.maxsize())
+        
+            # Option 3
+            # WX backend
+            # manager = plt.get_current_fig_manager()
+            # manager.frame.Maximize(True)
+        
+            print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
             print
+            plt.show()
+
+    
+    # Here we're out of the for cycle! Process the merged data if a merge was required.
+    if args.merge:
+
+        tot = data[:,c2]
+        dim1, dim2 = tot.shape
+        tot = tot.T.reshape(dim1 * dim2, 1)
+        x = np.arange(1, len(tot) + 1)
+        fig, stat = plot_data(x, tot, title, unit)
+
+        # Save plot as vector image
+        if args.save:
+        
+            print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+            print
+            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
+        
+        # Show the plot
+        if args.show:
+        
+            # Uncomment the two linex of the backend in use to generate a
+            # maximized-window plot
+        
+            # Option 1
+            # QT backend
+            # manager = plt.get_current_fig_manager()
+            # manager.window.showMaximized()
+        
+            # Option 2
+            # TkAgg backend
+            # manager = plt.get_current_fig_manager()
+            # manager.resize(*manager.window.maxsize())
+        
+            # Option 3
+            # WX backend
+            # manager = plt.get_current_fig_manager()
+            # manager.frame.Maximize(True)
+        
+            print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+            print
+            plt.show()
+
+
+    if not args.merge and not args.compare:
+
+        stat = np.array([]).reshape(0,4)
+        for col in c2:
+
+            fig, statcol = plot_data(x, data, [col], title, unit)
+            stat = np.vstack((stat, statcol))
 
             # Save plot as vector image
             if args.save:
@@ -258,49 +342,25 @@ if __name__ == '__main__':
                 print
                 plt.show()
 
-    # Here we're out of the for cycle! Process the merged data if a merge was required.
-    if args.merge:
-        x = np.arange(1, len(tot) + 1)
-        fig, avg, sigma, ymin, ymax = plot_data(x, tot, title, unit)
-    
-        print(banner("DATA ANALYSIS - COLS %d-%d" % (min(c2) + 1, max(c2) + 1), "=", 60))
-        print
-        print(" > Data Set  : %10d" % len(tot))
-        print(" > Avg.      : %10.4f" % avg)
-        print(" > Std. Dev. : %10.4f" % sigma)
-        print(" > Min.      : %10.4f" % ymin)
-        print(" > Max.      : %10.4f" % ymax)
-        print
-        pass
+    print
+    print(banner(ch="=", length=60))
+    print("Statistical Analysis of %s" % args.filename)
+    print
 
-        # Save plot as vector image
-        if args.save:
-        
-            print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
-            print
-            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
-        
-        # Show the plot
-        if args.show:
-        
-            # Uncomment the two linex of the backend in use to generate a
-            # maximized-window plot
-        
-            # Option 1
-            # QT backend
-            # manager = plt.get_current_fig_manager()
-            # manager.window.showMaximized()
-        
-            # Option 2
-            # TkAgg backend
-            # manager = plt.get_current_fig_manager()
-            # manager.resize(*manager.window.maxsize())
-        
-            # Option 3
-            # WX backend
-            # manager = plt.get_current_fig_manager()
-            # manager.frame.Maximize(True)
-        
-            print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
-            print
-            plt.show()
+    print("               Avg.  Std. Dev.       Min.       Max.")
+    print(banner(ch="-", length=60))
+
+    if not args.merge:
+
+        for i, col in enumerate(c2):
+
+            data = [ col + 1, stat[i,0], stat[i,1], stat[i,2], stat[i,3]]
+            print("Col %d    %10.4f %10.4f %10.4f %10.4f" % tuple(data))
+
+    else:
+        data = [ min(c2) + 1, max(c2) + 1, stat[0,0], stat[0,1], stat[0,2], stat[0,3]]
+        print("Cols %d-%d %10.4f %10.4f %10.4f %10.4f" % tuple(data))
+
+
+    print(banner(ch="=", length=60))
+    print
