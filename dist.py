@@ -27,9 +27,13 @@ def options():
     parser.add_argument('--compare', default=False, action='store_true', help='''Plot all data from all
     specified columns in --c2 option together.''')
 
-    parser.add_argument('-t', '--title', type=str, default=None, help='''Name of the property to be plotted.''')
+    parser.add_argument('-tx', '--titlex', type=str, default="Data Set", help='''Name of the property to be plotted on X axis.''')
 
-    parser.add_argument('-u', '--unit', type=str, default=None, help='''Unit of the property to be plotted.''')
+    parser.add_argument('-ux', '--unitx', type=str, default=None, help='''Unit of the property to be plotted on X axis.''')
+
+    parser.add_argument('-ty', '--titley', type=str, default=None, help='''Name of the property to be plotted on Y axis.''')
+
+    parser.add_argument('-uy', '--unity', type=str, default=None, help='''Unit of the property to be plotted on Y axis.''')
 
     parser.add_argument('-s', '--save', help='''Save the plot as an image. Specify the extension.''')
 
@@ -116,7 +120,7 @@ def extend_compact_list(idxs):
     return extended
 
 
-def plot_data(x, ys, cols=None, title=None, unit=None):
+def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
 
     if not cols:
         cols = [0]
@@ -146,19 +150,25 @@ def plot_data(x, ys, cols=None, title=None, unit=None):
         # Trajectory subplot
         #
         ax0 = plt.subplot(gs[0])
-        ax0.set_xlabel('Data Set', size=26)
         ax0.set_xlim(x.min(), x.max())
         ax0.tick_params(axis='both', which='major', labelsize=24, pad=10)
         line = ax0.plot(x, y, label="Col %d" % (col + 1))
         clr = line[0].get_color()
         ax0.minorticks_on()
 
-        if title:
-            title = title.title()
-            if unit:
-                ax0.set_ylabel('%s (%s)' % (title, unit), size=26)
+        if tx:
+            tx = tx.title()
+            if ux:
+                ax0.set_xlabel('%s (%s)' % (tx, ux), size=26)
             else:
-                ax0.set_ylabel('%s' % title, size=26)
+                ax0.set_xlabel('%s' % tx, size=26)
+
+        if ty:
+            ty = ty.title()
+            if uy:
+                ax0.set_ylabel('%s (%s)' % (ty, uy), size=26)
+            else:
+                ax0.set_ylabel('%s' % ty, size=26)
 
         # Get y scale to set the same for the histogram
         ylim_low, ylim_high = ax0.get_ylim()
@@ -205,8 +215,10 @@ if __name__ == '__main__':
     args = options()
 
     f = args.filename
-    title = args.title
-    unit = args.unit
+    tx = args.titlex
+    ux = args.unitx
+    ty = args.titley
+    uy = args.unity
     basename = '.'.join(f.split('.')[:-1])
     checkfile(f)
 
@@ -226,7 +238,7 @@ if __name__ == '__main__':
 
     if args.compare:
 
-        fig, stat = plot_data(x, data, c2, title, unit)
+        fig, stat = plot_data(x, data, c2, tx, ux, ty, uy)
 
         # Save plot as vector image
         if args.save:
@@ -268,7 +280,7 @@ if __name__ == '__main__':
         dim1, dim2 = tot.shape
         tot = tot.T.reshape(dim1 * dim2, 1)
         x = np.arange(1, len(tot) + 1)
-        fig, stat = plot_data(x, tot, title, unit)
+        fig, stat = plot_data(x, tot, tx, ux, ty, uy)
 
         # Save plot as vector image
         if args.save:
@@ -308,7 +320,7 @@ if __name__ == '__main__':
         stat = np.array([]).reshape(0,4)
         for col in c2:
 
-            fig, statcol = plot_data(x, data, [col], title, unit)
+            fig, statcol = plot_data(x, data, [col], tx, ux, ty, uy)
             stat = np.vstack((stat, statcol))
 
             # Save plot as vector image
