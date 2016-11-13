@@ -3,6 +3,7 @@
 import os
 import sys
 import numpy as np
+import pandas as pd
 import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
@@ -26,8 +27,6 @@ def options():
 
     parser.add_argument('--compare', default=False, action='store_true', help='''Plot all data from all
     specified columns in --c2 option together.''')
-
-    parser.add_argument('-tx', '--titlex', type=str, default="Data Set", help='''Name of the property to be plotted on X axis.''')
 
     parser.add_argument('-ux', '--unitx', type=str, default=None, help='''Unit of the property to be plotted on X axis.''')
 
@@ -120,10 +119,111 @@ def extend_compact_list(idxs):
     return extended
 
 
-def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
+# def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
 
-    if not cols:
-        cols = [0]
+#     if not cols:
+#         cols = [0]
+
+#     # Two subplots, unpack the axes array immediately
+#     # fig = plt.figure(figsize=(16, 12)) 
+#     fig = plt.figure(figsize=(11.69, 8.27)) 
+#     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
+#     stats = np.array([]).reshape(0,4)
+
+#     for col in cols:
+
+#         y = ys[:,col]
+
+#         avg = np.average(y)
+#         sigma = np.std(y)
+#         ymin  = y.min() 
+#         ymax  = y.max()
+
+#         stat = np.array([avg, sigma, ymin, ymax])
+#         stats = np.vstack((stats, stat))
+
+#         # Sturges' formula for number of bins
+#         nbins = np.log2(len(y)) + 1
+
+#         #
+#         # Trajectory subplot
+#         #
+#         ax0 = plt.subplot(gs[0])
+#         ax0.set_xlim(x.min(), x.max())
+#         ax0.tick_params(axis='both', which='major', labelsize=24, pad=10)
+#         line = ax0.plot(x, y, label="Col %d" % (col + 1))
+#         clr = line[0].get_color()
+#         ax0.minorticks_on()
+
+#         if tx:
+#             tx = tx.title()
+#             if ux:
+#                 ax0.set_xlabel('%s (%s)' % (tx, ux), size=26)
+#             else:
+#                 ax0.set_xlabel('%s' % tx, size=26)
+
+#         if ty:
+#             ty = ty.title()
+#             if uy:
+#                 ax0.set_ylabel('%s (%s)' % (ty, uy), size=26)
+#             else:
+#                 ax0.set_ylabel('%s' % ty, size=26)
+
+#         # Get y scale to set the same for the histogram
+#         ylim_low, ylim_high = ax0.get_ylim()
+
+#         # Average line
+#         ax0.axhline(avg, linestyle='dashed', linewidth=2, color=clr)
+
+#         #
+#         # Histogram subplot
+#         #
+#         ax1 = plt.subplot(gs[1])
+#         ax1.set_ylim(ylim_low, ylim_high)
+#         ax1.set_yticklabels([])
+#         ax1.minorticks_on()
+#         ax1.set_xlabel('Count', size=26)
+#         ax1.tick_params(axis='x', which='major', labelsize=24, pad=10)
+#         ax1.tick_params(axis='x', which='minor', bottom='off')
+#         ax1.tick_params(axis='x', which='minor', top='off')
+#         ax1.axhline(avg, linestyle='dashed', linewidth=2, color=clr)
+
+#         # Distribution histograms, the graph will be rotated by 90 deg
+#         n, bins, patches = ax1.hist(y, bins=nbins, orientation='horizontal',
+#                                     histtype='bar', rwidth=0.75, hatch='//',
+#                                     fill=False, color=clr, edgecolor=clr)
+
+#         # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
+#         scale_factor = (bins[1] - bins[0]) * len(y)
+#         lim1 = bins.min() - bins.min() * 0.1
+#         lim2 = bins.max() + bins.max() * 0.1
+#         fitx = np.linspace(lim1, lim2, 1000)
+#         gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
+#         gau_line = ax1.plot(gau_fit, fitx, '-', linewidth=2, color=clr)
+
+#     ax0.legend(bbox_to_anchor=(0.75, 1.06), loc=10, ncol=len(cols),
+#                borderaxespad=0, fontsize=24).draw_frame(False)
+
+#     # plt.tight_layout()
+
+#     return fig, stats
+
+
+def gen_pandas_df(filename):
+
+    df = pd.read_csv(filename, delim_whitespace=True, comment='#', header=None)
+
+    with open(filename) as f:
+        for line in f:
+            if line.startswith('#') and len(line.strip()) > 1:
+                header = line.split()[1:]
+
+    df.columns = header
+
+    return df
+
+
+def plot_data(data, yhdrs, xhdr=None, ux=None, ty=None, uy=None):
 
     # Two subplots, unpack the axes array immediately
     # fig = plt.figure(figsize=(16, 12)) 
@@ -131,9 +231,14 @@ def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
     stats = np.array([]).reshape(0,4)
 
-    for col in cols:
+    if xhdr:
+        x = data[xhdr]
+    else:
+        x = np.arange(1, len(data) + 1)
 
-        y = ys[:,col]
+    for yhdr in yhdrs:
+
+        y = data[yhdr]
 
         avg = np.average(y)
         sigma = np.std(y)
@@ -144,24 +249,29 @@ def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
         stats = np.vstack((stats, stat))
 
         # Sturges' formula for number of bins
-        nbins = np.log2(len(y)) + 1
+        nbins = int(np.log2(len(y)) + 1)
 
         #
         # Trajectory subplot
         #
         ax0 = plt.subplot(gs[0])
+        ax0.set_xlabel(xhdr, size=26)
         ax0.set_xlim(x.min(), x.max())
         ax0.tick_params(axis='both', which='major', labelsize=24, pad=10)
-        line = ax0.plot(x, y, label="Col %d" % (col + 1))
+        line = ax0.plot(x, y, label=yhdr)
         clr = line[0].get_color()
         ax0.minorticks_on()
 
-        if tx:
-            tx = tx.title()
-            if ux:
-                ax0.set_xlabel('%s (%s)' % (tx, ux), size=26)
-            else:
-                ax0.set_xlabel('%s' % tx, size=26)
+        if xhdr:
+            title = xhdr
+
+        else:
+            title = "Data Set"
+            
+        if ux:
+            ax0.set_xlabel('%s (%s)' % (title, ux), size=26)
+        else:
+            ax0.set_xlabel('%s' % title, size=26)
 
         if ty:
             ty = ty.title()
@@ -202,7 +312,8 @@ def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
         gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
         gau_line = ax1.plot(gau_fit, fitx, '-', linewidth=2, color=clr)
 
-    ax0.legend(bbox_to_anchor=(0.75, 1.06), loc=10, ncol=len(cols),
+
+    ax0.legend(bbox_to_anchor=(0.75, 1.06), loc=10, ncol=len(yhdrs),
                borderaxespad=0, fontsize=24).draw_frame(False)
 
     # plt.tight_layout()
@@ -215,7 +326,6 @@ if __name__ == '__main__':
     args = options()
 
     f = args.filename
-    tx = args.titlex
     ux = args.unitx
     ty = args.titley
     uy = args.unity
@@ -226,26 +336,27 @@ if __name__ == '__main__':
     c1 = args.c1 - 1
     c2 = map(lambda x: x - 1, extend_compact_list(args.c2))
 
-    data = np.genfromtxt(f)
+    data = gen_pandas_df(f)
 
-    if data.ndim == 1:
-        data = data.reshape(data.shape[0], 1)
-        x = np.arange(1, len(data) + 1)
-        c2 = [0]
+    if len(data.columns) > 1:
+        xhdr = data.columns[c1]
+        yhdrs = [ data.columns[i] for i in c2 ]
 
     else:
-        x = data[:,c1]
+        xhdr = None
+        yhdrs = data.columns
 
     if args.compare:
 
-        fig, stat = plot_data(x, data, c2, tx, ux, ty, uy)
+        fig, stat = plot_data(data, yhdrs, xhdr, ux, ty, uy)
 
         # Save plot as vector image
         if args.save:
         
             print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
             print
-            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
+            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save),
+                        dpi=1200, transparent=True, bbox_inches='tight')
         
         # Show the plot
         if args.show:
@@ -273,21 +384,21 @@ if __name__ == '__main__':
             plt.show()
 
     
-    # Here we're out of the for cycle! Process the merged data if a merge was required.
     if args.merge:
 
-        tot = data[:,c2]
-        dim1, dim2 = tot.shape
-        tot = tot.T.reshape(dim1 * dim2, 1)
-        x = np.arange(1, len(tot) + 1)
-        fig, stat = plot_data(x, tot, tx, ux, ty, uy)
+        tot = pd.concat([ data[yhdr] for yhdr in yhdrs ], ignore_index=True).to_frame(name="Merged")
+
+        yhdrs = ["Merged"]
+        xhdrs = None
+        fig, stat = plot_data(tot, yhdrs, xhdrs, ux, ty, uy)
 
         # Save plot as vector image
         if args.save:
         
-            print(" > Saving plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+            print(" > Saving plot for %s..." % yhdrs[0])
             print
-            plt.savefig('%s_cols%d-%d.%s' % (basename, min(c2) + 1, max(c2) + 1, args.save), dpi=1200, transparent=True)
+            plt.savefig('%s_%s.%s' % (basename, yhdrs[0], args.save),
+                        dpi=1200, transparent=True, bbox_inches='tight')
         
         # Show the plot
         if args.show:
@@ -310,7 +421,7 @@ if __name__ == '__main__':
             # manager = plt.get_current_fig_manager()
             # manager.frame.Maximize(True)
         
-            print(" > Showing plot for COLS %d-%d..." % (min(c2) + 1, max(c2) + 1))
+            print(" > Showing plot for %s..." % yhdrs[0])
             print
             plt.show()
 
@@ -318,17 +429,18 @@ if __name__ == '__main__':
     if not args.merge and not args.compare:
 
         stat = np.array([]).reshape(0,4)
-        for col in c2:
+        for yhdr in yhdrs:
 
-            fig, statcol = plot_data(x, data, [col], tx, ux, ty, uy)
+            fig, statcol = plot_data(data, [yhdr], xhdr, ux, ty, uy)
             stat = np.vstack((stat, statcol))
 
             # Save plot as vector image
             if args.save:
 
-                print(" > Saving plot for COL %d..." % (col + 1))
+                print(" > Saving plot for %s..." % yhdr)
                 print
-                plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save), dpi=1200, transparent=True)
+                plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save),
+                            dpi=1200, transparent=True, bbox_inches='tight')
 
             # Show the plot
             if args.show:
@@ -351,7 +463,7 @@ if __name__ == '__main__':
                 # manager = plt.get_current_fig_manager()
                 # manager.frame.Maximize(True)
 
-                print(" > Showing plot for COL %d..." % (col + 1))
+                print(" > Showing plot for %s..." % yhdr)
                 print
                 plt.show()
 
@@ -360,20 +472,13 @@ if __name__ == '__main__':
     print("Statistical Analysis of %s" % args.filename)
     print
 
-    print("               Avg.  Std. Dev.       Min.       Max.")
+    print("                      Avg.  Std. Dev.       Min.       Max.")
     print(banner(ch="-", length=60))
 
-    if not args.merge:
+    for i, yhdr in enumerate(yhdrs):
 
-        for i, col in enumerate(c2):
-
-            data = [ col + 1, stat[i,0], stat[i,1], stat[i,2], stat[i,3]]
-            print("Col %d    %10.4f %10.4f %10.4f %10.4f" % tuple(data))
-
-    else:
-        data = [ min(c2) + 1, max(c2) + 1, stat[0,0], stat[0,1], stat[0,2], stat[0,3]]
-        print("Cols %d-%d %10.4f %10.4f %10.4f %10.4f" % tuple(data))
-
+        data = [ yhdr, stat[i,0], stat[i,1], stat[i,2], stat[i,3]]
+        print("%-15s %10.4f %10.4f %10.4f %10.4f" % tuple(data))
 
     print(banner(ch="=", length=60))
     print
