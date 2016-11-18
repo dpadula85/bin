@@ -8,7 +8,6 @@ import argparse as arg
 from matplotlib import ticker
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
-from scipy.stats import norm
 
 
 def options():
@@ -153,6 +152,25 @@ def plot_data(data, hdrs, t=None, u=None):
                         np.max([ax.get_xlim(), ax.get_ylim()])]
 
                 ax.plot(lims, lims, color='k')
+
+                # Best Fitting Line
+                p, V = np.polyfit(x, y, 1, cov=True)
+                fit_x = np.linspace(np.min(ax.get_xlim()), np.max(ax.get_xlim())) 
+                fit_y = p[0] * fit_x + p[1]
+                xerr = np.sqrt(V[0][0])
+                yerr = np.sqrt(V[1][1])
+                ax.plot(fit_x, fit_y, color='b', lw=1.5, ls='--')
+
+                print
+                print(banner(ch="=", length=60))
+                print("Line Fitting of %s vs %s" % (hdrs[i], hdrs[j]))
+                print
+                print("             Value            Error")
+                print(banner(ch="-", length=60))
+                print("slope %16.6e %16.6e" % (p[0], xerr))
+                print("intcp %16.6e %16.6e" % (p[1], yerr))
+                print(banner(ch="=", length=60))
+
                 ax.set_aspect('equal')
                 ax.set_xlim(lims)
                 ax.set_ylim(lims)

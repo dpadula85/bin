@@ -439,7 +439,7 @@ if __name__ == '__main__':
 
                 print(" > Saving plot for %s..." % yhdr)
                 print
-                plt.savefig('%s_col%d.%s' % (basename, col + 1, args.save),
+                plt.savefig('%s_%s.%s' % (basename, yhdr, args.save),
                             dpi=1200, transparent=True, bbox_inches='tight')
 
             # Show the plot
@@ -471,7 +471,6 @@ if __name__ == '__main__':
     print(banner(ch="=", length=60))
     print("Statistical Analysis of %s" % args.filename)
     print
-
     print("                      Avg.  Std. Dev.       Min.       Max.")
     print(banner(ch="-", length=60))
 
