@@ -259,6 +259,7 @@ def plot_data(data, yhdrs, xhdr=None, ux=None, ty=None, uy=None):
         ax0.set_xlim(x.min(), x.max())
         ax0.tick_params(axis='both', which='major', labelsize=24, pad=10)
         line = ax0.plot(x, y, label=yhdr)
+        # line = ax0.plot(x, y, marker='.', label=yhdr)
         clr = line[0].get_color()
         ax0.minorticks_on()
 

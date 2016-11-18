@@ -151,25 +151,29 @@ def plot_data(data, hdrs, t=None, u=None):
                 lims = [np.min([ax.get_xlim(), ax.get_ylim()]),
                         np.max([ax.get_xlim(), ax.get_ylim()])]
 
-                ax.plot(lims, lims, color='k')
-
                 # Best Fitting Line
                 p, V = np.polyfit(x, y, 1, cov=True)
-                fit_x = np.linspace(np.min(ax.get_xlim()), np.max(ax.get_xlim())) 
+                fit_x = np.linspace(np.min(ax.get_xlim()), np.max(ax.get_xlim()), 100)
                 fit_y = p[0] * fit_x + p[1]
-                xerr = np.sqrt(V[0][0])
-                yerr = np.sqrt(V[1][1])
+                xerr = np.sqrt(V[0,0])
+                yerr = np.sqrt(V[1,1])
+                r_squared = 1 - (sum((y - (p[0] * x + p[1]))**2) / ((len(y) - 1) * np.var(y, ddof=1)))
                 ax.plot(fit_x, fit_y, color='b', lw=1.5, ls='--')
 
                 print
                 print(banner(ch="=", length=60))
                 print("Line Fitting of %s vs %s" % (hdrs[i], hdrs[j]))
                 print
+                print(banner(ch="-", length=60))
                 print("             Value            Error")
                 print(banner(ch="-", length=60))
                 print("slope %16.6e %16.6e" % (p[0], xerr))
                 print("intcp %16.6e %16.6e" % (p[1], yerr))
+                print("R^2   %12.6f" % r_squared)
                 print(banner(ch="=", length=60))
+
+                # x = y line
+                ax.plot(lims, lims, color='k')
 
                 ax.set_aspect('equal')
                 ax.set_xlim(lims)
