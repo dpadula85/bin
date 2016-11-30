@@ -268,6 +268,22 @@ def dihedral(A, B, C, D):
     return np.arctan2(y, x) * 180 / np.pi
 
 
+def acf(series):
+    '''Returns the autocorrelation function of a time series.'''
+
+    N = len(series)
+    avg = np.mean(series)
+    c0 = np.sum((series - avg)**2) / N
+
+    def r(j):
+        return np.sum((series[:N - j] - avg) * (series[j:] - avg)) / (N - j)
+
+    t = np.arange(N)
+    acf_t = map(r, t)
+
+    return acf_t / c0
+
+
 def write_PDB(pdbout, coords):
 
     # For better organization of the output writing
