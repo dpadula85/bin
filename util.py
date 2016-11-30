@@ -546,10 +546,20 @@ def parse_PDB(pdbfile):
                         coords = [coor]
                         symbols = [atom_symbol]
 
-            # TO DO
+            # Connectivity
             elif line[0:6] == 'CONECT':
-                Ib1 += [int(line[6:11])]
-                Ib2 += [int(line[11:16])]
+
+                data = line.split()[1:]
+
+                if len(data) > 1:
+                    Ib1 += [int(data[0])]
+                    tmpIb2 = np.zeros(4, dtype=int)
+                    tmp1Ib2 = map(int, data[1:])
+
+                    for k in range(len(tmp1Ib2)):
+                        tmpIb2[k] += tmp1Ib2[k]
+
+                    Ib2 += [tmpIb2.tolist()]
 
         # save data for the last residue 
         atom_idxs.append(idxs)
@@ -559,18 +569,10 @@ def parse_PDB(pdbfile):
 
     # Build Connectivity Matrix
     NAtoms = sum([ len(i) for i in atom_idxs ])
-    NBonds = len(Ib1)
     Conn = np.zeros((NAtoms, 4), dtype=int)
-    for i in range(NBonds):
 
-        try:
-            Idx1 = np.argmax(Conn[Ib1[i]] == 0)
-            Idx2 = np.argmax(Conn[Ib2[i]] == 0)
-            Conn[Ib1[i]][Idx1] = Ib2[i]
-            Conn[Ib2[i]][Idx2] = Ib1[i]
-
-        except IndexError:
-            pass
+    for i in range(len(Ib1)):
+        Conn[Ib1[i] - 1] = Ib2[i]
 
     return atom_idxs, atom_names, res_names, res_ids, atom_coords, atom_symbols, Conn
 
