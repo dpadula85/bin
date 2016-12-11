@@ -16,7 +16,7 @@ def options():
     parser = arg.ArgumentParser(description='Plots a series of nice scatter plots.', formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
-    parser.add_argument('filename', nargs='?', default='data.dat', help='''File data.dat from mdanalyzer.''')
+    parser.add_argument('-f', '--filename', default='data.dat', help='''File data.dat from mdanalyzer.''')
 
     parser.add_argument('-c', '--cols', default=['1', '2'], nargs='+', help='''Columns containing the data.''')
 

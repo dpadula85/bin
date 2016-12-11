@@ -16,7 +16,7 @@ def options():
     parser = arg.ArgumentParser(description='Plots a nice graph for MD properties.', formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
-    parser.add_argument('filename', nargs='?', default='data.dat', help='''File data.dat from mdanalyzer.''')
+    parser.add_argument('-f', '--filename', default='data.dat', help='''File data.dat from mdanalyzer.''')
 
     parser.add_argument('--c1', default=1, type=int, help='''Column for the progression of the property.''')
 
@@ -117,96 +117,6 @@ def extend_compact_list(idxs):
             extended.append(int(idx))
 
     return extended
-
-
-# def plot_data(x, ys, cols=None, tx=None, ux=None, ty=None, uy=None):
-
-#     if not cols:
-#         cols = [0]
-
-#     # Two subplots, unpack the axes array immediately
-#     # fig = plt.figure(figsize=(16, 12)) 
-#     fig = plt.figure(figsize=(11.69, 8.27)) 
-#     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])
-#     stats = np.array([]).reshape(0,4)
-
-#     for col in cols:
-
-#         y = ys[:,col]
-
-#         avg = np.average(y)
-#         sigma = np.std(y)
-#         ymin  = y.min() 
-#         ymax  = y.max()
-
-#         stat = np.array([avg, sigma, ymin, ymax])
-#         stats = np.vstack((stats, stat))
-
-#         # Sturges' formula for number of bins
-#         nbins = np.log2(len(y)) + 1
-
-#         #
-#         # Trajectory subplot
-#         #
-#         ax0 = plt.subplot(gs[0])
-#         ax0.set_xlim(x.min(), x.max())
-#         ax0.tick_params(axis='both', which='major', labelsize=24, pad=10)
-#         line = ax0.plot(x, y, label="Col %d" % (col + 1))
-#         clr = line[0].get_color()
-#         ax0.minorticks_on()
-
-#         if tx:
-#             tx = tx.title()
-#             if ux:
-#                 ax0.set_xlabel('%s (%s)' % (tx, ux), size=26)
-#             else:
-#                 ax0.set_xlabel('%s' % tx, size=26)
-
-#         if ty:
-#             ty = ty.title()
-#             if uy:
-#                 ax0.set_ylabel('%s (%s)' % (ty, uy), size=26)
-#             else:
-#                 ax0.set_ylabel('%s' % ty, size=26)
-
-#         # Get y scale to set the same for the histogram
-#         ylim_low, ylim_high = ax0.get_ylim()
-
-#         # Average line
-#         ax0.axhline(avg, linestyle='dashed', linewidth=2, color=clr)
-
-#         #
-#         # Histogram subplot
-#         #
-#         ax1 = plt.subplot(gs[1])
-#         ax1.set_ylim(ylim_low, ylim_high)
-#         ax1.set_yticklabels([])
-#         ax1.minorticks_on()
-#         ax1.set_xlabel('Count', size=26)
-#         ax1.tick_params(axis='x', which='major', labelsize=24, pad=10)
-#         ax1.tick_params(axis='x', which='minor', bottom='off')
-#         ax1.tick_params(axis='x', which='minor', top='off')
-#         ax1.axhline(avg, linestyle='dashed', linewidth=2, color=clr)
-
-#         # Distribution histograms, the graph will be rotated by 90 deg
-#         n, bins, patches = ax1.hist(y, bins=nbins, orientation='horizontal',
-#                                     histtype='bar', rwidth=0.75, hatch='//',
-#                                     fill=False, color=clr, edgecolor=clr)
-
-#         # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
-#         scale_factor = (bins[1] - bins[0]) * len(y)
-#         lim1 = bins.min() - bins.min() * 0.1
-#         lim2 = bins.max() + bins.max() * 0.1
-#         fitx = np.linspace(lim1, lim2, 1000)
-#         gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
-#         gau_line = ax1.plot(gau_fit, fitx, '-', linewidth=2, color=clr)
-
-#     ax0.legend(bbox_to_anchor=(0.75, 1.06), loc=10, ncol=len(cols),
-#                borderaxespad=0, fontsize=24).draw_frame(False)
-
-#     # plt.tight_layout()
-
-#     return fig, stats
 
 
 def gen_pandas_df(filename):
