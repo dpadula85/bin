@@ -79,6 +79,13 @@ def rot(axis, theta):
     return R
 
 
+def unique_rows(data):
+
+    uniq = np.unique(data.view(data.dtype.descr * data.shape[1]))
+
+    return uniq.view(data.dtype).reshape(-1, data.shape[1])
+
+
 if __name__ == '__main__':
 
     args = options()
@@ -235,6 +242,7 @@ if __name__ == '__main__':
     ax1.add_patch(circle)
     art3d.pathpatch_2d_to_3d(circle, z=-3, zdir="z")
 
+    rolled = unique_rows(rolled)
     atoms = np.ones(len(rolled))
     rolled = np.c_[atoms, rolled]
 
