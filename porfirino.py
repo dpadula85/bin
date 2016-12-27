@@ -359,10 +359,10 @@ if __name__ == '__main__':
     #
     # Generation of files for De Voe Calculation
     #
-    if os.path.isdir('DeVoe'):
-        sh.rmtree('DeVoe')
+    if os.path.isdir(args.output):
+        sh.rmtree(args.output)
 
-    os.makedirs('DeVoe')
+    os.makedirs(args.output)
 
     # Interaction matrix
     with open('matrix.txt', 'w') as f:
@@ -372,7 +372,7 @@ if __name__ == '__main__':
         for i in range(1, n + 1):
             f.write("1 %5d %5d\n" % (2*i -1, 2*i))
 
-    sh.move('matrix.txt', 'DeVoe')
+    sh.move('matrix.txt', args.output)
 
     # Dipoles
     # N atoms are 9, 14, 19, 24
@@ -393,11 +393,11 @@ if __name__ == '__main__':
             CC += natoms
             CD += natoms
 
-    sh.move('dipoles.txt', 'DeVoe')
+    sh.move('dipoles.txt', args.output)
 
     # Mol file
     np.savetxt('mol.txt', final[:,1:], fmt='%10.6f')
-    sh.move('mol.txt', 'DeVoe')
+    sh.move('mol.txt', args.output)
     print
     print(banner(ch='=', length=80))
     print
