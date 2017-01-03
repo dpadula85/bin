@@ -119,6 +119,7 @@ if __name__ == '__main__':
     T = t1 * a1 - t2 * a2
 
     r = np.linalg.norm(C) / (2 * np.pi)
+    print r
     
     #
     # Define Edges of the Tubular Cell
