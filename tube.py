@@ -190,6 +190,20 @@ if __name__ == '__main__':
     D -= D
     xs = points[:,0]
     ys = points[:,1]
+
+    sheet = np.c_[xs, ys, np.zeros(len(xs))]
+    sheet = unique_rows(sheet)
+    atoms = np.ones(len(sheet))
+    sheet = np.c_[atoms, sheet]
+    sheet = sheet[sheet[:, 1].argsort()]
+
+    #
+    # Save unwrapped Tubular cell
+    #
+    with open(args.output + ".sheet.xyz", "w") as f:
+        f.write("%d\n\n" % len(sheet))
+        np.savetxt(f, sheet, fmt="%5d %14.8f %14.8f %14.8f")
+
     
     ax0 = plt.subplot(gs[0])
     ax0.scatter(xs,ys, color="k", s=1)
