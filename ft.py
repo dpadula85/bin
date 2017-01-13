@@ -4,6 +4,7 @@ import os
 import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
+from matplotlib import gridspec
 
 eV2wn = 8065.544005
 
@@ -41,6 +42,9 @@ def options():
 
     parser.add_argument('-tu', '--timeunit', choices=["s", "ms", "mus", "ns", "ps", "fs"],
                         type=str, default="ps", help='''Unit of the time series''')
+
+    parser.add_argument('--show', help='''Show the plot in an external window.''',
+    default=False, action='store_true')
 
     parser.add_argument('-o', '--output', type=str, default=None, help='''Output File.''')
 
@@ -136,6 +140,20 @@ if __name__ == '__main__':
     acf_y = acf(y)
 
     #
+    # Save to a file
+    #
+    data = np.c_[x, acf_y]
+    if not args.output:
+        basename = '.'.join(f.split('.')[:-1])
+        outfile = basename + '.acf.out'
+
+    else:
+        outfile = args.output + '.acf.out'
+
+    header = "\n      Time (%s)         ACF (eV^2)\n" % args.timeunit
+    np.savetxt(outfile, data, fmt="%18.6e", header=header)
+
+    #
     # Get the Cosine Transform of the autocorrelation function
     #
     freqs, specden_ft_part = cos_transf(x, acf_y, factor=time_factor)
@@ -160,5 +178,34 @@ if __name__ == '__main__':
     header = "\n Frequency (cm^-1) Spectral Density (cm^-1)\n"
     np.savetxt(outfile, data, fmt="%18.6e", header=header)
 
-    plt.plot(freqs, specden)
-    plt.show()
+    if args.show:
+
+        fig = plt.figure(figsize=(11.69, 8.27)) 
+        gs = gridspec.GridSpec(3, 1)
+
+        #
+        # Plot FT
+        #
+        ax = plt.subplot(gs[0])
+        ax.plot(freqs, specden, label="FT")
+        ax.set_xlabel(r'$\omega$ (cm$^{-1}$)', size=22)
+        ax.set_ylabel(r'$J(\omega)$ (cm$^{-1}$)', size=22)
+
+        #
+        # Plot ACF
+        #
+        ax0 = plt.subplot(gs[1])
+        ax0.plot(x, acf_y, label="ACF")
+        ax0.set_xlabel('Time (%s)' % args.timeunit, size=22)
+        ax0.set_ylabel('ACF (eV$^2$)', size=22)
+
+        #
+        # Plot time series
+        #
+        ax1 = plt.subplot(gs[2])
+        ax1.plot(x, y,)
+        ax1.set_xlabel('Time (%s)' % args.timeunit, size=22)
+        ax1.set_ylabel('E (eV)', size=22)
+
+        plt.tight_layout()
+        plt.show()
