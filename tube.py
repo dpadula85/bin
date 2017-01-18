@@ -41,6 +41,9 @@ def options():
     parser.add_argument('-o', '--output', default='tube', help='''
     Root of the name of the output file.''')
 
+    parser.add_argument('-s', '--show', default=False, action="store_true",
+    help='''Root of the name of the output file.''')
+
     args = parser.parse_args()
 
     return args
@@ -104,8 +107,12 @@ if __name__ == '__main__':
     n = args.n
     m = args.m
     
+    #
+    # Basis Vectors and Basis Matrix
+    #
     a1 = ux * side1
     a2 = np.array([side2 * np.cos(gamma), side2 * np.sin(gamma)])
+    M_a = np.c_[a1, a2]
     
     #
     # Tubular cell
@@ -125,33 +132,43 @@ if __name__ == '__main__':
     # Define Edges of the Tubular Cell
     #
     O = origin[:-1]
-    A = C
+    A = O + C
     B = C + T
-    D = T
+    D = O + T
     rectangle = path.Path([O, A, B, D])
-    
+
+    #
+    # Calculate Max extension of the tubular cell
+    #
+    max_x = np.max([O[0], A[0], B[0], D[0]])
+    max_y = np.max([O[1], A[1], B[1], D[1]])
+    min_x = np.min([O[0], A[0], B[0], D[0]])
+    min_y = np.min([O[1], A[1], B[1], D[1]])
+    max_n = np.ceil(max_x / a1[0])
+    min_n = np.ceil(min_x / a1[0])
+    max_m = np.ceil(max_y / a2[1])
+    min_m = np.ceil(min_y / a2[1])
+    range1 = np.arange(min_n, max_n * 2)
+    range2 = np.arange(min_m, max_m)
+
+    x_a, y_a = np.meshgrid(range1, range2)
+    x_a = x_a.flatten()
+    y_a = y_a.flatten()
+    coords_a = np.c_[x_a, y_a]
+
+    #
+    # Change basis to cartesian coordinates
+    #
+    coords = np.dot(M_a, coords_a.T).T
+
     #
     # Generate points inside the Tubular cell
     #
     points = []
-    for i in range(n * t1):
-        for j in range(m * t2):
-    
-            x = i * side1 + j * side2 * np.cos(gamma)
-            y = j * side2 * np.sin(gamma)
-            point = np.array([x, y])
-    
-            if rectangle.contains_points(np.atleast_2d(point)):
-                points.append(point)
-    
-    
-            xneg = i * side1 - j * side2 * np.cos(gamma)
-            yneg = -j * side2 * np.sin(gamma)
-            point = np.array([xneg, yneg])
-    
-            if rectangle.contains_points(np.atleast_2d(point)):
-                points.append(point)
-    
+    for coord in coords:
+        if rectangle.contains_points(np.atleast_2d(coord)):
+            points.append(coord)
+
     points = np.array(points)
 
     xs = points[:,0]
@@ -204,7 +221,6 @@ if __name__ == '__main__':
         f.write("%d\n\n" % len(sheet))
         np.savetxt(f, sheet, fmt="%5d %14.8f %14.8f %14.8f")
 
-    
     ax0 = plt.subplot(gs[0])
     ax0.scatter(xs,ys, color="k", s=1)
     ax0.plot([D[0], B[0]], [D[1], B[1]], color="b", lw=2, label="Chiral Vector")
@@ -270,4 +286,5 @@ if __name__ == '__main__':
         f.write("%d\n\n" % len(rolled))
         np.savetxt(f, rolled, fmt="%5d %14.8f %14.8f %14.8f")
 
-    # plt.show()
+    if args.show:
+        plt.show()
