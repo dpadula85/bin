@@ -34,7 +34,10 @@ def options():
                                 formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
-    parser.add_argument('-f', '--filename', default='data.dat', help='''File data.dat from mdanalyzer.''')
+    parser.add_argument('-f', '--filename', default='data.dat', help='''Either a time series or an acf file.''')
+
+    parser.add_argument('--filetype', default='series', choices=['series', 'acf'],
+                        help='''Type of the input file.''')
 
     parser.add_argument('--c1', default=1, type=int, help='''Time Column.''')
 
@@ -135,9 +138,16 @@ if __name__ == '__main__':
     time_factor = time_units[args.timeunit]
 
     data = np.loadtxt(f)
-    x = data[:,c1]
-    y = data[:,c2]
-    acf_y = acf(y)
+
+    if args.filetype == 'series':
+        x = data[:,c1]
+        y = data[:,c2]
+        acf_y = acf(y)
+
+    elif args.filetype == 'acf':
+        x = data[:,c1]
+        y = None
+        acf_y = data[:,c2].flatten()
 
     #
     # Save to a file
@@ -180,8 +190,12 @@ if __name__ == '__main__':
 
     if args.show:
 
-        fig = plt.figure(figsize=(11.69, 8.27)) 
-        gs = gridspec.GridSpec(3, 1)
+        fig = plt.figure(figsize=(11.69, 8.27))
+
+        if y is not None:
+            gs = gridspec.GridSpec(3, 1)
+        else:
+            gs = gridspec.GridSpec(2, 1)
 
         #
         # Plot FT
@@ -199,13 +213,15 @@ if __name__ == '__main__':
         ax0.set_xlabel('Time (%s)' % args.timeunit, size=22)
         ax0.set_ylabel('ACF (eV$^2$)', size=22)
 
-        #
-        # Plot time series
-        #
-        ax1 = plt.subplot(gs[2])
-        ax1.plot(x, y,)
-        ax1.set_xlabel('Time (%s)' % args.timeunit, size=22)
-        ax1.set_ylabel('E (eV)', size=22)
+        if y is not None:
+
+            #
+            # Plot time series
+            #
+            ax1 = plt.subplot(gs[2])
+            ax1.plot(x, y)
+            ax1.set_xlabel('Time (%s)' % args.timeunit, size=22)
+            ax1.set_ylabel('E (eV)', size=22)
 
         plt.tight_layout()
         plt.show()
