@@ -40,6 +40,10 @@ def options():
     inp.add_argument('-s', '--sel', default=None, nargs='+', type=str,
                      dest='AtomSel', help='''Atom Selection.''')
 
+    inp.add_argument('--scale', default=5, type=int,
+                     dest='Scale', help='''Scaling factor for displacement
+                     vectors in the VMD script.''')
+
     #
     # Output files
     #
@@ -452,8 +456,8 @@ def save_visdisps(coords, disps, sel=None, filename="structure"):
 
         for N, coord in enumerate(coords):
 
-            disp = disps[N] * 3
-            if np.linalg.norm(disp) > 0.15:
+            disp = disps[N] * Opts['Scale']
+            if np.linalg.norm(disp) > 0.15 * Opts['Scale']:
                 cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
                 data = [coord[0], coord[1], coord[2], disp[0], disp[1], disp[2]]
                 f.write(cmd % tuple(data))
