@@ -159,7 +159,7 @@ if __name__ == '__main__':
 
     title = "%s fit" % args.fit
     plt.title(title.title())
-    plt.plot(x, y, lw=1, color='black', label='Data Set')
+    plt.plot(x, y, lw=2, color='b', label='Data Set')
 
     # Find maxima and minima in the dataset
     peaks = findpeaks(x, filtered_y, args.search)
@@ -190,8 +190,7 @@ if __name__ == '__main__':
         high_bounds.extend(h_bounds)
 
         # Add points for the maxima and minima to the plot
-        marker = plt.plot(xm, ym, 'o', ms=8, label='Det. Max. %d' % i)
-        col = marker[0].get_color()
+        marker = plt.plot(xm, ym, 'x', color="b", mec="b", mew=3, ms=8)
 
         if args.fit == 'single':
 
@@ -207,7 +206,7 @@ if __name__ == '__main__':
             print
 
             # Plot the result of the fitting
-            peak = plt.plot(x, y_fitted, color=col, lw=2, linestyle='dashed', label='Deconv. Peak %d' % i)
+            peak = plt.plot(x, y_fitted, lw=1.5, linestyle='dashed')
 
     totbounds = (low_bounds, high_bounds)
     # Here we're out of the for cycle! Do operations for the global fit
@@ -226,7 +225,7 @@ if __name__ == '__main__':
         y_totfit = funct(x, *popt)
 
         # Plot the function that fits experimental data
-        tot = plt.plot(x, y_totfit, color='black', lw=4, linestyle='dashed', label='Total fit')
+        tot = plt.plot(x, y_totfit, color='black', lw=3, linestyle='--', label='Total fit')
         plt.gca().set_color_cycle(None)
 
         # Plot the single functions constituting the sum function that fits
@@ -240,7 +239,7 @@ if __name__ == '__main__':
             parms = np.array([A, avg, wid])
 
             y_fitted = funct(x, *parms)
-            peak = plt.plot(x, y_fitted, lw=2, linestyle='dashed', label='Component %d' % j)
+            peak = plt.plot(x, y_fitted, lw=1.5, linestyle='--')
 
             # Summary of the fitting procedure
             print(banner("Component %d" % j, "=", 30))
