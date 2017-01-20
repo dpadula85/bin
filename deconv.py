@@ -32,7 +32,7 @@ def options():
 
     parser.add_argument('-t', '--thresh', type=float, help='''Threshold to ignore data.''')
 
-    parser.add_argument( '-s', '--search', default=False, action='store_true',
+    parser.add_argument( '--search', default=False, action='store_true',
     help='''Search for both maxima and minima (default: maxima only).''')
 
     parser.add_argument('-s', '--save', help='''Save the plot as an image. Specify the extension.''')
