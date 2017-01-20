@@ -37,7 +37,7 @@ def options():
 
     parser.add_argument('-s', '--save', help='''Save the plot as an image. Specify the extension.''')
 
-    parser.add_argument('--show', help='''Show the plot in an external window.''')
+    parser.add_argument('--show', default=False, action="store_true", help='''Show the plot in an external window.''')
 
     args = parser.parse_args()
 
