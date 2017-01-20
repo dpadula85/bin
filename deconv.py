@@ -35,6 +35,8 @@ def options():
     parser.add_argument( '-s', '--search', default=False, action='store_true',
     help='''Search for both maxima and minima (default: maxima only).''')
 
+    parser.add_argument('-s', '--save', help='''Save the plot as an image. Specify the extension.''')
+
     args = parser.parse_args()
 
     return args
@@ -203,7 +205,7 @@ if __name__ == '__main__':
         # Fit the data set with a sum of n functions, where n is the
         # number of peaks found by the findpeaks function
         try:
-            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess) #, bounds=(0, np.inf))
+            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess, bounds=(0, np.inf))
 
         except RuntimeError:
             print(banner("ERROR", "=", 60))
@@ -240,4 +242,11 @@ if __name__ == '__main__':
 
     if len(peaks) > 0:
         plt.legend(loc=2).draw_frame(False)
+
+        # Save plot as vector image
+        if args.save:
+
+            plt.savefig('%s_fit.%s' % (args.filename, args.save),
+                        dpi=1200, transparent=True, bbox_inches='tight')
+
         plt.show()
