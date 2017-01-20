@@ -37,6 +37,8 @@ def options():
 
     parser.add_argument('-s', '--save', help='''Save the plot as an image. Specify the extension.''')
 
+    parser.add_argument('--show', help='''Show the plot in an external window.''')
+
     args = parser.parse_args()
 
     return args
@@ -128,8 +130,10 @@ if __name__ == '__main__':
 
     args = options()
 
+    f = args.filename
     c1 = args.c1 - 1
     c2 = args.c2 - 1
+    basename = '.'.join(f.split('.')[:-1])
 
     if not args.thresh:
         thresh = 0.0
@@ -144,7 +148,7 @@ if __name__ == '__main__':
     elif lineshape == 'lor':
         funct = lorentzians
 
-    data = np.loadtxt(args.filename)
+    data = np.loadtxt(f)
 
     # Get DataSet and add it to the plot
     x = data[:,c1]
@@ -246,7 +250,8 @@ if __name__ == '__main__':
         # Save plot as vector image
         if args.save:
 
-            plt.savefig('%s_fit.%s' % (args.filename, args.save),
+            plt.savefig('%s_fit.%s' % (basename, args.save),
                         dpi=1200, transparent=True, bbox_inches='tight')
 
-        plt.show()
+        if args.show:
+            plt.show()
