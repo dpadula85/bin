@@ -14,7 +14,7 @@ def options():
     parser = arg.ArgumentParser(description='Deconvolutes Experimental Data in separated Peaks.')
 
     # Optional arguments
-    parser.add_argument('-f', '--filename', help='''File data.dat from mdanalyzer.''')
+    parser.add_argument('-f', '--filename', help='''Input file.''')
 
     # parser.add_argument('-a', '--accuracy', type=float, default=10., help='''Tolerance
     # interval for the detection of another maximum/minimum along the x axis.''')
@@ -22,6 +22,10 @@ def options():
     parser.add_argument('--fit', choices=['single', 'global'], default='single',
     help='''Type of fit to use. Single : each peak fitted alone, Global : whole data set fitted; the components
     are also plotted.''')
+
+    parser.add_argument('--c1', default=1, type=int, help='''Column for the progression of the property.''')
+
+    parser.add_argument('--c2', default=2, type=int, help='''Column containing the data.''')
 
     parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor'], default='gau',
     help='''Type of function for the deconvolution of experimental peaks.''')
@@ -78,12 +82,12 @@ def banner(text=None, ch='=', length=78):
 
 def findpeaks(x, y, minima=False):
 
-    _max = signal.argrelmax(y, order=5)[0]
+    _max = signal.argrelmax(y, order=1)[0]
     maxs = [[x[p], y[p]] for p in _max]
     peaks = maxs
 
     if minima:
-        _min = signal.argrelmin(y, order=5)[0]
+        _min = signal.argrelmin(y, order=1)[0]
         mins = [[x[p], y[p]] for p in _min]
         peaks = maxs + mins
 
@@ -122,6 +126,9 @@ if __name__ == '__main__':
 
     args = options()
 
+    c1 = args.c1 - 1
+    c2 = args.c2 - 1
+
     if not args.thresh:
         thresh = 0.0
     else:
@@ -138,8 +145,8 @@ if __name__ == '__main__':
     data = np.loadtxt(args.filename)
 
     # Get DataSet and add it to the plot
-    x = data[:,0]
-    y = data[:,1]
+    x = data[:,c1]
+    y = data[:,c2]
     filtered_y = np.copy(y)
     idxs = np.abs(filtered_y) < thresh
     filtered_y[idxs] = 0.0
@@ -164,9 +171,9 @@ if __name__ == '__main__':
         ym = p[1]
 
         # Set the initial guess for the fitting procedure
-        A = 10000.0
+        A = 100.0
         avg = xm
-        wid = 1000
+        wid = 10.0
         parms = np.array([A, avg, wid])
         totguess = np.r_[totguess, parms]
 
@@ -196,7 +203,7 @@ if __name__ == '__main__':
         # Fit the data set with a sum of n functions, where n is the
         # number of peaks found by the findpeaks function
         try:
-            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess)
+            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess) #, bounds=(0, np.inf))
 
         except RuntimeError:
             print(banner("ERROR", "=", 60))
