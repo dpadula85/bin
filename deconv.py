@@ -171,6 +171,8 @@ if __name__ == '__main__':
     print
 
     totguess = np.array([])
+    low_bounds = []
+    high_bounds = []
     for i, p in enumerate(peaks, start=1):
 
         xm = p[0]
@@ -182,6 +184,10 @@ if __name__ == '__main__':
         wid = 10.0
         parms = np.array([A, avg, wid])
         totguess = np.r_[totguess, parms]
+        l_bounds = [0, 0, 0]
+        h_bounds = [np.inf, 2000, 2000]
+        low_bounds.extend(l_bounds)
+        high_bounds.extend(h_bounds)
 
         # Add points for the maxima and minima to the plot
         marker = plt.plot(xm, ym, 'o', ms=8, label='Det. Max. %d' % i)
@@ -190,7 +196,7 @@ if __name__ == '__main__':
         if args.fit == 'single':
 
             # Fit the single maximum with a function
-            popt, pcov = curve_fit(funct, x, filtered_y, p0=parms)
+            popt, pcov = curve_fit(funct, x, filtered_y, p0=parms, bounds=(l_bounds, h_bounds))
             y_fitted = funct(x, *popt)
 
             # Summary of the fitting procedure
@@ -203,13 +209,14 @@ if __name__ == '__main__':
             # Plot the result of the fitting
             peak = plt.plot(x, y_fitted, color=col, lw=2, linestyle='dashed', label='Deconv. Peak %d' % i)
 
+    totbounds = (low_bounds, high_bounds)
     # Here we're out of the for cycle! Do operations for the global fit
     if args.fit == 'global':
 
         # Fit the data set with a sum of n functions, where n is the
         # number of peaks found by the findpeaks function
         try:
-            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess, bounds=(0, np.inf))
+            popt, pcov = curve_fit(funct, x, filtered_y, p0=totguess, bounds=totbounds)
 
         except RuntimeError:
             print(banner("ERROR", "=", 60))
