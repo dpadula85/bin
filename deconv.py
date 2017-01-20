@@ -184,8 +184,8 @@ if __name__ == '__main__':
         wid = 10.0
         parms = np.array([A, avg, wid])
         totguess = np.r_[totguess, parms]
-        l_bounds = [0, 0, 0]
-        h_bounds = [np.inf, 2000, 2000]
+        l_bounds = [0, xm - xm/4, 0]
+        h_bounds = [np.inf, xm + xm/4, 200]
         low_bounds.extend(l_bounds)
         high_bounds.extend(h_bounds)
 
