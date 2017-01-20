@@ -250,7 +250,7 @@ if __name__ == '__main__':
         # Save plot as vector image
         if args.save:
 
-            plt.savefig('%s_fit.%s' % (basename, args.save),
+            plt.savefig('%s.fit.%s' % (basename, args.save),
                         dpi=1200, transparent=True, bbox_inches='tight')
 
         if args.show:
