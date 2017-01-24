@@ -27,7 +27,7 @@ def options():
 
     parser.add_argument('--c2', default=2, type=int, help='''Column containing the data.''')
 
-    parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor'], default='gau',
+    parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor', 'dlor'], default='gau',
     help='''Type of function for the deconvolution of experimental peaks.''')
 
     parser.add_argument('-t', '--thresh', type=float, help='''Threshold to ignore data.''')
@@ -126,6 +126,19 @@ def lorentzians(x, *parms):
     return y
 
 
+def damped_lorentzians(x, *parms):
+
+    y = np.zeros_like(x)
+
+    for i in range(0, len(parms), 3):
+        A = parms[i]
+        avg = parms[i + 1]
+        gamma = parms[i + 2]
+        y += 2 * x * A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2)
+
+    return y
+
+
 if __name__ == '__main__':
 
     args = options()
@@ -147,6 +160,9 @@ if __name__ == '__main__':
 
     elif lineshape == 'lor':
         funct = lorentzians
+
+    elif lineshape == 'dlor':
+        funct = damped_lorentzians
 
     data = np.loadtxt(f)
 
