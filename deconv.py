@@ -30,6 +30,9 @@ def options():
     parser.add_argument('-ls', '--lineshape', choices=['gau', 'lor', 'dlor'], default='gau',
     help='''Type of function for the deconvolution of experimental peaks.''')
 
+    parser.add_argument('-gd', '--gendata', default=False, action='store_true',
+    help='''Write a file with the data from the fitted curve''')
+
     parser.add_argument('-t', '--thresh', type=float, help='''Threshold to ignore data.''')
 
     parser.add_argument( '--search', default=False, action='store_true',
@@ -268,6 +271,14 @@ if __name__ == '__main__':
 
     if len(peaks) > 0:
         plt.legend(loc=2).draw_frame(False)
+
+        if args.gendata:
+            step = x[1] - x[0]
+            new_x = np.arange(0, x.max() * 2, step)
+            new_y = funct(new_x, *popt)
+            new_data = np.c_[new_x, new_y]
+            hdr = "\n Fitted Data\n"
+            np.savetxt("fitted_curve.txt", new_data, fmt="%18.6e", header=hdr)
 
         # Save plot as vector image
         if args.save:
