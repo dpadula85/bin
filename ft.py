@@ -169,6 +169,15 @@ if __name__ == '__main__':
     freqs, specden_ft_part = cos_transf(x, acf_y, factor=time_factor)
 
     #
+    # Subtract a baseline from the Cosine Transform before multiplication
+    # with the prefactor (see JPCB, 2013, 117, 7157)
+    #
+    idxs = np.where(freqs > 200)
+    avg = np.mean(specden_ft_part[idxs])
+    specden_ft_part -= avg
+    specden_ft_part[specden_ft_part < 0] = 0
+
+    #
     # Calculate the total Spectral Density and convert to wavenumbers
     #
     prefac = freqs / (k_B * T * np.pi)
