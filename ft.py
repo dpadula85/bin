@@ -46,6 +46,9 @@ def options():
     parser.add_argument('-tu', '--timeunit', choices=["s", "ms", "mus", "ns", "ps", "fs"],
                         type=str, default="ps", help='''Unit of the time series''')
 
+    parser.add_argument('-bl', '--baseline', default=400.0, type=float,
+                        help='''Starting frequency to determine the baseline.''')
+
     parser.add_argument('--show', help='''Show the plot in an external window.''',
     default=False, action='store_true')
 
@@ -137,6 +140,7 @@ if __name__ == '__main__':
     c1 = args.c1 - 1
     c2 = map(lambda x: x - 1, extend_compact_list(args.c2))
     time_factor = time_units[args.timeunit]
+    bl = args.baseline
 
     data = np.loadtxt(f)
 
@@ -173,7 +177,7 @@ if __name__ == '__main__':
     # Subtract a baseline from the Cosine Transform before multiplication
     # with the prefactor (see JPCB, 2013, 117, 7157)
     #
-    idxs = np.where(freqs > 200)
+    idxs = np.where(freqs > bl)
     avg = np.mean(specden_ft_part[idxs])
     specden_ft_part -= avg
     specden_ft_part[specden_ft_part < 0] = 0
