@@ -119,8 +119,7 @@ def cos_transf(x, y, factor=1):
     #
     # Calculate the FFT of y and normalise
     #
-    yf = np.fft.fft(y) / N
-    # yf = np.fft.fft(y)
+    yf = (2.0 / N) * np.fft.fft(y)
 
     #
     # Return only the positive half of the freqs and the real part of the FFT
