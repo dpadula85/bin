@@ -119,8 +119,8 @@ def cos_transf(x, y, factor=1):
     #
     # Calculate the FFT of y and normalise
     #
-    # yf = (2.0 / N) * np.fft.fft(y)
-    yf = np.fft.fft(y)
+    yf = np.fft.fft(y) / N
+    # yf = np.fft.fft(y)
 
     #
     # Return only the positive half of the freqs and the real part of the FFT
@@ -172,6 +172,7 @@ if __name__ == '__main__':
     # Get the Cosine Transform of the autocorrelation function
     #
     freqs, specden_ft_part = cos_transf(x, acf_y, factor=time_factor)
+    print np.trapz(specden_ft_part, freqs)
 
     #
     # Subtract a baseline from the Cosine Transform before multiplication
