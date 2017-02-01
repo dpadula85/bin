@@ -106,6 +106,14 @@ def cos_transf(x, y, factor=1):
     #
     N = len(x)
 
+    # #
+    # # Generate 4N array for the DCT
+    # # Leave even elements at 0, and fill odd ones with y and y reversed
+    # #
+    # dummy_y = np.zeros(4 * N)
+    # dummy_y[1:2*N:2] = y
+    # dummy_y[2*N+1::2] = y[::-1]
+
     #
     # Time step in seconds, assuming points are evenly spaced
     #
@@ -114,12 +122,15 @@ def cos_transf(x, y, factor=1):
     #
     # Calculate freqs in Hz and convert to wavenumbers
     #
+    # xf = np.fft.fftfreq(4 * N, d=ts / 2.0) / c
+    # xf = xf[:N]
     xf = np.fft.fftfreq(N, d=ts) / c
     dxf = xf[1] - xf[0]
 
     #
     # Calculate the FFT of y and normalise
     #
+    # yf = (1.0 / (N * dxf)) * np.fft.fft(dummy_y).real[:N]
     yf = (2.0 / (N * dxf)) * np.fft.fft(y)
 
     #
