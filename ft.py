@@ -115,11 +115,12 @@ def cos_transf(x, y, factor=1):
     # Calculate freqs in Hz and convert to wavenumbers
     #
     xf = np.fft.fftfreq(N, d=ts) / c
+    dxf = xf[1] - xf[0]
 
     #
     # Calculate the FFT of y and normalise
     #
-    yf = (2.0 / N) * np.fft.fft(y)
+    yf = (2.0 / (N * dxf)) * np.fft.fft(y)
 
     #
     # Return only the positive half of the freqs and the real part of the FFT
