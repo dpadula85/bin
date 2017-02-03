@@ -52,6 +52,9 @@ def options():
     parser.add_argument('--show', help='''Show the plot in an external window.''',
     default=False, action='store_true')
 
+    parser.add_argument('--outtype', default='ft', choices=['specden', 'ft'],
+                        help='''Type of the input file.''')
+
     parser.add_argument('-o', '--output', type=str, default=None, help='''Output File.''')
 
     args = parser.parse_args()
@@ -106,13 +109,13 @@ def cos_transf(x, y, factor=1):
     #
     N = len(x)
 
-    # #
-    # # Generate 4N array for the DCT
-    # # Leave even elements at 0, and fill odd ones with y and y reversed
-    # #
-    # dummy_y = np.zeros(4 * N)
-    # dummy_y[1:2*N:2] = y
-    # dummy_y[2*N+1::2] = y[::-1]
+    #
+    # Generate 4N array for the DCT
+    # Leave even elements at 0, and fill odd ones with y and y reversed
+    #
+    dummy_y = np.zeros(4 * N)
+    dummy_y[1:2*N:2] = y
+    dummy_y[2*N+1::2] = y[::-1]
 
     #
     # Time step in seconds, assuming points are evenly spaced
@@ -122,23 +125,14 @@ def cos_transf(x, y, factor=1):
     #
     # Calculate freqs in Hz and convert to wavenumbers
     #
-    # xf = np.fft.fftfreq(4 * N, d=ts / 2.0) / c
-    # xf = xf[:N]
-    xf = np.fft.fftfreq(N, d=ts) / c
+    xf = np.fft.fftfreq(4 * N, d=ts / 2.0) / c
+    xf = xf[:N]
     dxf = xf[1] - xf[0]
 
     #
     # Calculate the FFT of y and normalise
     #
-    # yf = (1.0 / (N * dxf)) * np.fft.fft(dummy_y).real[:N]
-    yf = (2.0 / (N * dxf)) * np.fft.fft(y)
-
-    #
-    # Return only the positive half of the freqs and the real part of the FFT
-    # i.e. the Cosine Transform
-    #
-    xf = xf[:N/2]
-    yf = np.abs(yf[:N/2].real)
+    yf = (1.0 / (N * dxf)) * np.fft.fft(dummy_y).real[:N]
 
     return xf, yf
 
@@ -197,8 +191,12 @@ if __name__ == '__main__':
     #
     # Calculate the total Spectral Density and convert to wavenumbers
     #
-    prefac = freqs / (k_B * T * np.pi)
-    specden = prefac * specden_ft_part * eV2wn
+    if args.outtype == "specden":
+        prefac = freqs / (k_B * T * np.pi)
+        specden = prefac * specden_ft_part * eV2wn
+
+    elif args.outtype == "ft":
+        specden = specden_ft_part
 
     #
     # Save to a file
