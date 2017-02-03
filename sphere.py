@@ -8,8 +8,8 @@ import argparse as arg
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='''Calculates Electronic Coupling
-                                            from Transition Charges and Densities.''',
+    parser = arg.ArgumentParser(description='''Calculates the position of a set of points onto
+                                            the surface of a sphere.''',
                                             formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     #
