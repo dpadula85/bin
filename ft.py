@@ -46,8 +46,8 @@ def options():
     parser.add_argument('-tu', '--timeunit', choices=["s", "ms", "mus", "ns", "ps", "fs"],
                         type=str, default="ps", help='''Unit of the time series''')
 
-    parser.add_argument('-bl', '--baseline', default=None, type=float,
-                        help='''Starting frequency to determine the baseline.''')
+    # parser.add_argument('-bl', '--baseline', default=None, type=float,
+    #                     help='''Starting frequency to determine the baseline.''')
 
     parser.add_argument('--show', help='''Show the plot in an external window.''',
     default=False, action='store_true')
@@ -178,15 +178,16 @@ if __name__ == '__main__':
     #
     freqs, specden_ft_part = cos_transf(x, acf_y, factor=time_factor)
 
-    #
-    # Subtract a baseline from the Cosine Transform before multiplication
-    # with the prefactor (see JPCB, 2013, 117, 7157)
-    #
-    if bl:
-        idxs = np.where(freqs > bl)
-        avg = np.mean(specden_ft_part[idxs])
-        specden_ft_part -= avg
-        specden_ft_part[specden_ft_part < 0] = 0
+    # This is not needed anymore thanks to the correction of the DCT
+    # #
+    # # Subtract a baseline from the Cosine Transform before multiplication
+    # # with the prefactor (see JPCB, 2013, 117, 7157)
+    # #
+    # if bl:
+    #     idxs = np.where(freqs > bl)
+    #     avg = np.mean(specden_ft_part[idxs])
+    #     specden_ft_part -= avg
+    #     specden_ft_part[specden_ft_part < 0] = 0
 
     #
     # Calculate the total Spectral Density and convert to wavenumbers
