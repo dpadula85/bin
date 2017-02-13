@@ -145,7 +145,7 @@ if __name__ == '__main__':
     c1 = args.c1 - 1
     c2 = map(lambda x: x - 1, extend_compact_list(args.c2))
     time_factor = time_units[args.timeunit]
-    bl = args.baseline
+    # bl = args.baseline
 
     data = np.loadtxt(f)
 
