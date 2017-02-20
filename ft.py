@@ -52,9 +52,6 @@ def options():
     parser.add_argument('--show', help='''Show the plot in an external window.''',
     default=False, action='store_true')
 
-    parser.add_argument('--outtype', default='ft', choices=['specden', 'ft'],
-                        help='''Type of the input file.''')
-
     parser.add_argument('-o', '--output', type=str, default=None, help='''Output File.''')
 
     args = parser.parse_args()
@@ -192,17 +189,13 @@ if __name__ == '__main__':
     #
     # Calculate the total Spectral Density and convert to wavenumbers
     #
-    if args.outtype == "specden":
-        prefac = freqs / (k_B * T * np.pi)
-        specden = prefac * specden_ft_part * eV2wn
-
-    elif args.outtype == "ft":
-        specden = specden_ft_part
+    prefac = freqs / (k_B * T * np.pi)
+    specden = prefac * specden_ft_part * eV2wn
 
     #
     # Save to a file
     #
-    data = np.c_[freqs, specden]
+    data = np.c_[freqs, specden_ft_part,specden]
     if not args.output:
         basename = '.'.join(f.split('.')[:-1])
         outfile = basename + '.specden.out'
@@ -210,7 +203,7 @@ if __name__ == '__main__':
     else:
         outfile = args.output + '.specden.out'
 
-    header = "\n Frequency (cm^-1) Spectral Density (cm^-1)\n"
+    header = "\n Frequency (cm^-1)  FT (eV^2 / cm^-1) Spectral Density (cm^-1)\n"
     np.savetxt(outfile, data, fmt="%18.6e", header=header)
 
     if args.show:
@@ -226,27 +219,32 @@ if __name__ == '__main__':
         # Plot FT
         #
         ax = plt.subplot(gs[0])
-        ax.plot(freqs, specden, label="FT")
+        ax.plot(freqs, specden, label="SpecDen")
         ax.set_xlabel(r'$\omega$ (cm$^{-1}$)', size=22)
         ax.set_ylabel(r'$J(\omega)$ (cm$^{-1}$)', size=22)
+
+        ax0 = ax.twinx()
+        ax0.plot(freqs, specden_ft_part, color="g", label="FT")
+        ax0.set_ylabel(r'(eV$^2$ / cm$^{-1}$)', size=22)
+
 
         #
         # Plot ACF
         #
-        ax0 = plt.subplot(gs[1])
-        ax0.plot(x, acf_y, label="ACF")
-        ax0.set_xlabel('Time (%s)' % args.timeunit, size=22)
-        ax0.set_ylabel('ACF (eV$^2$)', size=22)
+        ax1 = plt.subplot(gs[1])
+        ax1.plot(x, acf_y, label="ACF")
+        ax1.set_xlabel('Time (%s)' % args.timeunit, size=22)
+        ax1.set_ylabel('ACF (eV$^2$)', size=22)
 
         if y is not None:
 
             #
             # Plot time series
             #
-            ax1 = plt.subplot(gs[2])
-            ax1.plot(x, y)
-            ax1.set_xlabel('Time (%s)' % args.timeunit, size=22)
-            ax1.set_ylabel('E (eV)', size=22)
+            ax2 = plt.subplot(gs[2])
+            ax2.plot(x, y)
+            ax2.set_xlabel('Time (%s)' % args.timeunit, size=22)
+            ax2.set_ylabel('E (eV)', size=22)
 
         plt.tight_layout()
         plt.show()

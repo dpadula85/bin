@@ -15,6 +15,9 @@ def options():
     # Optional arguments
     parser.add_argument('-f', '--filename', help='''Input File.''')
 
+    parser.add_argument('-d', '--degree', type=int, default=3,
+                        help='''Degree of the polynomial for smoothing,''')
+
     parser.add_argument('--show', help='''Show the plot in an external window.''',
     default=False, action='store_true')
 
@@ -33,7 +36,7 @@ if __name__ == '__main__':
     # Get DataSet and add it to the plot
     x = data[:,0]
     y = data[:,1]
-    yhat = savgol_filter(y, 51, 3)
+    yhat = savgol_filter(y, 51, args.degree)
     hdr = "\n Smoothed Data\n"
     np.savetxt("%s.smooth.out" % basename, np.c_[x, yhat], fmt="%18.6e", header=hdr)
 
