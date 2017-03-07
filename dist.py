@@ -217,9 +217,7 @@ def plot_data(data, yhdrs, xhdr=None, ux=None, ty=None, uy=None):
 
         # Fit a gaussian, scaled to the real distribution of the data and add it to the legend
         scale_factor = (bins[1] - bins[0]) * len(y)
-        lim1 = bins.min() - bins.min() * 0.1
-        lim2 = bins.max() + bins.max() * 0.1
-        fitx = np.linspace(lim1, lim2, 1000)
+        fitx = np.linspace(ymin, ymax, 1000)
         gau_fit = norm.pdf(fitx, avg, sigma) * scale_factor
         gau_line = ax1.plot(gau_fit, fitx, '-', linewidth=2, color=clr)
 

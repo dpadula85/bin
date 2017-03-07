@@ -20,7 +20,7 @@ def options():
     calc.add_argument('-r', '--radius', default=1.0, type=float, dest='R',
                      help='''Radius of the Sphere.''')
 
-    calc.add_argument('-m', '--mode', default='rand', type=str, choices=['rand', 'grid'],
+    calc.add_argument('-m', '--mode', default='rand', type=str, choices=['rand', 'grid', 'fib'],
                       help='''Distribution of the points on the surface of the Sphere.''',
                       dest='Mode')
 
@@ -73,6 +73,23 @@ def sphere_rand(r, n):
     return coords * r
 
 
+def sphere_fib(r, n):
+
+    r = float(r)
+    angle = np.pi * (3. - np.sqrt(5.))
+    theta = np.arange(n) * angle
+    step = r / n
+    z = np.linspace(r - r / n , r / n - r, n)
+    rr = np.sqrt(r**2 - z**2)
+
+    coords = np.zeros((n,3))
+    coords[:,0] = rr * np.cos(theta)
+    coords[:,1] = rr * np.sin(theta)
+    coords[:,2] = z
+
+    return np.array(coords)
+
+
 def unique_rows(data):
 
     uniq = np.unique(data.view(data.dtype.descr * data.shape[1]))
@@ -88,6 +105,9 @@ if __name__ == '__main__':
 
     elif Opts['Mode'] == 'grid':
         coords = sphere_grid(Opts['R'], Opts['NPhi'], Opts['NTheta'])
+
+    elif Opts['Mode'] == 'fib':
+        coords = sphere_fib(Opts['R'], Opts['NPts'])
 
     N = len(coords)
     coords = np.c_[np.ones(N), coords]

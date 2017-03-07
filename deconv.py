@@ -137,7 +137,7 @@ def damped_lorentzians(x, *parms):
         A = parms[i]
         avg = parms[i + 1]
         gamma = parms[i + 2]
-        y += 2 * x * A * (1 / np.pi) * gamma / (gamma**2 + (x - avg)**2)
+        y += (1 / np.pi) * A * x**2 * gamma / ((gamma * x)**2 + (x**2 - avg**2)**2)
 
     return y
 
@@ -204,7 +204,7 @@ if __name__ == '__main__':
         parms = np.array([A, avg, wid])
         totguess = np.r_[totguess, parms]
         l_bounds = [0, xm - xm/4, 0]
-        h_bounds = [np.inf, xm + xm/4, 200]
+        h_bounds = [np.inf, xm + xm/4, 400]
         low_bounds.extend(l_bounds)
         high_bounds.extend(h_bounds)
 
