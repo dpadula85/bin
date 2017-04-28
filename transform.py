@@ -115,7 +115,7 @@ def parse_PDB(pdb_file):
 def parse_XYZ(xyz_file):
 
     checkfile(xyz_file)
-    struct = np.genfromtxt(xyz_file, skiprows=2, dtype=None)
+    struct = np.genfromtxt(xyz_file, skip_header=2, dtype=None)
 
     return struct.tolist()
 

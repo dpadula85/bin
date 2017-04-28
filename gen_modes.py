@@ -454,13 +454,19 @@ def save_visdisps(coords, disps, sel=None, filename="structure"):
         f.write("mol showrep 0 0 off\n")
         f.write("\n")
 
-        for N, coord in enumerate(coords):
+        for N, coord in enumerate(coords[sel]):
 
             disp = disps[N] * Opts['Scale']
             if np.linalg.norm(disp) > 0.15 * Opts['Scale']:
                 cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
                 data = [coord[0], coord[1], coord[2], disp[0], disp[1], disp[2]]
                 f.write(cmd % tuple(data))
+
+            # scale = Opts['Scale'] / np.linalg.norm(disps[N])
+            # disp = disps[N] * scale
+            # cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
+            # data = [coord[0], coord[1], coord[2], disp[0], disp[1], disp[2]]
+            # f.write(cmd % tuple(data))
 
     return
 
