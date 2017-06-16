@@ -159,16 +159,18 @@ if __name__ == '__main__':
     #
     # Save to a file
     #
-    data = np.c_[x, acf_y]
-    if not args.output:
-        basename = '.'.join(f.split('.')[:-1])
-        outfile = basename + '.acf.out'
+    if args.filetype == 'series':
 
-    else:
-        outfile = args.output + '.acf.out'
+        data = np.c_[x, acf_y]
+        if not args.output:
+            basename = '.'.join(f.split('.')[:-1])
+            outfile = basename + '.acf.out'
 
-    header = "\n      Time (%s)         ACF (eV^2)\n" % args.timeunit
-    np.savetxt(outfile, data, fmt="%18.6e", header=header)
+        else:
+            outfile = args.output + '.acf.out'
+
+        header = "\n      Time (%s)         ACF (eV^2)\n" % args.timeunit
+        np.savetxt(outfile, data, fmt="%18.6e", header=header)
 
     #
     # Get the Cosine Transform of the autocorrelation function

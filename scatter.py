@@ -190,8 +190,8 @@ def plot_data(data, hdrs, t=None, u=None):
 
                 if t:
                     if u:
-                        ax.set_xlabel('%s\n%s(%s)' % (hdrs[i], t, u), size=22)
-                        ax.set_ylabel('%s\n%s(%s)' % (hdrs[j], t, u), size=22)
+                        ax.set_xlabel('%s\n%s / %s' % (hdrs[i], t, u), size=22)
+                        ax.set_ylabel('%s\n%s / %s' % (hdrs[j], t, u), size=22)
 
                     else:
                         ax.set_xlabel('%s\n%s' % (hdrs[i], t), size=22)
