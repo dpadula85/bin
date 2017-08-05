@@ -1,8 +1,8 @@
 #!/bin/sh
 
-essid=`nmcli dev wifi | grep "*" | tail -n 1 | awk '{print $2}'`
+essid=`iwgetid -r`
 
-if [ "$essid" = "Obi" ]; then
+if [ "$essid" = "Obi WAN" ]; then
 
     ip=`curl ifconfig.me 2> /dev/null`
     oldip=`grep -A 1 " pi" ~/.ssh/config | tail -1 | awk '{print $2}'`
