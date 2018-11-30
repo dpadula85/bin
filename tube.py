@@ -109,14 +109,14 @@ if __name__ == '__main__':
     gamma = np.radians(args.gamma)
     n = args.n
     m = args.m
-    
+
     #
     # Basis Vectors and Basis Matrix
     #
     a1 = ux * side1
     a2 = np.array([side2 * np.cos(gamma), side2 * np.sin(gamma)])
     M_a = np.c_[a1, a2]
-    
+
     #
     # Generate 60x60 grid in basis subspace
     #
@@ -161,7 +161,7 @@ if __name__ == '__main__':
         print
         print "> Calculated radius for the tube: %16.6f" % r
         print
-        
+
         #
         # Define Edges of the Tubular Cell
         #
@@ -207,9 +207,9 @@ if __name__ == '__main__':
 
         xs = points[:,0]
         ys = points[:,1]
-        
+
         # fig = plt.figure(figsize=(16, 12))
-        # gs = gridspec.GridSpec(1, 2, width_ratios=[1, 1]) 
+        # gs = gridspec.GridSpec(1, 2, width_ratios=[1, 1])
         # ax0 = plt.subplot(gs[0])
         # ax0.scatter(xs,ys, color="k", s=1)
         # ax0.plot([D[0], B[0]], [D[1], B[1]], color="b", lw=2, label="Chiral Vector")
@@ -220,15 +220,15 @@ if __name__ == '__main__':
         # plt.show()
 
         fig = plt.figure(figsize=(16, 12))
-        gs = gridspec.GridSpec(1, 2, width_ratios=[1, 1]) 
-        
+        gs = gridspec.GridSpec(1, 2, width_ratios=[1, 1])
+
         #
         # Rotate everything to superimpose the Chiral Vector with the x axis
         #
         angle = v1v2_angle(C, ux)
         uz = np.array([0, 0, 1])
         M = rot(uz, -angle)[:-1,:-1]
-        
+
         #
         # Transformation to have the lowest left edge of the tubular cell correspond
         # to the origin
@@ -268,22 +268,22 @@ if __name__ == '__main__':
         # Height of the Tube for repetitions
         #
         h = O[1] - D[1]
-        
+
         #
         # Roll Tubular cell
         #
         rolled = []
         for point in points:
-        
+
             fracx = point[0] / B[0]
             phi = 2 * np.pi * fracx
             rolledx = r * np.cos(phi)
             rolledy = r * np.sin(phi)
             rolledz = point[1]
-        
+
             rolledpoint = np.array([rolledx, rolledy, rolledz])
             rolled.append(rolledpoint)
-        
+
         rolled = np.array(rolled)
 
         for rep in range(reps):
@@ -292,7 +292,7 @@ if __name__ == '__main__':
             repeated = np.copy(rolled)
             repeated[:,2] = z
             rolled = np.r_[ rolled, repeated ]
-   
+
         x = rolled[:,0]
         y = rolled[:,1]
         z = rolled[:,2]

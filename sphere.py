@@ -20,18 +20,20 @@ def options():
     calc.add_argument('-r', '--radius', default=1.0, type=float, dest='R',
                      help='''Radius of the Sphere.''')
 
-    calc.add_argument('-m', '--mode', default='rand', type=str, choices=['rand', 'grid', 'fib'],
-                      help='''Distribution of the points on the surface of the Sphere.''',
-                      dest='Mode')
+    calc.add_argument('-m', '--mode', default='rand', type=str,
+                      choices=['rand', 'grid', 'fib'],
+                      help='''Distribution of the points on the surface of the
+                      Sphere.''', dest='Mode')
 
-    calc.add_argument('-n', default=50, type=int, dest='NPts', help='''Number of points
-                      randomly distributed on the Sphere.''')
+    calc.add_argument('-n', default=50, type=int, dest='NPts',
+                      help='''Number of points randomly distributed on the
+                      Sphere.''')
 
     calc.add_argument('--nphi', default=None, type=int, dest='NPhi',
-                      help='''Number of points of the grid along the z axis.''')
+                      help='Number of points of the grid along the z axis.')
 
     calc.add_argument('--ntheta', default=None, type=int, dest='NTheta',
-                      help='''Number of points of the grid along the circle.''')
+                      help='Number of points of the grid along the circle.')
 
     #
     # Output Options

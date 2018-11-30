@@ -11,12 +11,16 @@ import multiprocessing as mp
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='Calculates the volume of a molecule with a Monte Carlo approach.', formatter_class=arg.ArgumentDefaultsHelpFormatter)
+    parser = arg.ArgumentParser(description='''Calculates the volume of a
+                                molecule with a Monte Carlo approach.''',
+                                formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
-    parser.add_argument('-f', '--filename', required=True, help='''XYZ structure file.''')
+    parser.add_argument('-f', '--filename', required=True,
+                        help='''XYZ structure file.''')
 
-    parser.add_argument('-n', '--npts', type=int, default=1e5, help='''Number of points for Monte Carlo sampling.''')
+    parser.add_argument('-n', '--npts', type=int, default=1e5,
+                        help='''Number of points for Monte Carlo sampling.''')
 
     args = parser.parse_args()
 
@@ -71,7 +75,7 @@ def inside_VdW(coords, VdWs, point):
     for i, coord in enumerate(coords):
         r = VdWs[i]
         d = np.linalg.norm(point - coord)
-        
+
         if d <= r:
             return True
 
@@ -122,7 +126,7 @@ def monte_carlo_hit(box, coords, VdWs, seed=None):
 
 def banner(text=None, ch='=', length=78):
     """Return a banner line centering the given text.
-    
+
         "text" is the text to show in the banner. None can be given to have
             no text.
         "ch" (optional, default '=') is the banner line character (can
@@ -148,7 +152,7 @@ def banner(text=None, ch='=', length=78):
         remain = length - (len(text) + 2)
         prefix_len = remain / 2
         suffix_len = remain - prefix_len
-    
+
         if len(ch) == 1:
             prefix = ch * prefix_len
             suffix = ch * suffix_len
@@ -167,9 +171,9 @@ if __name__ == '__main__':
     Z_atoms = map(int, struct[:,0].tolist())
     VdWs = [ ELEMENTS[x].vdwrad for x in Z_atoms ]
     coords = struct[:,1:]
-    
+
     vol = calc_vol(coords, VdWs, npts=args.npts)
-    
+
     print(banner(ch="=", length=50))
     print("Molecular Volume (A^3) of %s" % args.filename)
     print("%-18.6f" % vol)

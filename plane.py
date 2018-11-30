@@ -61,9 +61,9 @@ def extend_compact_list(idxs):
             extended += range(sel[0],sel[1]+1,1)
 
         else:
-        
+
             extended.append(int(idx))
-    
+
     return extended
 
 
@@ -71,7 +71,7 @@ def format_selection(intlist):
 
     s = ''
     for i in intlist:
-        s += '%2d ' % (i + 1) 
+        s += '%2d ' % (i + 1)
 
     return s
 
@@ -84,7 +84,7 @@ def parse_log(logfile):
         for line in f:
             if "Optimization completed" in line:
                 opt = 1
-    
+
             # It could be Standard or Input orientation
             # depending on nosymm keyword
             if "orientation:" in line and opt == 1:
@@ -102,7 +102,7 @@ def parse_log(logfile):
                     structure.append([atom_n, atom_x, atom_y, atom_z])
                     curr_line = next(f).split()
                 opt = 0
-    
+
     return np.array(structure)
 
 
@@ -137,7 +137,7 @@ if __name__ == "__main__":
         f.write("%d\n" % len(struct))
         f.write("\n")
         np.savetxt(f, struct, fmt="%3d %14.8f %14.8f %14.8f")
-    
+
     if args.sel:
         idxs = process_selection(args.sel)
         points = struct[idxs,1:]
@@ -151,14 +151,14 @@ if __name__ == "__main__":
     # Calculate the Plane
     guess = np.zeros(3)
     res = minimize(error, guess, args=(x, y, z))
-    
+
     a = res.x[0]
     b = res.x[1]
     c = res.x[2]
     err = res.fun
 
     print
-    print("--------- Results of the Fitting Procedure ---------") 
+    print("--------- Results of the Fitting Procedure ---------")
     print
     print("Input: %s" % args.filename)
 
@@ -167,11 +167,11 @@ if __name__ == "__main__":
 
     print
     print("RMSD: %13.7f" % err)
-    print("Equation: z = %13.7f*x + %13.7f*y + %13.7f" % (a, b, c)) 
+    print("Equation: z = %13.7f*x + %13.7f*y + %13.7f" % (a, b, c))
     print
     print("Saving the vmd script %s.vmd" % outpref)
     print
-    
+
     # Generate a plottable surface
     point  = np.array([0.0, 0.0, c])
     normal = np.array(np.cross([1,0,a], [0,1,b]))

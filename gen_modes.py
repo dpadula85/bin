@@ -81,9 +81,9 @@ def extend_compact_list(idxs):
             extended += range(sel[0],sel[1]+1,1)
 
         else:
-        
+
             extended.append(int(idx))
-    
+
     return extended
 
 
@@ -107,7 +107,6 @@ def read_sel(string):
 
 
 def parsefreqs_QChem(filename):
-    '''Parses Q-Chem frequencies logfile for geometric and vibrational properties.'''
 
     with open(filename) as f:
 
@@ -192,7 +191,7 @@ def parsefreqs_QChem(filename):
 
                     try:
                         line = skiplines(f)
-                    
+
                     except StopIteration:
                         break
 
@@ -210,7 +209,6 @@ def parsefreqs_QChem(filename):
 
 
 def parsefreqs_G09(filename):
-    '''Parses G09 frequencies logfile for geometric and vibrational properties.'''
 
     with open(filename) as f:
 
@@ -308,7 +306,6 @@ def parsefreqs_G09(filename):
 
                     if not disps:
                         for mode in range(numbermodes):
-                            # For each mode, make list of list [atom][coord_index]
                             disps.append([[] for x in range(0, NAtoms)])
 
                     for mode in range(numbermodes):
@@ -378,7 +375,7 @@ def guess(filename):
     # the correct parser to use
     #
     filetypes = {}
-    
+
     filetypes["This is part of the Gaussian(R) 09 program."] = "G09"
     filetypes["A Quantum Leap Into The Future Of Chemistry"] = "QChem"
 

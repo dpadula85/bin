@@ -34,25 +34,30 @@ def options():
                                 formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     # Optional arguments
-    parser.add_argument('-f', '--filename', default='data.dat', help='''Either a time series or an acf file.''')
+    parser.add_argument('-f', '--filename', default='data.dat',
+                        help='''Either a time series or an acf file.''')
 
-    parser.add_argument('--filetype', default='series', choices=['series', 'acf'],
+    parser.add_argument('--filetype', default='series',
+                        choices=['series', 'acf'],
                         help='''Type of the input file.''')
 
-    parser.add_argument('--c1', default=1, type=int, help='''Time Column.''')
+    parser.add_argument('--c1', default=1, type=int,
+                        help='''Time Column.''')
 
-    parser.add_argument('--c2', default=['2'], nargs='+', help='''Data Columns.''')
+    parser.add_argument('--c2', default=['2'], nargs='+',
+                        help='''Data Columns.''')
 
-    parser.add_argument('-tu', '--timeunit', choices=["s", "ms", "mus", "ns", "ps", "fs"],
-                        type=str, default="ps", help='''Unit of the time series''')
+    parser.add_argument('-tu', '--timeunit',
+                        choices=["s", "ms", "mus", "ns", "ps", "fs"],
+                        type=str, default="ps",
+                        help='''Unit of the time series''')
 
-    # parser.add_argument('-bl', '--baseline', default=None, type=float,
-    #                     help='''Starting frequency to determine the baseline.''')
+    parser.add_argument('--show',
+                        help='''Show the plot in an external window.''',
+                        default=False, action='store_true')
 
-    parser.add_argument('--show', help='''Show the plot in an external window.''',
-    default=False, action='store_true')
-
-    parser.add_argument('-o', '--output', type=str, default=None, help='''Output File.''')
+    parser.add_argument('-o', '--output', type=str, default=None,
+                        help='''Output File.''')
 
     args = parser.parse_args()
 
@@ -76,7 +81,7 @@ def extend_compact_list(idxs):
             extended += range(sel[0],sel[1]+1,1)
 
         else:
-        
+
             extended.append(int(idx))
 
     return extended
