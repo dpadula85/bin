@@ -31,6 +31,7 @@ if __name__ == '__main__':
     au2kcalmol = 627.509469
     data = np.loadtxt(args.filename)
     DeltaE = (data - data.min()) * au2kcalmol
+    w = np.exp(-DeltaE / (k*T))
     pop = np.exp(-DeltaE / (k*T)) / np.sum(np.exp(-DeltaE / (k*T)))
     results = np.c_[data, DeltaE, pop*100]
     header = "\n%11s %17s %9s\n" % ("Energy (au)", "DeltaE (Kcal/mol)",
