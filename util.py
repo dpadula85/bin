@@ -278,7 +278,7 @@ def parse_MOL2(mol2file, cdim=4):
     res_ids:
         List of residue ids.
     atom_coord:
-        List of atom coordinates. Each residue is contained in a sublist.
+        Array of atom coordinates. Each residue is contained in a subarray.
     conn: np.array (N,cdim).
         connectivity matrix of the system.
     '''
@@ -342,12 +342,12 @@ def parse_MOL2(mol2file, cdim=4):
                         # save data for the old one
                         atom_names.append(names)
                         atom_types.append(types)
-                        atom_coord.append(coords)
+                        atom_coord.append(np.array(coords))
                     
                         # initialize data for the new one
                         names = [ data[1] ]
                         types = [ data[5] ]
-                        coords = map(float, data[2:5])
+                        coords = list(map(float, data[2:5]))
                         coords = [ coords ]
                     
                     # if still in the old residue
@@ -371,7 +371,7 @@ def parse_MOL2(mol2file, cdim=4):
                     # save data for the last residue 
                     atom_names.append(names)
                     atom_types.append(types)
-                    atom_coord.append(coords)
+                    atom_coord.append(np.array(coords))
 
             elif line[0:13] == '@<TRIPOS>BOND':
                 for i in range(NBonds):
@@ -384,6 +384,8 @@ def parse_MOL2(mol2file, cdim=4):
             elif  line[0:21] == '@<TRIPOS>SUBSTRUCTURE':
                 if FoundAt and FoundBond:
                     break 
+
+    atom_coord = np.array(atom_coord)
 
     # Build Connectivity Matrix
     conn = np.zeros((NAtoms, cdim), dtype=int)
@@ -421,7 +423,7 @@ def parse_PDB(pdbfile, cdim=4):
     res_ids:
         List of residue ids.
     atom_coord:
-        List of atom coordinates. Each residue is contained in a sublist.
+        Array of atom coordinates. Each residue is contained in a subarray.
     atom_symbols:
         List of atom symbols. Each residue is contained in a sublist.
     conn: np.array (N,cdim).
@@ -453,7 +455,7 @@ def parse_PDB(pdbfile, cdim=4):
                 res_name = line[17:20].strip()
                 chain_idx = line[21].strip()
                 res_id = int(line[22:26])
-                coor = map(float, line[30:54].split())
+                coor = list(map(float, line[30:54].split()))
                 atom_symbol = line[76:78].strip()
 
                 # Special case for the first residue
@@ -477,7 +479,7 @@ def parse_PDB(pdbfile, cdim=4):
                     # save the old ones
                     atom_idxs.append(idxs)
                     atom_names.append(names)
-                    atom_coords.append(coords)
+                    atom_coords.append(np.array(coords))
                     atom_symbols.append(symbols)
                     
                     # initialize data for the new one
@@ -511,7 +513,7 @@ def parse_PDB(pdbfile, cdim=4):
                 if len(data) > 1:
                     Ib1 += [int(data[0])]
                     tmpIb2 = np.zeros(4, dtype=int)
-                    tmp1Ib2 = map(int, data[1:])
+                    tmp1Ib2 = list(map(int, data[1:]))
 
                     for k in range(len(tmp1Ib2)):
                         tmpIb2[k] += tmp1Ib2[k]
@@ -521,8 +523,10 @@ def parse_PDB(pdbfile, cdim=4):
         # save data for the last residue 
         atom_idxs.append(idxs)
         atom_names.append(names)
-        atom_coords.append(coords)
+        atom_coords.append(np.array(coords))
         atom_symbols.append(symbols)
+
+    atom_coords = np.array(atom_coords)
 
     # Build Connectivity Matrix
     NAtoms = sum([ len(i) for i in atom_idxs ])
@@ -564,7 +568,7 @@ def build_neigh_matrix(conn):
         for j in range(neigh.shape[0]):
             if neigh[i,j] == 2:
                 for k in range(neigh.shape[0]):
-                    if neigh[j,k] == 2 and neigh[i,k] != 1
+                    if neigh[j,k] == 2 and neigh[i,k] != 1 \
                     and neigh[i,k] != 2:
                         neigh[i,k] = 3
                         neigh[k,i] = 3
@@ -573,7 +577,7 @@ def build_neigh_matrix(conn):
         for j in range(neigh.shape[0]):
             if neigh[i,j] == 3:
                 for k in range(neigh.shape[0]):
-                    if neigh[j,k] == 2 and neigh[i,k] != 1
+                    if neigh[j,k] == 2 and neigh[i,k] != 1 \
                     and neigh[i,k] != 2 and neigh[i,k] != 3:
                         neigh[i,k] = 4
                         neigh[k,i] = 4
