@@ -3,7 +3,7 @@
 import sys
 import numpy as np
 import argparse as arg
-from fractions import gcd
+from math import gcd
 from matplotlib import path
 from matplotlib import gridspec
 import matplotlib.pyplot as plt
@@ -158,9 +158,9 @@ if __name__ == '__main__':
             T *= 20
 
         r = np.linalg.norm(C) / (2 * np.pi)
-        print
-        print "> Calculated radius for the tube: %16.6f" % r
-        print
+        print()
+        print("> Calculated radius for the tube: %16.6f" % r)
+        print()
 
         #
         # Define Edges of the Tubular Cell
@@ -297,15 +297,15 @@ if __name__ == '__main__':
         y = rolled[:,1]
         z = rolled[:,2]
 
-        ax1 = plt.subplot(gs[1], projection= '3d', aspect='equal')
-        ax1.scatter(x,y,z, marker=".", color="k")
-        ax1.set_xlim(x.min() - 1, x.max() + 1)
-        ax1.set_ylim(y.min() - 1, y.max() + 1)
-        ax1.set_zlim(z.min() - 1, z.max() + 1)
-        ax1.plot([0, 0], [0, 0], [0, z.max()], color="k", lw=2)
-        circle = Circle((0, 0), r, color="b", lw=2, fill=False)
-        ax1.add_patch(circle)
-        art3d.pathpatch_2d_to_3d(circle, z=-3, zdir="z")
+        # ax1 = plt.subplot(gs[1], projection= '3d', aspect='equal')
+        # ax1.scatter(x,y,z, marker=".", color="k")
+        # ax1.set_xlim(x.min() - 1, x.max() + 1)
+        # ax1.set_ylim(y.min() - 1, y.max() + 1)
+        # ax1.set_zlim(z.min() - 1, z.max() + 1)
+        # ax1.plot([0, 0], [0, 0], [0, z.max()], color="k", lw=2)
+        # circle = Circle((0, 0), r, color="b", lw=2, fill=False)
+        # ax1.add_patch(circle)
+        # art3d.pathpatch_2d_to_3d(circle, z=-3, zdir="z")
 
         rolled = unique_rows(rolled)
         atoms = np.ones(len(rolled))

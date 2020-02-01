@@ -225,11 +225,11 @@ def banner(text=None, ch='=', length=78):
 
 if __name__ == '__main__':
 
-    print
+    print()
     print(banner(ch='=', length=80))
     print(banner(text='porfirino.py', ch=' ', length=80))
     print(banner(ch='=', length=80))
-    print
+    print()
 
     args = options()
 
@@ -398,6 +398,6 @@ if __name__ == '__main__':
     # Mol file
     np.savetxt('mol.txt', final[:,1:], fmt='%10.6f')
     sh.move('mol.txt', args.output)
-    print
+    print()
     print(banner(ch='=', length=80))
-    print
+    print()
