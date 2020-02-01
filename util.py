@@ -1,60 +1,31 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import warnings
 import numpy as np
 from itertools import groupby
 
-from elements import ELEMENTS
-
-warnings.filterwarnings("error")
-verbosity = False
-
-# Dictionary for energy conversion
-
-
-energy_conversion = {'au'       : 1,
-                     'eV'       : 27.21138505,
-                     'wn'       : 219474.63,
-                     'kj/mol'   : 2625.5,
-                     'kcal/mol' : 627.503}
-
-# au to eV = 27.21128505 / 1
-# eV to au = 1 / 27.21128505
-# u1 to u2 = dict[u2]/dict[u1]
-
-
-# Dictionaries comparison:
-# Options are stored in dictionaries. dictA is the default options dictionary
-# and dictB is the one passed to the function.
-# We want to compare dictA and dictB. We want to add to dictB all the missing 
-# keys in dictA with their value.
-
-def checkfile(filename):
-
-    if not os.path.isfile(filename):
-        print(banner(text='ERROR', ch='#', length=80))
-        print("File %s not found!" % filename)
-        sys.exit()
-
 
 def skiplines(openfile, nlines=0):
-    '''Skips nlines + 1 lines in openfile. In other words, if nlines=0 it will
-    go to the next line.'''
+    '''
+    Function to skip nlines + 1 lines in openfile. In other words, if nlines=0 it will
+    go to the next line.
 
-    for i in range(nlines):
-        next(openfile)
+    Parameters
+    ----------
+    openfile: object.
+        File object to process.
+    nlines: int.
+        Number of lines to skip.
 
-    return next(openfile)
+    Returns
+    -------
+    line: string.
+        Line after skipping nlines + 1 lines.
+    '''
 
+    for i in range(nlines + 1):
+        line = next(openfile)
 
-def dict_compare(dictA, dictB):
-
-    for k in dictA.viewkeys() - dictB.viewkeys():
-        dictB[k] = dictA[k]
-
-    return dictB
+    return line
 
 
 def extend_compact_list(idxs):
@@ -62,19 +33,15 @@ def extend_compact_list(idxs):
     extended = []
 
     # Uncomment this line if idxs is a string and not a list
-    # idxs = idxs.split()
+    idxs = idxs.split()
 
     for idx in idxs:
-
         to_extend = idx.split('-')
 
         if len(to_extend) > 1:
-
             sel =  map(int, to_extend)
             extended += range(sel[0],sel[1]+1,1)
-
         else:
-        
             extended.append(int(idx))
     
     return extended
@@ -86,15 +53,11 @@ def compact_extended_list(idxs, factor=0):
     compact = []
 
     for k, iterable in groupby(enumerate(sorted(idxs)), lambda x: x[1] - x[0]):
-
          rng = list(iterable)
 
          if len(rng) == 1:
-
              s = str(rng[0][1] + factor)
-
          else:
-
              s = "%s-%s" % (rng[0][1] + factor, rng[-1][1] + factor)
 
          compact.append(s)
@@ -103,92 +66,66 @@ def compact_extended_list(idxs, factor=0):
 
 
 def flatten(lst):
-    return sum( ([x] if not isinstance(x, list) else flatten(x) for x in lst), [] )
+    '''
+    Recursive function to flatten a nested list.
 
+    Parameters
+    ----------
+    lst: list.
+        Nested list to be flattened.
 
-def refframe(A, B, C):
-    '''Returns a reference frame where the x axis goes from A to B, the y axis
-    passes through C and the z axis is built accordingly.'''
+    Returns
+    -------
+    flattened: list.
+        Flattened list.
+    '''
 
-    x = (B - A) / np.linalg.norm(B - A)
+    flattened = sum( ([x] if not isinstance(x, list)
+                     else flatten(x) for x in lst), [] )
 
-    # Define the point P on x whose perpendicular to x passes through C
-    P = A + np.dot((C - A), x) * x
-    y = (C - P) / np.linalg.norm(C - P)
-
-    z = np.cross(x, y)
-
-    ref = np.array([x, y, z])
-
-    return ref
-
-
-def refframe_var(A, B, C):
-    '''Returns a reference frame where A, B and C are contained in the x-y plane,
-    A is the origin, the x axis goes from A to B, the y axis is directed towards
-    C and the z axis is built accordingly.'''
-
-    x = (B - A) / np.linalg.norm(B - A)
-
-    # Build a temporary y axis to find the real z axis passing through A and
-    # perpendicular to the plane defined by A, B and C.
-    tmpy = (C - A) / np.linalg.norm(C - A)
-
-    z = np.cross(x, tmpy)
-    y = np.cross(z, x)
-
-    ref = np.array([x, y, z])
-
-    return ref
+    return flattened
 
 
 def symm_mat(M):
-    '''Symmetrize an upper- or lower diagonal matrix.'''
-    return M + M.T - np.diag(M.diagonal())
+    '''
+    Function to symmetrize an upper- or lower diagonal matrix.
 
+    Parameters
+    ----------
+    M: np.array (N,N).
+        Matrix to be symmetrised.
 
-def rot_mat_x(theta):
+    Returns
+    -------
+    M: np.array (N,N).
+        Symmetrised matrix.
+    '''
 
-    theta = np.radians(theta)
-    Rx = np.zeros((4,4))
-    Rx[0] = np.array([1., 0., 0., 0.])
-    Rx[1] = np.array([0., np.cos(theta), -1*np.sin(theta), 0.])
-    Rx[2] = np.array([0., np.sin(theta), np.cos(theta), 0.])
-    Rx[3] = np.array([0., 0., 0., 1.])
+    M = M + M.T - np.diag(M.diagonal())
 
-    return Rx
-
-
-def rot_mat_y(theta):
-
-    theta = np.radians(theta)
-    Ry = np.zeros((4,4))
-    Ry[0] = np.array([np.cos(theta), 0., np.sin(theta), 0.])
-    Ry[1] = np.array([0., 1., 0., 0.])
-    Ry[2] = np.array([-1*np.sin(theta), 0., np.cos(theta), 0.])
-    Ry[3] = np.array([0., 0., 0., 1.])
-
-    return Ry
-
-
-def rot_mat_z(theta):
-
-    theta = np.radians(theta)
-    Rz = np.zeros((4,4))
-    Rz[0] = np.array([np.cos(theta), -1*np.sin(theta), 0., 0.])
-    Rz[1] = np.array([np.sin(theta), np.cos(theta), 0., 0.])
-    Rz[2] = np.array([0., 0., 1., 0.])
-    Rz[3] = np.array([0., 0., 0., 1.])
-
-    return Rz
+    return M
 
 
 def rot(axis, theta):
-    '''Returns the rotation matrix for the anticlockwise rotation about
-    axis by theta according to Rodrigues' formula.'''
+    '''
+    Returns the rotation matrix for the anticlockwise rotation about an
+    arbitrary axis by theta according to Rodrigues' formula.
+
+    Parameters
+    ----------
+    axis: np.array (3).
+        Unit vector describing the rotation axis.
+    theta: float.
+        Angle of rotation (in degrees).
+
+    Returns
+    -------
+    R: np.array (3,3).
+        Rotation matrix.
+    '''
 
     axis = axis / np.linalg.norm(axis)
-    theta = -1 * np.radians(theta)
+    theta = -np.radians(theta)
     I = np.eye(3)
 
     # Define axis' cross-product matrix
@@ -199,42 +136,27 @@ def rot(axis, theta):
     return R
 
 
-def transl_mat(v):
-
-    # Define the transformation matrix for a translation
-    T = np.eye(4)
-    T[-1,:3] = v
-
-    return T
-
-
-def rototransl(axis, theta, T=None):
-    '''Returns a 4x4 rototranslation matrix, where the rotation part is given
-    by the anticlockwise rotation about axis by theta, and the
-    translation by the vector T.'''
-
-    R = rot(axis, theta)
-    R = np.vstack([R, np.array([0., 0., 0.])])
-    R = np.c_[R, np.array([0., 0., 0., 1.])]
-    if T:
-        T_mat = transl_mat(T)
-
-    R[-1,:] = T_mat[-1,:]
-
-    return R
-
-
 def v1v2_angle(v1, v2):
-    '''Returns the angle between two vectors.'''
-    # Remember that the angle between a plane and a vector equals
-    # 90 - alpha, where alpha is the angle between the vector and
-    # the normal to the plane. To obtain such an angle, you could
-    # do angle = 90 - v1v2_angle(v1, np.cross(x, y)), where x, y
-    # are the two vectors that define the plane.
+    '''
+    Function to compute the angle between two vectors.
 
-    dotprod = np.dot(v1, v2)
+    Parameters
+    ----------
+    v1: np.array (3).
+        First vector.
+    v2: np.array (3).
+        Second vector.
+
+    Returns
+    -------
+    theta: float.
+        Angle between the vector (in degrees).
+    '''
+
     try:
-        theta = np.degrees(np.arccos(dotprod / (np.linalg.norm(v1) * np.linalg.norm(v2))))
+        theta = np.degrees(np.arccos(
+                    np.dot(v1, v2) / ( np.linalg.norm(v1) * np.linalg.norm(v2) )
+                ))
     except:
         theta = 0.0
 
@@ -242,16 +164,52 @@ def v1v2_angle(v1, v2):
 
 
 def angle(A, B, C):
-    '''Returns the bond angle defined by atoms ABC.'''
+    '''
+    Function to compute the angle defined by points A, B, and C.
+
+    Parameters
+    ----------
+    A: np.array (2 or 3).
+        First point.
+    B: np.array (2 or 3).
+        Second point, vertex of the angle.
+    C: np.array (2 or 3).
+        Third point.
+
+    Returns
+    -------
+    abc: float.
+        Angle ABC (in degrees).
+    '''
 
     ab = B - A
     bc = C - B
+    abc = v1v2_angle(ab, bc)
 
-    return v1v2_angle(ab, bc)
+    return abc
 
 
 def dihedral(A, B, C, D):
-    '''Returns the dihedral angle between the planes containing bonds AB and CD.'''
+    '''
+    Function to compute the dihedral angle between the planes containing
+    segments AB and CD.
+
+    Parameters
+    ----------
+    A: np.array (3).
+        First point.
+    B: np.array (3).
+        Second point.
+    C: np.array (3).
+        Third point.
+    D: np.array (3).
+        Fourth point.
+
+    Returns
+    -------
+    dihedral: float.
+        Dihedral angle defined by AB and CD (in degrees).
+    '''
 
     ab = B - A
     bc = C - B
@@ -264,12 +222,25 @@ def dihedral(A, B, C, D):
     m1 = np.cross(n1, bc)
     x = np.dot(n1, n2) 
     y = np.dot(m1, n2)
+    dihedral = np.arctan2(y, x) * 180 / np.pi
 
-    return np.arctan2(y, x) * 180 / np.pi
+    return dihedral
 
 
 def acf(series):
-    '''Returns the autocorrelation function of a time series.'''
+    '''
+    Function to compute the autocorrelation function of a time series.
+
+    Parameters
+    ----------
+    series: np.array.
+        Time series.
+
+    Returns
+    -------
+    acf_t: np.array.
+        Autocorrelation function of the time series.
+    '''
 
     N = len(series)
     avg = np.mean(series)
@@ -279,79 +250,38 @@ def acf(series):
         return np.sum((series[:N - j] - avg) * (series[j:] - avg)) / (N - j)
 
     t = np.arange(N)
-    acf_t = map(r, t)
+    acf_t = map(r, t) / c0
 
-    return acf_t / c0
-
-
-def write_PDB(pdbout, coords):
-
-    # For better organization of the output writing
-    # coords must be a list of lists:
-    # coords = [[at1mol1, at2mol1, ...], [at1mol2, at2mol2, ...], ..., [at1molN, at2molN, ...]]
-
-    line = "ATOM  %5d %-4s %3s %5d    %8.3f%8.3f%8.3f  0.00  0.00  %s\n"
-    resname = 'MOL'
-
-    with open(pdbout, 'w') as f:
-
-        # i : total atom counter
-        # j : residue counter
-        # k : atom in molecule counter
-        i = 0
-        j = 0
-
-        for molecule in coords:
-
-            j += 1
-            counter_dict = {}
-
-            for atom in molecule:
-
-                i += 1
-                atom[0] = ELEMENTS[atom[0]].symbol
-
-                try:
-                    counter_dict[atom[0]] += 1
-
-                except KeyError:
-                    counter_dict[atom[0]] = 1
-
-                k = counter_dict[atom[0]]
-                atom_name = "%s%d" % (atom[0], k)
-                f.write(line % (i, atom_name, resname, j, atom[1], atom[2], atom[3], atom[0]))
-
-            # At the end of each molecule
-            f.write('TER\n')
-
-        # At the end of the file
-        f.write('END')
-
-    return
+    return acf_t
 
 
-def write_XYZ(xyzout, coords):
+def parse_MOL2(mol2file, cdim=4):
+    '''
+    Function to parse a Sybyl MOL2 file.
 
-    # Here coords is just an np.array
-    line = '%2s %10.6f %10.6f %10.6f'
+    Parameters
+    ----------
+    mol2file: string.
+        File to parse
+    cdim: integer (default: 4)
+        Second dimension of the connectivity matrix, representing the maximum
+        number of atoms that can be bonded to a certain atom.
 
-    with open(xyzout, 'w') as f:
-
-        f.write('%d\n' % len(coords))
-        f.write('Title\n')
-        np.savetxt(f, coords, fmt=line)
-
-    return
-
-
-def parse_MOL2(mol2file):
-    '''The following code creates this structure:
-    res_names and res_ids are plain lists, and the elements
-    appear only once per residue.
-    atom_names, type and coord are lists of lists. Each sublist
-    corresponds to a residue and contains all the info
-    for  on the atoms in that residue.'''
-
+    Returns
+    -------
+    atom_names: list of lists.
+        List of atom names. Each residue is contained in a sublist.
+    atom_types: list of lists.
+        List of atom typess. Each residue is contained in a sublist.
+    res_names:
+        List of residue names.
+    res_ids:
+        List of residue ids.
+    atom_coord:
+        List of atom coordinates. Each residue is contained in a sublist.
+    conn: np.array (N,cdim).
+        connectivity matrix of the system.
+    '''
 
     with open(mol2file) as f:
 
@@ -415,11 +345,10 @@ def parse_MOL2(mol2file):
                         atom_coord.append(coords)
                     
                         # initialize data for the new one
-                        names = [data[1]]
-                        types = [data[5]]
-                        # coords = [data[2:5]]
+                        names = [ data[1] ]
+                        types = [ data[5] ]
                         coords = map(float, data[2:5])
-                        coords = [coords]
+                        coords = [ coords ]
                     
                     # if still in the old residue
                     else:
@@ -428,15 +357,14 @@ def parse_MOL2(mol2file):
                         try:
                             names.append(data[1])
                             types.append(data[5])
-                            coords.append(map(float, data[2:5]))
+                            coords.append(list(map(float, data[2:5])))
                     
                         # unless no atom has been saved before
                         except:
-                            names = [data[1]]
-                            types = [data[5]]
-                            # coords = [data[2:5]]
-                            coords = map(float, data[2:5])
-                            coords = [coords]
+                            names = [ data[1] ]
+                            types = [ data[5] ]
+                            coords = list(map(float, data[2:5]))
+                            coords = [ coords ]
 
                 FoundAt = True
                 if FoundAt:
@@ -448,8 +376,8 @@ def parse_MOL2(mol2file):
             elif line[0:13] == '@<TRIPOS>BOND':
                 for i in range(NBonds):
                     data = f.readline().split()[1:3]
-                    Ib1 += [int(data[0])]
-                    Ib2 += [int(data[1])]
+                    Ib1 += [ int(data[0]) ]
+                    Ib2 += [ int(data[1]) ]
 
                 FoundBond = True
 
@@ -458,17 +386,47 @@ def parse_MOL2(mol2file):
                     break 
 
     # Build Connectivity Matrix
-    Conn = np.zeros((NAtoms, 9), dtype=int)
+    conn = np.zeros((NAtoms, cdim), dtype=int)
     for i in range(NBonds):
-        Idx1 = np.argmax(Conn[Ib1[i]-1] == 0)
-        Idx2 = np.argmax(Conn[Ib2[i]-1] == 0)
-        Conn[Ib1[i]-1][Idx1] = Ib2[i]
-        Conn[Ib2[i]-1][Idx2] = Ib1[i]
+        Idx1 = np.argmax(conn[Ib1[i] - 1] == 0)
+        Idx2 = np.argmax(conn[Ib2[i] - 1] == 0)
+        conn[Ib1[i] - 1,Idx1] = Ib2[i]
+        conn[Ib2[i] - 1,Idx2] = Ib1[i]
 
-    return atom_names, atom_types, res_names, res_ids, atom_coord, Conn
+    return atom_names, atom_types, res_names, res_ids, atom_coord, conn
 
 
-def parse_PDB(pdbfile):
+def parse_PDB(pdbfile, cdim=4):
+    '''
+    Function to parse a Protein Data Bank file.
+
+    Parameters
+    ----------
+    pdbfile: string.
+        File to parse
+    cdim: integer (default: 4)
+        Second dimension of the connectivity matrix, representing the maximum
+        number of atoms that can be bonded to a certain atom.
+
+    Returns
+    -------
+    atom_idxs: list of lists.
+        List of atom indexes. Each residue is contained in a sublist.
+    atom_names: list of lists.
+        List of atom names. Each residue is contained in a sublist.
+    atom_types: list of lists.
+        List of atom typess. Each residue is contained in a sublist.
+    res_names:
+        List of residue names.
+    res_ids:
+        List of residue ids.
+    atom_coord:
+        List of atom coordinates. Each residue is contained in a sublist.
+    atom_symbols:
+        List of atom symbols. Each residue is contained in a sublist.
+    conn: np.array (N,cdim).
+        connectivity matrix of the system.
+    '''
 
     with open(pdbfile) as f:
 
@@ -497,7 +455,6 @@ def parse_PDB(pdbfile):
                 res_id = int(line[22:26])
                 coor = map(float, line[30:54].split())
                 atom_symbol = line[76:78].strip()
-
 
                 # Special case for the first residue
                 try:
@@ -569,7 +526,7 @@ def parse_PDB(pdbfile):
 
     # Build Connectivity Matrix
     NAtoms = sum([ len(i) for i in atom_idxs ])
-    Conn = np.zeros((NAtoms, 4), dtype=int)
+    Conn = np.zeros((NAtoms, cdim), dtype=int)
 
     for i in range(len(Ib1)):
         Conn[Ib1[i] - 1] = Ib2[i]
@@ -577,31 +534,132 @@ def parse_PDB(pdbfile):
     return atom_idxs, atom_names, res_names, res_ids, atom_coords, atom_symbols, Conn
 
 
-def get_group(D, connectivity, visited=None, C=None):
-    '''Returns the list of the indexes of the group of atoms connected
-    to atom D, given the connectivity matrix. Atom C is optional and
-    should be linked to D as well. C is useful to get all the atoms
-    connected to D excluding the portion in which C is included.
-    However, atom C is included in the list returned.
-    This function is useful to define the groups of atoms which should
-    undergo a certain transformation, for example for a dihedral scan.'''
+def build_neigh_matrix(conn):
+    '''
+    Function to build a 1-2, 1-3, 1-4 neighbours matrix given the connectivity.
 
-    if not visited:
-        if C:
-            visited = [C, D]
-        else:
-            visited = [D]
+    Parameters
+    ----------
+    conn: np.array (N,M).
+        connectivity matrix of the system.
 
-    for atom in connectivity[D]:
+    Returns
+    -------
+    neigh: np.array (N,N).
+        Neighbours matrix.
+    '''
 
-        if atom != 0 and atom - 1 not in visited:
-            visited.append(atom - 1)
-            visited = get_group(atom - 1, connectivity, visited)
-            
-        if atom - 1 in visited:
-            continue
+    neigh = np.zeros((conn.shape[0],conn.shape[0]))
 
-    return sorted(visited)
+    for i in range(conn.shape[0]):
+        neigh[i,i] = 1
+        for j in range(conn.shape[1]):
+            if conn[i,j] == 0:
+                continue
+            else:
+                neigh[conn[i,j] - 1, i] = 2
+                neigh[i, conn[i,j] - 1] = 2
+
+    for i in range(neigh.shape[0]):
+        for j in range(neigh.shape[0]):
+            if neigh[i,j] == 2:
+                for k in range(neigh.shape[0]):
+                    if neigh[j,k] == 2 and neigh[i,k] != 1
+                    and neigh[i,k] != 2:
+                        neigh[i,k] = 3
+                        neigh[k,i] = 3
+
+    for i in range(neigh.shape[0]):
+        for j in range(neigh.shape[0]):
+            if neigh[i,j] == 3:
+                for k in range(neigh.shape[0]):
+                    if neigh[j,k] == 2 and neigh[i,k] != 1
+                    and neigh[i,k] != 2 and neigh[i,k] != 3:
+                        neigh[i,k] = 4
+                        neigh[k,i] = 4
+
+    return neigh
+
+
+def build_R_matrix(coord, pol, a=1.7278):
+    '''
+    Function to fill in the relay matrix R (see JPCA 1998, 102, 2399).
+
+    Parameters
+    ----------
+    coord: np.array (N,3).
+        coordinates in au.
+    pol: np.array (N).
+        isotropic atomic polarisabilities in au.
+
+    Returns
+    -------
+    R: np.array (3*N,3*N).
+        Relay matrix.
+    '''
+
+    R = np.zeros((3 * coord.shape[0],3 * coord.shape[0]))
+
+    for i in range(R.shape[0])[::3]:
+
+        # Diagonal terms
+        R[i:i+3,i:i+3] = np.eye(3) / pol[i // 3]
+
+        # Non-diagonal terms, only upper half
+        for j in range(i + 3, R.shape[0])[::3]:
+
+            # Compute distance between sites i and j
+            r = coord[j // 3] - coord[i // 3]
+            rij = np.linalg.norm(r)
+
+            # Compute screening distance between sites i and j
+            s = a * ( (pol[i // 3] * pol[j // 3])**(1.0 / 6.0) )
+
+            # Thole screening for linear charge distribution
+            if rij <= s:
+                v = rij / s
+                s3 = 4 * v**3 - 3 * v**4
+                s5 = v**4
+            else:
+                s3 = 1
+                s5 = 1
+
+            # Compute dipole field tensor between sites i and j
+            Tij = ( s3 * np.eye(r.shape[0]) / rij**3 ) - ( s5 * 3 * np.outer(r, r) / rij**5 )
+            R[i:i+3,j:j+3] = Tij
+
+    # Symmetrise R
+    R = R + R.T - np.diag(R.diagonal())
+
+    return R
+
+
+def reorganise_R_matrix(R):
+    '''
+    Function to reorganise a (3*N,3*N) matrix from an atomic-block diagonal
+    (x_1, y_1, z_1...x_N, y_N, z_N) to a coordinate-block diagonal
+    (x_1...x_N, y_1...y_N, z_1...z_N).
+
+    Parameters
+    ----------
+    R: np.array (3*N,3*N).
+        Relay matrix.
+
+    Returns
+    -------
+    R: np.array (3*N,3*N).
+        Relay matrix.
+    '''
+
+    for i in range(3):
+        try:
+            idxs = np.concatenate((idxs, np.arange(i, R.shape[0])[::3]))
+        except:
+            idxs = np.arange(i, R.shape[0])[::3]
+
+    R = R[idxs][:,idxs]
+
+    return R
 
 
 def kabsch(struct1, struct2):
@@ -656,7 +714,8 @@ def kabsch(struct1, struct2):
 
 
 def banner(text=None, ch='=', length=78):
-    """Return a banner line centering the given text.
+    '''
+    Return a banner line centering the given text.
     
         "text" is the text to show in the banner. None can be given to have
             no text.
@@ -671,7 +730,7 @@ def banner(text=None, ch='=', length=78):
         '------------------- Peggy Sue --------------------'
         >>> banner("Pretty pretty pretty pretty Peggy Sue", length=40)
         'Pretty pretty pretty pretty Peggy Sue'
-    """
+    '''
     if text is None:
         return ch * length
 
