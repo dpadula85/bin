@@ -10,7 +10,7 @@ from rdkit.Chem import AllChem, rdFMCS
 def options():
     '''Defines the options of the script.'''
 
-    parser = arg.ArgumentParser(description='Fits atomic charges to a Molecular ESP',
+    parser = arg.ArgumentParser(description='Docks a molecule to a reference.',
              formatter_class=arg.ArgumentDefaultsHelpFormatter)
 
     #
