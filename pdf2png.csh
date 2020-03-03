@@ -5,7 +5,8 @@ if ( $#argv > 0 ) then
   set n = 1
   while ( $n <= $#argv )
     
-    inkscape -f $argv[$n] -d 300 -e ${argv[$n]:r}.png
+    inkscape --pdf-poppler $argv[$n] -d 300 --export-type png
+
     @ n ++
 
   end
@@ -16,7 +17,7 @@ else
   
   foreach pdf ( $pdfs )
   
-    inkscape -f $pdf -d 300 -e ${pdf:r}.png
+    inkscape --pdf-poppler $pdf -d 300 --export-type png
   
   end
 
