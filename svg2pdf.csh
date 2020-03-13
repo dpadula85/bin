@@ -5,7 +5,7 @@ if ( $#argv > 0 ) then
   set n = 1
   while ( $n <= $#argv )
     
-    inkscape -f $argv[$n] -A ${argv[$n]:r}.pdf
+    inkscape $argv[$n] -d 300 --export-type pdf
     @ n ++
 
   end
@@ -16,7 +16,7 @@ else
   
   foreach svg ( $svgs )
   
-    inkscape -f $svg -A ${svg:r}.pdf
+    inkscape $svg -d 300 --export-type pdf
   
   end
 

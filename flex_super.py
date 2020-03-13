@@ -5,6 +5,10 @@ import argparse as arg
 from rdkit import Chem
 from rdkit.Geometry import Point3D
 from rdkit.Chem import AllChem, rdFMCS
+from rdkit import RDLogger
+
+lg = RDLogger.logger()
+lg.setLevel(RDLogger.CRITICAL)
 
 
 def options():
@@ -30,14 +34,6 @@ def options():
     inp.add_argument('-m', '--map', default=None, type=str, dest="RefMapFile",
                      help='''Mapping between the reference SMILES and
                      coordinates.''')
-
-    #
-    # Output Options
-    #
-    out = parser.add_argument_group("Output Options")
-
-    out.add_argument('-o', '--output', default="docked.xyz", type=str, dest='OutXYZFile',
-                     help='''Output XYZ File Name.''')
 
     args = parser.parse_args()
     Opts = vars(args)
@@ -107,22 +103,32 @@ def dock_to_ref(ref_smi, ref_xyz, new_smi, mapping=None):
     # Find max common substruct mcs
     mcs = rdFMCS.FindMCS([ ref, new ])
     mcs_mol = Chem.MolFromSmarts(mcs.smartsString)
+    # print(Chem.MolToSmiles(mcs_mol))
 
-    # Get portions corresponding to mcs
-    ref_match = ref.GetSubstructMatch(mcs_mol)
-    new_match = new.GetSubstructMatch(mcs_mol)
+    while True:
 
-    # Assign coordinates to mcs
-    rwmcs = Chem.RWMol(mcs_mol)
-    rwconf = Chem.Conformer(rwmcs.GetNumAtoms())
-    matches = rwmcs.GetSubstructMatch(mcs_mol)
-    for i, atom in enumerate(matches):
-        rwconf.SetAtomPosition(atom, rwrefconf.GetAtomPosition(ref_match[i]))
+        try:
+            # Get portions corresponding to mcs
+            ref_match = ref.GetSubstructMatch(mcs_mol)
+            new_match = new.GetSubstructMatch(mcs_mol)
 
-    rwmcs.AddConformer(rwconf)
+            # Assign coordinates to mcs
+            rwmcs = Chem.RWMol(mcs_mol)
+            rwconf = Chem.Conformer(rwmcs.GetNumAtoms())
+            matches = rwmcs.GetSubstructMatch(mcs_mol)
+            for i, atom in enumerate(matches):
+                rwconf.SetAtomPosition(atom, rwrefconf.GetAtomPosition(ref_match[i]))
 
-    # Dock the new molecule to the mcs with the reference molecule
-    AllChem.ConstrainedEmbed(new, rwmcs)
+            rwmcs.AddConformer(rwconf)
+
+            # Dock the new molecule to the mcs with the reference molecule
+            AllChem.ConstrainedEmbed(new, rwmcs)
+            break
+
+        except ValueError:
+            last = rwmcs.GetNumAtoms()
+            rwmcs.RemoveAtom(last - 1)
+            mcs_mol = rwmcs
 
     # Get the final coordinates of the new molecule
     coords = []
@@ -155,6 +161,7 @@ def main(Opts):
     smi_to_xyz = dict(zip(idxs_smi, idxs_xyz))
 
     # Read new molecule
+    base = ".".join(Opts["NewSmiFile"].split(".")[:-1])
     with open(Opts["NewSmiFile"]) as f:
         smiles = f.readlines()[0].strip()
         new_smi = polish_smiles(smiles)
@@ -163,7 +170,7 @@ def main(Opts):
     new_xyz = dock_to_ref(ref_smi, ref_xyz, new_smi, mapping=smi_to_xyz)
 
     # Write result to output
-    with open(Opts["OutXYZFile"], "w") as f:
+    with open("%s_docked.xyz" % base, "w") as f:
         f.write("%d\n\n" % len(new_xyz))
         np.savetxt(f, new_xyz, fmt="%-5d %12.6f %12.6f %12.6f")
 
