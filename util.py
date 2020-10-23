@@ -28,6 +28,40 @@ def skiplines(openfile, nlines=0):
     return line
 
 
+def parallel_fn(fn, iterable, nproc=None):
+
+    '''
+    Function to execute a generic function in parallel applying it to all
+    the elements of an iterable. The function fn should contain appropriate
+    error handling to avoid mp.Pool to hang up.
+
+    Parameters
+    ----------
+    fn: object.
+        Python standalone function.
+    iterable: iterable.
+        Collection of elements on which fn should be applied.
+    nproc: integer (default: None).
+        Number of processors for the parallelisation. If not specified all
+        available processors will be used.
+
+    Returns
+    -------
+    data: list.
+        List of the returns of function fn for each element of iterable.
+    '''
+
+    if not nproc:
+        nproc = os.cpu_count()
+
+    pool = mp.Pool(nproc)
+    data = pool.map(fn, iterable)                                                                                                                     
+    pool.close()
+    pool.join()
+
+    return data
+
+
 def extend_compact_list(idxs):
 
     extended = []
@@ -84,6 +118,29 @@ def flatten(lst):
                      else flatten(x) for x in lst), [] )
 
     return flattened
+
+
+def centroid(coords, masses=None):
+    '''
+    Function to compute the centre (or the centre of mass) of a set of
+    coordinates.
+
+    Parameters
+    ----------
+    coord: np.array (N,3).
+        coordinates.
+    masses: np.array (N) (default: None).
+        masses.
+
+    Returns
+    -------
+    com: np.array (3).
+        centre (or centre of mass) of the set of coordinates.
+    '''
+
+    com = np.average(coords, axis=0, weights=masses)
+
+    return com
 
 
 def symm_mat(M):

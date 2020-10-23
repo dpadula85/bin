@@ -5,6 +5,11 @@ import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
+from matplotlib import rc
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
 
 
 def options():
@@ -40,12 +45,14 @@ def options():
 
     return Opts
 
+def myround(x, base=5):
+    return base * round(x/base)
 
 def plot(x, color="b", label=1):
 
     nbins = int(np.log2(x.shape[0]) + 1)
 
-    fig = plt.figure(figsize=(12, 9))
+    fig = plt.figure(figsize=(8, 6))
     gs = gridspec.GridSpec(1, 1)
 
     # Plot
@@ -68,9 +75,11 @@ def plot(x, color="b", label=1):
     ax.yaxis.set_minor_locator(ytickmin)
     ax.xaxis.set_ticks_position('both')
     ax.yaxis.set_ticks_position('both')
-    ax.tick_params(axis='both', which='major', direction='in', labelsize=18, pad=10, length=5)
-    ax.tick_params(axis='both', which='minor', direction='in', labelsize=18, pad=10, length=2)
-    ax.set_xlim(x.min(), x.max())
+    ax.tick_params(axis='both', which='major', direction='in', labelsize=16, pad=10, length=5)
+    ax.tick_params(axis='both', which='minor', direction='in', labelsize=16, pad=10, length=2)
+    xmin = myround(x.min(), base=30)
+    xmax = myround(x.max(), base=30)
+    ax.set_xlim(xmin, xmax)
 
     return
 

@@ -5,6 +5,11 @@ import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
+from matplotlib import rc
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
 
 
 def options():

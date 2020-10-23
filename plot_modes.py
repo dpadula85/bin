@@ -5,6 +5,11 @@ import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
+from matplotlib import rc
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
 
 
 def options():
@@ -86,7 +91,8 @@ def plot_overlap(overlap, color="b"):
     ax.bar(overlap[:,0], overlap[:,1], color=color, width=1.0)
 
     ax.set_xlabel(r"Normal Mode", size=18, labelpad=5)
-    ax.set_ylabel(r"overlap", size=18, labelpad=5)
+    # ax.set_ylabel(r"overlap", size=18, labelpad=5)
+    ax.set_ylabel(r"$\langle Q_i^{MM} \vert Q_i^{QM} \rangle$", size=18, labelpad=5)
     ax.xaxis.set_label_position('top')
 
     xtickmaj = ticker.MultipleLocator(20)
