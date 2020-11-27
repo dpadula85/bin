@@ -3,6 +3,7 @@
 import numpy as np
 import multiprocessing as mp
 from itertools import groupby
+from scipy.spatial.distance import cdist
 
 
 def skiplines(openfile, nlines=0):
@@ -160,6 +161,43 @@ def symm_mat(M):
     '''
 
     M = M + M.T - np.diag(M.diagonal())
+
+    return M
+
+
+def get_connectivity_matrix(coords, radii):
+    '''
+    Function to symmetrize an upper- or lower diagonal matrix.
+
+    Parameters
+    ----------
+    coords: np.array (N,3).
+        Coordinates matrix.
+    radii: np.array (N).
+        Radii vector.
+
+    Returns
+    -------
+    M: np.array (N,P).
+        Connectivity matrix.
+    '''
+
+    # Compute distance matrix
+    D = cdist(coords, coords)
+
+    # Add fictitious distance on the diagonal to not find the atom itself
+    D = D + np.diag(D.diagonal() + 10)
+
+    # Compute radii sum matrix
+    R = radii.reshape(1, -1) / 2 + radii.reshape(-1, 1) / 2
+
+    # Compare them to figure out connectivity
+    idxs = D <= R
+
+    # For each line get True idxs
+    connidxs = [ np.where(i == True)[0].tolist() for i in idxs ]
+    pad = len(max(connidxs, key=len))
+    M = np.array([i + [-1]*(pad - len(i)) for i in connidxs])
 
     return M
 
