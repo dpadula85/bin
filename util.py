@@ -198,7 +198,7 @@ def get_connectivity_matrix(coords, radii):
     # For each line get True idxs
     connidxs = [ np.where(i == True)[0].tolist() for i in idxs ]
     pad = len(max(connidxs, key=len))
-    M = np.array([i + [-1]*(pad - len(i)) for i in connidxs])
+    M = np.array([ i + [ -1 ] * (pad - len(i)) for i in connidxs ])
 
     return M
 
