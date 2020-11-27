@@ -167,7 +167,8 @@ def symm_mat(M):
 
 def get_connectivity_matrix(coords, radii):
     '''
-    Function to symmetrize an upper- or lower diagonal matrix.
+    Function to obtain the connectivity matrix of a molecule from the
+    coordinates and the atomic radii.
 
     Parameters
     ----------
