@@ -186,8 +186,8 @@ def get_connectivity_matrix(coords, radii):
     # Compute distance matrix
     D = cdist(coords, coords)
 
-    # Add fictitious distance on the diagonal to not find the atom itself
-    D = D + np.diag(D.diagonal() + 10)
+    # Add fictitious distance on the diagonal not to find the atom itself
+    D = D + np.diag(D.diagonal() + np.inf)
 
     # Compute radii sum matrix
     R = radii.reshape(1, -1) / 2 + radii.reshape(-1, 1) / 2
@@ -210,20 +210,20 @@ def rot(axis, theta):
 
     Parameters
     ----------
-    axis: np.array (3).
+    axis: np.array (N).
         Unit vector describing the rotation axis.
     theta: float.
         Angle of rotation (in degrees).
 
     Returns
     -------
-    R: np.array (3,3).
+    R: np.array (N,N).
         Rotation matrix.
     '''
 
     axis = axis / np.linalg.norm(axis)
-    theta = -np.radians(theta)
-    I = np.eye(3)
+    theta = np.radians(theta)
+    I = np.eye(axis.shape[0])
 
     # Define axis' cross-product matrix
     K = np.cross(I, axis)
@@ -239,9 +239,9 @@ def v1v2_angle(v1, v2):
 
     Parameters
     ----------
-    v1: np.array (3).
+    v1: np.array (N).
         First vector.
-    v2: np.array (3).
+    v2: np.array (N).
         Second vector.
 
     Returns
@@ -260,17 +260,47 @@ def v1v2_angle(v1, v2):
     return theta
 
 
+def rot_vecs(v1, v2):
+    '''
+    Returns the rotation matrix that transforms v1 into v2.
+
+    Parameters
+    ----------
+    v1: np.array (N).
+        First vector.
+    v2: np.array (N).
+        Second vector.
+
+    Returns
+    -------
+    R: np.array (N,N).
+        Rotation matrix.
+    '''
+
+    # Find rotation vector orthogonal to the plane spanned by v1 and v2
+    axis = np.cross(v1, v2)
+    axis = axis / np.linalg.norm(axis)
+
+    # Find the angle of rotation
+    theta = v1v2_angle(v1, v2)
+
+    # Obtain the rotation matrix with Rodrigues' formula
+    R = rot(axis, theta)
+
+    return R
+
+
 def angle(A, B, C):
     '''
     Function to compute the angle defined by points A, B, and C.
 
     Parameters
     ----------
-    A: np.array (2 or 3).
+    A: np.array (N).
         First point.
-    B: np.array (2 or 3).
+    B: np.array (N).
         Second point, vertex of the angle.
-    C: np.array (2 or 3).
+    C: np.array (N).
         Third point.
 
     Returns
@@ -293,13 +323,13 @@ def dihedral(A, B, C, D):
 
     Parameters
     ----------
-    A: np.array (3).
+    A: np.array (N).
         First point.
-    B: np.array (3).
+    B: np.array (N).
         Second point.
-    C: np.array (3).
+    C: np.array (N).
         Third point.
-    D: np.array (3).
+    D: np.array (N).
         Fourth point.
 
     Returns
@@ -322,6 +352,128 @@ def dihedral(A, B, C, D):
     dihedral = np.arctan2(y, x) * 180 / np.pi
 
     return dihedral
+
+
+def lstsq_fit(pts):
+    '''
+    Function to fit a set of points with least squares. The geometrical objects
+    involved depend on the number of dimensions (columns) of pts.
+
+    Parameters
+    ----------
+    pts: np.array (N,M).
+        coordinates.
+
+    Returns
+    -------
+    coeffs: np.array (M).
+        coefficients of the least squares fit.
+    '''
+
+    A = np.c_[ pts[:,:-1], np.ones(pts.shape[0]) ]
+    B = pts[:,-1]
+
+    coeffs, res, rank, singular_values = np.linalg.lstsq(A, B)
+
+    return coeffs
+
+
+def make_grid(**kwargs):
+    '''
+    Function to create a grid of points centred at the origin according to
+    the basis vectors. Optional kwargs can control both the reference frame
+    and whether the grid will be generate in space, onto a plane, or along a
+    line.
+
+    Parameters
+    ----------
+    ref: np.array (N,3).
+        basis vectors.
+    origin: np.array (3).
+        coordinated of the origin.
+    xm, ym, zm: int.
+        maximum coefficient for each basis vector.
+
+    Returns
+    -------
+    grid: np.array (M,3).
+        grid of points.
+    '''
+
+    # Assign default reference system and origin to the cartesian ref frame
+    ref = kwargs.pop("ref", np.eye(3))
+    origin = kwargs.pop("origin", np.zeros(3))
+
+    # Define options for the grid
+    xm = kwargs.pop("xm", 5)
+    ym = kwargs.pop("ym", 5)
+    zm = kwargs.pop("zm", 5)
+    nx = 2 * xm + 1
+    ny = 2 * ym + 1
+    nz = 2 * zm + 1
+
+    # Define spacings along each basis vector
+    i = np.linspace(-xm, xm, nx)
+    j = np.linspace(-ym, ym, ny)
+    k = np.linspace(-zm, zm, nz)
+
+    # Make grid
+    g = np.meshgrid(i, j, k)
+
+    # Convert to a readable format
+    grid = np.vstack(list(map(np.ravel, g))).T
+
+    # Apply to desired basis vectors
+    grid = np.dot(grid, ref.T)
+
+    # Translate in its origin
+    grid += origin
+
+    return grid
+
+
+def proj(pts, coeffs):
+    '''
+    Function to compute projections of a set of points onto a plane.
+
+    Parameters
+    ----------
+    pts: np.array (N,M).
+        set of points
+    coeffs: np.array (M).
+        normal vector describing the plane.
+
+    Returns
+    -------
+    prjs: np.array (N,M).
+        set of points projected onto the plane.
+    '''
+
+    # For each point p in pts we should do
+    # p = p - np.dot(p, u) * u
+    # where u is the normal unit vector
+
+    # Compute normal vector
+    u = coeffs / np.linalg.norm(coeffs)
+
+    # Here is a vectorised version of the projection formula
+    # Compute elementwise dot products between pts and u.
+    # Deal with the case of a single point as an exception.
+    try:
+        dotprods = np.einsum('ij,ij->i', pts, u.reshape(1,-1))
+    except:
+        dotprods = np.einsum('ij,ij->i', pts.reshape(-1,u.shape[0]), u.reshape(1,-1))
+
+    # Repeat dot products and unit vector for elementwise mult to be
+    # subtracted from originary coordinates
+    dotprodsmat = np.repeat(dotprods.reshape(-1,1), u.shape[0], axis=1)
+    umat = np.repeat(u.reshape(1,-1), dotprods.shape[0], axis=0)
+
+    # Subtract the components along the normal to the plane from the
+    # originary coordinates
+    prjs = pts - dotprodsmat * umat
+
+    return prjs
 
 
 def acf(series):
@@ -347,292 +499,9 @@ def acf(series):
         return np.sum((series[:N - j] - avg) * (series[j:] - avg)) / (N - j)
 
     t = np.arange(N)
-    acf_t = map(r, t) / c0
+    acf_t = np.array(list(map(r, t))) / c0
 
     return acf_t
-
-
-def parse_MOL2(mol2file, cdim=4):
-    '''
-    Function to parse a Sybyl MOL2 file.
-
-    Parameters
-    ----------
-    mol2file: string.
-        File to parse
-    cdim: integer (default: 4)
-        Second dimension of the connectivity matrix, representing the maximum
-        number of atoms that can be bonded to a certain atom.
-
-    Returns
-    -------
-    atom_names: list of lists.
-        List of atom names. Each residue is contained in a sublist.
-    atom_types: list of lists.
-        List of atom typess. Each residue is contained in a sublist.
-    res_names:
-        List of residue names.
-    res_ids:
-        List of residue ids.
-    atom_coord:
-        Array of atom coordinates. Each residue is contained in a subarray.
-    conn: np.array (N,cdim).
-        connectivity matrix of the system.
-    '''
-
-    with open(mol2file) as f:
-
-        FoundAt = False
-        FoundBond = False
-
-        while True:
-            line = f.readline()
-            if not line:
-                break
-
-            # skip comments
-            elif line[0] == '#':
-                continue
-            
-            # Read initial lines
-            elif line[0:17] == '@<TRIPOS>MOLECULE':
-                f.readline()
-                info = f.readline().split()
-                NAtoms = int(info[0])
-                NBonds = int(info[1])
-                try:
-                    NRes = int(info[2])
-                except:
-                    NRes = 1
-
-                atom_names = []
-                atom_types = []
-                res_names = []
-                res_ids = []
-                atom_coord = []
-                Ib1 = []
-                Ib2 = []
-
-            # Read Atoms
-            elif  line[0:13] == '@<TRIPOS>ATOM':
-                for i in range(NAtoms):
-                    data = f.readline().split()
-                    
-                    # Special case for the first residue
-                    try:
-                        res_ids[-1]
-                    except IndexError:
-                        res_ids.append(int(data[6]))
-                    
-                    # Special case for the first residue
-                    try:
-                        res_names[-1]
-                    except IndexError:
-                        res_names.append(data[7])
-                    
-                    # Check id: new residue or old one
-                    # if in new residue
-                    if int(data[6]) != res_ids[-1]:
-                        res_ids.append(int(data[6]))
-                        res_names.append(data[7])
-                        
-                        # save data for the old one
-                        atom_names.append(names)
-                        atom_types.append(types)
-                        atom_coord.append(np.array(coords))
-                    
-                        # initialize data for the new one
-                        names = [ data[1] ]
-                        types = [ data[5] ]
-                        coords = list(map(float, data[2:5]))
-                        coords = [ coords ]
-                    
-                    # if still in the old residue
-                    else:
-                    
-                        # save data for the new atom
-                        try:
-                            names.append(data[1])
-                            types.append(data[5])
-                            coords.append(list(map(float, data[2:5])))
-                    
-                        # unless no atom has been saved before
-                        except:
-                            names = [ data[1] ]
-                            types = [ data[5] ]
-                            coords = list(map(float, data[2:5]))
-                            coords = [ coords ]
-
-                FoundAt = True
-                if FoundAt:
-                    # save data for the last residue 
-                    atom_names.append(names)
-                    atom_types.append(types)
-                    atom_coord.append(np.array(coords))
-
-            elif line[0:13] == '@<TRIPOS>BOND':
-                for i in range(NBonds):
-                    data = f.readline().split()[1:3]
-                    Ib1 += [ int(data[0]) ]
-                    Ib2 += [ int(data[1]) ]
-
-                FoundBond = True
-
-            elif  line[0:21] == '@<TRIPOS>SUBSTRUCTURE':
-                if FoundAt and FoundBond:
-                    break 
-
-    atom_coord = np.array(atom_coord)
-
-    # Build Connectivity Matrix
-    conn = np.zeros((NAtoms, cdim), dtype=int)
-    for i in range(NBonds):
-        Idx1 = np.argmax(conn[Ib1[i] - 1] == 0)
-        Idx2 = np.argmax(conn[Ib2[i] - 1] == 0)
-        conn[Ib1[i] - 1,Idx1] = Ib2[i]
-        conn[Ib2[i] - 1,Idx2] = Ib1[i]
-
-    return atom_names, atom_types, res_names, res_ids, atom_coord, conn
-
-
-def parse_PDB(pdbfile, cdim=4):
-    '''
-    Function to parse a Protein Data Bank file.
-
-    Parameters
-    ----------
-    pdbfile: string.
-        File to parse
-    cdim: integer (default: 4)
-        Second dimension of the connectivity matrix, representing the maximum
-        number of atoms that can be bonded to a certain atom.
-
-    Returns
-    -------
-    atom_idxs: list of lists.
-        List of atom indexes. Each residue is contained in a sublist.
-    atom_names: list of lists.
-        List of atom names. Each residue is contained in a sublist.
-    atom_types: list of lists.
-        List of atom typess. Each residue is contained in a sublist.
-    res_names:
-        List of residue names.
-    res_ids:
-        List of residue ids.
-    atom_coord:
-        Array of atom coordinates. Each residue is contained in a subarray.
-    atom_symbols:
-        List of atom symbols. Each residue is contained in a sublist.
-    conn: np.array (N,cdim).
-        connectivity matrix of the system.
-    '''
-
-    with open(pdbfile) as f:
-
-        FoundAt = False
-        FoundBond = False
-        atom_idxs = []
-        atom_names = []
-        chain_idxs = []
-        res_names = []
-        res_ids = []
-        atom_coords = []
-        atom_symbols = []
-        Ib1 = []
-        Ib2 = []
-
-        for line in f:
-
-            # Read Atoms
-            if line[0:6] == 'ATOM  ' or line[0:6] == 'HETATM':
-
-                atom_idx = int(line[6:11])
-                atom_name = line[11:16].strip()
-                chain_idx = line[16].strip()
-                res_name = line[17:20].strip()
-                chain_idx = line[21].strip()
-                res_id = int(line[22:26])
-                coor = list(map(float, line[30:54].split()))
-                atom_symbol = line[76:78].strip()
-
-                # Special case for the first residue
-                try:
-                    res_ids[-1]
-                except IndexError:
-                    res_ids.append(res_id)
-    
-                # Special case for the first residue
-                try:
-                    res_names[-1]
-                except IndexError:
-                    res_names.append(res_name)
-                
-                # Check id: new residue or old one
-                # if in new residue
-                if res_id != res_ids[-1]:
-                    res_ids.append(res_id)
-                    res_names.append(res_name)
-
-                    # save the old ones
-                    atom_idxs.append(idxs)
-                    atom_names.append(names)
-                    atom_coords.append(np.array(coords))
-                    atom_symbols.append(symbols)
-                    
-                    # initialize data for the new one
-                    idxs = [atom_idx]
-                    names = [atom_name]
-                    coords = [coor]
-                    symbols = [atom_symbol]
-
-                # if still in the old residue
-                else:
-                
-                    # save data for the new atom
-                    try:
-                        idxs.append(atom_idx)
-                        names.append(atom_name)
-                        coords.append(coor)
-                        symbols.append(atom_symbol)
-                
-                    # unless no atom has been saved before
-                    except:
-                        idxs = [atom_idx]
-                        names = [atom_name]
-                        coords = [coor]
-                        symbols = [atom_symbol]
-
-            # Connectivity
-            elif line[0:6] == 'CONECT':
-
-                data = line.split()[1:]
-
-                if len(data) > 1:
-                    Ib1 += [int(data[0])]
-                    tmpIb2 = np.zeros(4, dtype=int)
-                    tmp1Ib2 = list(map(int, data[1:]))
-
-                    for k in range(len(tmp1Ib2)):
-                        tmpIb2[k] += tmp1Ib2[k]
-
-                    Ib2 += [tmpIb2.tolist()]
-
-        # save data for the last residue 
-        atom_idxs.append(idxs)
-        atom_names.append(names)
-        atom_coords.append(np.array(coords))
-        atom_symbols.append(symbols)
-
-    atom_coords = np.array(atom_coords)
-
-    # Build Connectivity Matrix
-    NAtoms = sum([ len(i) for i in atom_idxs ])
-    Conn = np.zeros((NAtoms, cdim), dtype=int)
-
-    for i in range(len(Ib1)):
-        Conn[Ib1[i] - 1] = Ib2[i]
-
-    return atom_idxs, atom_names, res_names, res_ids, atom_coords, atom_symbols, Conn
 
 
 def build_neigh_matrix(conn):
@@ -761,57 +630,6 @@ def reorganise_R_matrix(R):
     R = R[idxs][:,idxs]
 
     return R
-
-
-def kabsch(struct1, struct2):
-    '''Returns the RMSD calculated with Kabsch's algorithm.'''
-
-    # Modify structures to get rid of the atomic symbol or number and convert
-    # to np.array
-    struct1 = np.array([ [atom[0], atom[1], atom[2]] for atom in struct1 ])    
-    struct2 = np.array([ [atom[0], atom[1], atom[2]] for atom in struct2 ])    
-
-    # check for consistency in number of atoms
-    assert len(struct1) == len(struct2)
-    L = len(struct1)
-    assert L > 0
-
-    # Center the two fragments to their center of coordinates
-    com1 = np.sum(struct1, axis=0) / float(L)
-    com2 = np.sum(struct2, axis=0) / float(L)
-    struct1 -= com1
-    struct2 -= com2
-
-    # Initial residual, see Kabsch.
-    E0 = np.sum(np.sum(struct1 * struct1, axis=0), axis=0) + \
-         np.sum(np.sum(struct2 * struct2, axis=0), axis=0)
-
-    # This beautiful step provides the answer. V and Wt are the orthonormal
-    # bases that when multiplied by each other give us the rotation matrix, U.
-    # S, (Sigma, from SVD) provides us with the error!  Isn't SVD great!
-    V, S, Wt = np.linalg.svd(np.dot(np.transpose(struct2), struct1))
-
-    # we already have our solution, in the results from SVD.
-    # we just need to check for reflections and then produce
-    # the rotation. V and Wt are orthonormal, so their det's
-    # are +/-1.
-    reflect = float(str(float(np.linalg.det(V) * np.linalg.det(Wt))))
-
-    if reflect == -1.0:
-        S[-1] = -S[-1]
-        V[:,-1] = -V[:,-1]
-
-    RMSD = E0 - (2.0 * sum(S))
-    RMSD = np.sqrt(abs(RMSD / L))
-
-    # The rotation matrix U is simply V*Wt
-    U = np.dot(V, Wt)
- 
-    # rotate and translate the molecule
-    struct2 = np.dot((struct2), U)
-    struct2 = struct2 + com1
-
-    return struct2, U
 
 
 def banner(text=None, ch='=', length=78):
