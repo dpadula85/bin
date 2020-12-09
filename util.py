@@ -373,7 +373,7 @@ def lstsq_fit(pts):
     A = np.c_[ pts[:,:-1], np.ones(pts.shape[0]) ]
     B = pts[:,-1]
 
-    coeffs, res, rank, singular_values = np.linalg.lstsq(A, B)
+    coeffs, res, rank, singular_values = np.linalg.lstsq(A, B, rcond=None)
 
     return coeffs
 
