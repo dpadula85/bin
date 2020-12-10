@@ -382,7 +382,7 @@ def make_grid(**kwargs):
     '''
     Function to create a grid of points centred at the origin according to
     the basis vectors. Optional kwargs can control both the reference frame
-    and whether the grid will be generate in space, onto a plane, or along a
+    and whether the grid will be generated in space, onto a plane, or along a
     line.
 
     Parameters
@@ -393,6 +393,8 @@ def make_grid(**kwargs):
         coordinated of the origin.
     xm, ym, zm: int.
         maximum coefficient for each basis vector.
+    nx, ny, nz: int.
+        number of points along each direction.
 
     Returns
     -------
@@ -408,22 +410,31 @@ def make_grid(**kwargs):
     xm = kwargs.pop("xm", 5)
     ym = kwargs.pop("ym", 5)
     zm = kwargs.pop("zm", 5)
-    nx = 2 * xm + 1
-    ny = 2 * ym + 1
-    nz = 2 * zm + 1
+    nx = kwargs.pop("nx", 2 * xm + 1)
+    ny = kwargs.pop("ny", 2 * ym + 1)
+    nz = kwargs.pop("nz", 2 * zm + 1)
 
     # Define spacings along each basis vector
     i = np.linspace(-xm, xm, nx)
     j = np.linspace(-ym, ym, ny)
     k = np.linspace(-zm, zm, nz)
 
-    # Make grid
+    # We should do
+    # for p in i:
+    #     for q in j:
+    #         for r in k:
+    #             gridpoint = p * e1 + q * e2 + r * e3
+    #
+    # where e1, e2, e3 are basis vectors stored as columns of ref
+
+    # Here is a vectorised version of the nested for loop
+    # Make grid of displacements along each basis vector
     g = np.meshgrid(i, j, k)
 
-    # Convert to a readable format
+    # Convert to a more natural format
     grid = np.vstack(list(map(np.ravel, g))).T
 
-    # Apply to desired basis vectors
+    # Multiply each displacement for the corresponding basis vector
     grid = np.dot(grid, ref.T)
 
     # Translate in its origin
