@@ -31,7 +31,6 @@ def skiplines(openfile, nlines=0):
 
 
 def parallel_fn(fn, iterable, nproc=None):
-
     '''
     Function to execute a generic function in parallel applying it to all
     the elements of an iterable. The function fn should contain appropriate
@@ -387,12 +386,14 @@ def make_grid(**kwargs):
 
     Parameters
     ----------
-    ref: np.array (N,3).
+    ref: np.array (3,3).
         basis vectors.
     origin: np.array (3).
         coordinated of the origin.
-    xm, ym, zm: int.
+    xu, yu, zu: float.
         maximum coefficient for each basis vector.
+    xl, yl, zl: float.
+        minimum coefficient for each basis vector.
     nx, ny, nz: int.
         number of points along each direction.
 
@@ -407,23 +408,26 @@ def make_grid(**kwargs):
     origin = kwargs.pop("origin", np.zeros(3))
 
     # Define options for the grid
-    xm = kwargs.pop("xm", 5)
-    ym = kwargs.pop("ym", 5)
-    zm = kwargs.pop("zm", 5)
-    nx = kwargs.pop("nx", 2 * xm + 1)
-    ny = kwargs.pop("ny", 2 * ym + 1)
-    nz = kwargs.pop("nz", 2 * zm + 1)
+    xu = kwargs.pop("xu", 5)
+    yu = kwargs.pop("yu", 5)
+    zu = kwargs.pop("zu", 5)
+    xl = kwargs.pop("xl", -xu)
+    yl = kwargs.pop("yl", -yu)
+    zl = kwargs.pop("zl", -zu)
+    nx = kwargs.pop("nx", np.abs(xl) + np.abs(xu) + 1)
+    ny = kwargs.pop("ny", np.abs(yl) + np.abs(yu) + 1)
+    nz = kwargs.pop("nz", np.abs(zl) + np.abs(zu) + 1)
 
     # Define spacings along each basis vector
-    i = np.linspace(-xm, xm, nx)
-    j = np.linspace(-ym, ym, ny)
-    k = np.linspace(-zm, zm, nz)
+    i = np.linspace(xl, xu, nx)
+    j = np.linspace(yl, yu, ny)
+    k = np.linspace(zl, zu, nz)
 
     # We should do
     # for p in i:
     #     for q in j:
     #         for r in k:
-    #             gridpoint = p * e1 + q * e2 + r * e3
+    #             gridpoint = origin + p * e1 + q * e2 + r * e3
     #
     # where e1, e2, e3 are basis vectors stored as columns of ref
 
@@ -431,14 +435,11 @@ def make_grid(**kwargs):
     # Make grid of displacements along each basis vector
     g = np.meshgrid(i, j, k)
 
-    # Convert to a more natural format
+    # Convert to a more natural format, one column for each basis vector
     grid = np.vstack(list(map(np.ravel, g))).T
 
-    # Multiply each displacement for the corresponding basis vector
-    grid = np.dot(grid, ref.T)
-
-    # Translate in its origin
-    grid += origin
+    # Transform each grid point to local basis and translate
+    grid = np.dot(ref, grid.T).T + origin
 
     return grid
 
@@ -461,7 +462,7 @@ def proj(pts, coeffs):
     '''
 
     # For each point p in pts we should do
-    # p = p - np.dot(p, u) * u
+    # prj = p - np.dot(p, u) * u
     # where u is the normal unit vector
 
     # Compute normal vector
@@ -485,6 +486,44 @@ def proj(pts, coeffs):
     prjs = pts - dotprodsmat * umat
 
     return prjs
+
+
+def make_plane_basis(plane):
+    '''
+    Function to define a local reference frame on a plane defined by its
+    normal vector.
+
+    Parameters
+    ----------
+    plane: np.array (N).
+        normal vector describing the plane.
+
+    Returns
+    -------
+    ref: np.array (N,N).
+        local basis.
+    '''
+
+    # Get missing coeff
+    u = plane / np.linalg.norm(plane)
+    p = np.zeros(3)
+    p[-1] = plane[-1]
+    d = np.dot(-p, u)
+
+    # Define two points on the plane
+    p1 = np.array([0, 0, d / u[2]])
+    p2 = np.array([0, d / u[1], 0])
+    e1 = p2 - p1
+    e1 = e1 / np.linalg.norm(e1)
+    e2 = np.cross(u, e1)
+
+    # Define the local reference frame basis and check its righthandedness
+    ref = np.c_[ e1, e2, u ]
+    det = np.linalg.det(ref)
+    if det < 0.0:
+        ref[:,0] = -ref[:,0]
+
+    return ref
 
 
 def acf(series):
@@ -597,6 +636,7 @@ def build_R_matrix(coord, pol, a=1.7278):
             s = a * ( (pol[i // 3] * pol[j // 3])**(1.0 / 6.0) )
 
             # Thole screening for linear charge distribution
+            # These damping factors avoid polarisation catastrophe
             if rij <= s:
                 v = rij / s
                 s3 = 4 * v**3 - 3 * v**4
