@@ -1,0 +1,187 @@
+#! /bin/tcsh
+#
+#    usage:   go.joyce [-f] [-h] [-e] name
+set dir = $JOYCE/Joyce.git/Source
+#
+if ($#argv == 0) then
+  echo ...................................................
+  echo  'JJJJJJJ   OOOOOOO   YY   YY   CCCCCCC   EEEEEEE'
+  echo  '   JJJJ   O     O    YY YY    CC        EE     '
+  echo  '   JJJJ   O     O     YYY     CC        EEEEEE '
+  echo  'J  JJJJ   O     O     YYY     CC        EE     '
+  echo  'JJJJJJJ   OOOOOOO     YYY     CCCCCCC   EEEEEEE'
+  echo ...................................................
+  echo ' a program to optimize internal FF from QM data'
+  echo ...................................................
+  echo 
+  echo '                version 3.1       '
+  echo '************************************'
+  echo '                    Beta       '
+  echo '************************************'
+  echo 
+  echo '                written by            '
+  echo 
+  echo 'I. Cacelli, N. De Mitri, J. Cerezo and G. Prampolini'
+  echo 
+  echo ...................................................
+  echo usage: go.joyce \[-f\] \[-h\] \[-e\] \[-v\] \[-lic\] name
+  echo ...................................................
+  echo 
+  echo usage: name   \(use joyce.name.inp as input file\)
+  echo 
+  echo ...................................................
+  echo usage: -e     \(edit input file and run\)
+  echo usage: -v     \(edit output file\)
+  echo ...................................................
+  echo 
+  echo        COMPILING OPTIONS
+  echo 
+  echo usage: -f     \(compile and link  - default compiler\)
+  echo usage: -ifort \(compile and link  - ifort \)
+  echo usage: -pgi   \(compile and link  - pgi \)
+  echo usage: -g77   \(compile and link  - g77 \)
+  echo usage: -g95   \(compile and link  - g95 \)
+  echo usage: -u     \(unistall and clear obj  \)
+  echo ...................................................
+  echo usage: -h     \(see joyce guide\)
+  echo usage: -lic   \(see joyce license\)
+  echo ...................................................
+  echo ......... input files in this dir .................
+  ls -lt joyce*inp
+  exit
+endif
+echo ...... joyce is running ......
+#
+#   parse data
+#
+set vedi = 0
+set edin = 0
+set run  = 0
+while ($#argv > 0)
+  switch ($1)
+  case -h:
+    okular $dir/../Manual/joyce.guide.pdf &
+  breaksw 
+  case -lic:
+    less $dir/../doc/license.gpl.txt
+  breaksw 
+  case -e:
+    set edin = 1
+#   vi $inp
+  breaksw 
+  case -f:
+    echo .... compiling fortran
+    set cdir = $cwd
+    cd $dir
+    make 
+    cd $cdir
+  breaksw 
+  case -gfortran:
+    echo .... compiling fortran
+    set cdir = $cwd
+    cd $dir
+    make -f makefile.joyce.gfortran
+    cd $cdir
+  breaksw 
+  case -ifort:
+    echo .... compiling fortran
+    set cdir = $cwd
+    cd $dir
+    make -f makefile.joyce.ifort
+    cd $cdir
+  breaksw 
+  case -pgi:
+    echo .... compiling fortran
+    set cdir = $cwd
+    cd $dir
+    make -f makefile.joyce.pgi
+    cd $cdir
+  breaksw 
+  case -g77:
+    echo .... compiling fortran
+    set cdir = $cwd
+    cd $dir
+    make -f makefile.g77.ifort
+    cd $cdir
+  breaksw 
+  case -g95:
+    echo .... compiling fortran
+    set cdir = $cwd
+    cd $dir
+    make -f makefile.95.ifort
+    cd $cdir
+  breaksw 
+  case -u:
+    echo .... clearing objects and excutable
+    set cdir = $cwd
+    cd $dir
+    rm *.o *.x
+    cd $cdir
+  breaksw 
+  case -v:
+    set vedi = 1
+  breaksw 
+  default:
+    set x = $1
+    set inp = joyce.$x.inp
+    set out = joyce.$x.out
+    setenv LABEL $1
+    set run = 1
+  endsw
+  shift
+end
+#
+if ($run == 0) goto fine
+#
+if !(-e $inp) then
+  echo WARNING: il file = $inp -- does not exist here
+  echo -n must I create it \? \(y/n\) --\> 
+  set x = ($<)
+  if ($x == y) then
+    cat <<END-OF-FILE > $inp
+-------- joyce --------
+     O1        fluoro-formaldeide
+     C2
+   F4  H3
+
+\$title HFC=O fluoro-formaldeide - test input
+\$equil g03.HFCO.fchk
+\$forcefield moscitpo formilf.system
+\$whess 1.00 1.00
+ geom
+  g03.HFCO.1.fchk   1.0  0.1  0.1
+  g03.HFCO.2.fchk   1.0  0.1  0.1
+\$end
+
+\$dependence
+6 = 5 * 2.60
+\$end
+
+\$assign
+4 = 0.024
+$end
+
+end-of-file
+END-OF-FILE
+echo
+echo ......... please modify your input file and rerun
+echo
+sleep 2
+vi $inp
+set edin = 0
+endif
+exit
+endif
+if ($edin == 1) vi $inp
+#
+#   RUN
+#
+$dir/joyce.x $LABEL < $inp >& $out
+#
+if ($vedi == 1 ) vi $out
+fine:
+echo ...... joyce ended  ......
+if !(-e provvi.48) exit
+rm provvi.48
+exit
+

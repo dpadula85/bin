@@ -6,7 +6,9 @@ import re
 import sys
 import numpy as np
 import argparse as arg
-from elements import ELEMENTS
+from rdkit.Chem import GetPeriodicTable
+
+pt = GetPeriodicTable()
 
 au2ang = 0.5291771
 
@@ -77,7 +79,7 @@ def extend_compact_list(idxs):
 
         if len(to_extend) > 1:
 
-            sel =  map(int, to_extend)
+            sel =  list(map(int, to_extend))
             extended += range(sel[0],sel[1]+1,1)
 
         else:
@@ -97,11 +99,11 @@ def read_sel(string):
         f.close()
         string =  ','.join(string).replace(',,',',')
         string = string.replace(',', ' ')
-        string = map(lambda x: x - 1, extend_compact_list(string))
+        string = list(map(lambda x: x - 1, extend_compact_list(string)))
 
     except IOError:
         string = string.replace(',', ' ')
-        string = map(lambda x: x - 1, extend_compact_list(string))
+        string = list(map(lambda x: x - 1, extend_compact_list(string)))
 
     return string
 
@@ -150,21 +152,21 @@ def parsefreqs_QChem(filename):
                     # Frequencies
                     #
                     if "Frequency" in line:
-                        tmpfreqs = map(float, line.split()[1:])
+                        tmpfreqs = list(map(float, line.split()[1:]))
                         freqs.extend(tmpfreqs)
 
                     #
                     # Force Constants
                     #
                     if "Force Cnst" in line:
-                        tmpcns = map(float, line.split()[2:])
+                        tmpcns = list(map(float, line.split()[2:]))
                         forcecns.extend(tmpcns)
 
                     #
                     # Reduced Masses
                     #
                     if "Red. Mass" in line:
-                        tmpredms = map(float, line.split()[2:])
+                        tmpredms = list(map(float, line.split()[2:]))
                         redmasses.extend(tmpredms)
 
                     #
@@ -175,7 +177,7 @@ def parsefreqs_QChem(filename):
                         disps = []
 
                         while "TransDip" not in line:
-                            data = map(float, line.split()[1:])
+                            data = list(map(float, line.split()[1:]))
                             N = len(data) // 3
 
                             if not disps:
@@ -196,8 +198,8 @@ def parsefreqs_QChem(filename):
                         break
 
 
-        Z_atoms = [ ELEMENTS[x[0]].number for x in structure ]
-        masses = np.array([ ELEMENTS[x[0]].mass for x in structure ])
+        Z_atoms = [ pt.GetAtomicNumber(x[0]) for x in structure ]
+        masses = np.array([ pt.GetAtomicWeight(x[0]) for x in structure ])
         atoms = [ x[0] for x in structure ]
         coords = np.array([ x[1:] for x in structure ])
         freqs = np.array(freqs)
@@ -228,7 +230,7 @@ def parsefreqs_G09(filename):
             # Atomic Masses
             #
             if "AtmWgt" in line and not struct_done:
-                data = map(float, line.split()[1:])
+                data = list(map(float, line.split()[1:]))
                 masses.extend(data)
 
             #
@@ -283,15 +285,15 @@ def parsefreqs_G09(filename):
             if "Frequencies ---" in line:
                 HPmodes = True
                 NAtoms = len(structure)
-                tmpfreqs = map(float, line.split()[2:])
+                tmpfreqs = list(map(float, line.split()[2:]))
                 freqs.extend(tmpfreqs)
 
             if "Reduced masses ---" in line:
-                tmpredms = map(float, line.split()[3:])
+                tmpredms = list(map(float, line.split()[3:]))
                 redmasses.extend(tmpredms)
 
             if "Force constants ---" in line:
-                tmpcns = map(float, line.split()[3:])
+                tmpcns = list(map(float, line.split()[3:]))
                 forcecns.extend(tmpcns)
 
             if "Coord Atom Element" in line:
@@ -301,7 +303,7 @@ def parsefreqs_G09(filename):
                     line = skiplines(f)
                     data = line.split()
                     atomindex = int(data[1]) - 1
-                    numbers = map(float, data[3:])
+                    numbers = list(map(float, data[3:]))
                     numbermodes = len(numbers)
 
                     if not disps:
@@ -320,15 +322,15 @@ def parsefreqs_G09(filename):
 
                 if "Frequencies --" in line:
                     NAtoms = len(structure)
-                    tmpfreqs = map(float, line.split()[2:])
+                    tmpfreqs = list(map(float, line.split()[2:]))
                     freqs.extend(tmpfreqs)
 
                 if "Red. masses --" in line:
-                    tmpredms = map(float, line.split()[3:])
+                    tmpredms = list(map(float, line.split()[3:]))
                     redmasses.extend(tmpredms)
 
                 if "Frc consts --" in line:
-                    tmpcns = map(float, line.split()[3:])
+                    tmpcns = list(map(float, line.split()[3:]))
                     forcecns.extend(tmpcns)
 
                 if "X      Y      Z" in line:
@@ -337,7 +339,7 @@ def parsefreqs_G09(filename):
 
                     i = 1
                     while i <= NAtoms:
-                        data = map(float, line.split()[2:])
+                        data = list(map(float, line.split()[2:]))
                         N = len(data) // 3
 
                         if not disps:
@@ -353,11 +355,11 @@ def parsefreqs_G09(filename):
                     modes.extend(disps)
 
         if not masses:
-            masses = [ ELEMENTS[x[0]].mass for x in structure ]
+            masses = [ pt.GetAtomicWeight(x[0]) for x in structure ]
 
         Z_atoms = [ int(x[0]) for x in structure ]
         masses = np.array(masses)
-        atoms = [ ELEMENTS[x[0]].symbol for x in structure ]
+        atoms = [ pt.GetElementSymbol(x[0]) for x in structure ]
         coords = np.array([ x[1:] for x in structures[-1] ])
         freqs = np.array(freqs)
         forcecns = np.array(forcecns)
@@ -453,17 +455,17 @@ def save_visdisps(coords, disps, sel=None, filename="structure"):
 
         for N, coord in enumerate(coords[sel]):
 
-            disp = disps[N] * Opts['Scale']
-            if np.linalg.norm(disp) > 0.15 * Opts['Scale']:
-                cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
-                data = [coord[0], coord[1], coord[2], disp[0], disp[1], disp[2]]
-                f.write(cmd % tuple(data))
+            # disp = disps[N] * Opts['Scale']
+            # if np.linalg.norm(disp) > 0.15 * Opts['Scale']:
+            #     cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
+            #     data = [coord[N,0], coord[N,1], coord[N,2], disp[0], disp[1], disp[2]]
+            #     f.write(cmd % tuple(data))
 
-            # scale = Opts['Scale'] / np.linalg.norm(disps[N])
-            # disp = disps[N] * scale
-            # cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
-            # data = [coord[0], coord[1], coord[2], disp[0], disp[1], disp[2]]
-            # f.write(cmd % tuple(data))
+            scale = Opts['Scale'] / np.linalg.norm(disps[N])
+            disp = disps[N] * scale
+            cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
+            data = [coord[N,0], coord[N,1], coord[N,2], disp[0], disp[1], disp[2]]
+            f.write(cmd % tuple(data))
 
     return
 
