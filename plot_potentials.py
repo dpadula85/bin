@@ -6,10 +6,21 @@ import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
 from matplotlib import rc
+import matplotlib
+
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
 #rc('font',**{'family':'serif','serif':['Palatino']})
 rc('text', usetex=True)
+
+# matplotlib.use('pgf')
+# matplotlib.rcParams['pgf.texsystem'] = 'pdflatex'
+# matplotlib.rcParams['text.usetex'] = True
+# matplotlib.rcParams['text.latex.preamble'] = [ r'\usepackage{siunitx}',
+#                                                r'\sisetup{detect-all}',
+#                                                r'\usepackage{helvet}',
+#                                                r'\usepackage{sansmath}',
+#                                                r'\sansmath' ]
 
 
 def options():
@@ -29,7 +40,10 @@ def options():
     inp.add_argument('--mm', type=str, dest='MMFile',
                      help='''MM Data.''')
 
-    inp.add_argument('-l', '--label', type=int, default=1, dest='Label',
+    inp.add_argument('-m', '--min', type=int, default=180, dest='Min',
+                     help='''Centre of the plot.''')
+
+    inp.add_argument('-l', '--label', type=str, default="phi_1", dest='Label',
                      help='''Label of the plot.''')
 
     inp.add_argument('-c', '--color', type=str, default="b", dest='Color',
@@ -43,6 +57,9 @@ def options():
     #
     out = parser.add_argument_group("Output Options")
 
+    out.add_argument('-p', '--pre', default=None, type=str, dest='OutPre',
+                     help='''Output File Prefix.''')
+
     out.add_argument('-o', '--output', default=None, type=str, dest='Out',
                      help='''Output File Format.''')
 
@@ -52,9 +69,19 @@ def options():
     return Opts
 
 
-def plot(qmdata, mmdata, color="b", label=1, rescale=False):
+def myround(x, base=30):
+    return base * round(x/base)
 
-    fig = plt.figure(figsize=(8, 6))
+
+def plot(qmdata, mmdata, **kwargs):
+
+    color = kwargs.pop("Color", "b")
+    label = kwargs.pop("Label", "phi_1")
+    rescale = kwargs.pop("Rescale", False)
+    x_min = kwargs.pop("Min", 180)
+    x_min = myround(x_min)
+
+    fig = plt.figure(figsize=(12, 9))
     gs = gridspec.GridSpec(1, 1)
 
     # Sort and transform
@@ -62,6 +89,12 @@ def plot(qmdata, mmdata, color="b", label=1, rescale=False):
     mmdata = mmdata[mmdata[:,0].argsort()]
     mask = qmdata[:,0] < 0
     qmdata[:,0][mask] = 360 + qmdata[:,0][mask]
+    mask = mmdata[:,0] < 0
+    mmdata[:,0][mask] = 360 + mmdata[:,0][mask]
+    qmdata = qmdata[qmdata[:,0].argsort()]
+    mmdata = mmdata[mmdata[:,0].argsort()]
+    # qmdata[:,0] = np.unwrap(qmdata[:,0] * np.pi / 180) * 180 / np.pi - 360
+    # mmdata[:,0] = np.unwrap(mmdata[:,0] * np.pi / 180) * 180 / np.pi - 360
 
     # Vertical shift
     if rescale:
@@ -71,11 +104,11 @@ def plot(qmdata, mmdata, color="b", label=1, rescale=False):
     # Plot
     ax = plt.subplot(gs[0])
 
-    ax.scatter(qmdata[:,0], qmdata[:,1], color=color)
-    ax.plot(mmdata[:,0], mmdata[:,1], color=color, lw=1, ls="--")
+    ax.scatter(qmdata[:,0], qmdata[:,1], color=color, s=80)
+    ax.plot(mmdata[:,0], mmdata[:,1], color=color, lw=2, ls="--")
 
-    ax.set_xlabel(r"$\delta_{%d}$ / deg" % label, size=18, labelpad=5)
-    ax.set_ylabel(r"$\Delta E$ / KJ mol$^{-1}$", size=18, labelpad=5)
+    ax.set_xlabel(r"$\%s_{%s}$ / deg" % tuple(label.split("_")), size=30, labelpad=5)
+    ax.set_ylabel(r"$\Delta E$ / KJ mol$^{-1}$", size=30, labelpad=5)
 
     xtickmaj = ticker.MultipleLocator(30)
     xtickmin = ticker.AutoMinorLocator(5)
@@ -87,9 +120,10 @@ def plot(qmdata, mmdata, color="b", label=1, rescale=False):
     ax.yaxis.set_minor_locator(ytickmin)
     ax.xaxis.set_ticks_position('both')
     ax.yaxis.set_ticks_position('both')
-    ax.tick_params(axis='both', which='major', direction='in', labelsize=16, pad=10, length=5)
-    ax.tick_params(axis='both', which='minor', direction='in', labelsize=16, pad=10, length=2)
+    ax.tick_params(axis='both', which='major', direction='in', labelsize=28, pad=10, length=5)
+    ax.tick_params(axis='both', which='minor', direction='in', labelsize=28, pad=10, length=2)
     ax.set_xlim(qmdata[:,0].min(), qmdata[:,0].max())
+    ax.set_xlim(x_min - 90, x_min + 90)
 
     return
 
@@ -99,12 +133,20 @@ if __name__ == '__main__':
     Opts = options()
     qmdata = np.loadtxt(Opts["QMFile"])[:,:2]
     mmdata = np.loadtxt(Opts["MMFile"])[:,:2]
-    plot(qmdata, mmdata,
-         color=Opts["Color"],
-         label=Opts["Label"],
-         rescale=Opts["Rescale"])
+    plot(qmdata, mmdata, **Opts)
 
     if Opts["Out"]:
-        plt.savefig("delta_%d.%s" % (Opts["Label"], Opts["Out"]), dpi=600)
+
+        if Opts["OutPre"]:
+            name = "%s_%s_%s.%s" % (Opts["OutPre"],
+                                    Opts["Label"].split("_")[0],
+                                    Opts["Label"].split("_")[1],
+                                    Opts["Out"])
+        else:
+            name = "%s_%s.%s" % (Opts["Label"].split("_")[0],
+                                 Opts["Label"].split("_")[1],
+                                 Opts["Out"])
+
+        plt.savefig(name, dpi=600)
     else:
         plt.show()

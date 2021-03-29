@@ -34,6 +34,9 @@ def options():
     #
     out = parser.add_argument_group("Output Options")
 
+    out.add_argument('-p', '--pre', default=None, type=str, dest='OutPre',
+                     help='''Output File Prefix.''')
+
     out.add_argument('-o', '--output', default=None, type=str, dest='Out',
                      help='''Output File Format.''')
 
@@ -54,7 +57,7 @@ def plot_modes(modes, color="b"):
     y = x
 
     ax.plot(x, y, color="k", ls="--")
-    ax.scatter(modes[:,0], modes[:,1], color=color)
+    ax.scatter(np.sort(modes[:,0]), np.sort(modes[:,1]), color=color)
 
     ax.set_xlabel(r"$\nu^{QM}$ / cm$^{-1}$", size=18, labelpad=5)
     ax.set_ylabel(r"$\nu^{MM}$ / cm$^{-1}$", size=18, labelpad=5)
@@ -122,13 +125,21 @@ if __name__ == '__main__':
     plot_modes(modes, color=Opts["Color"])
 
     if Opts["Out"]:
-        plt.savefig("modes.%s" % Opts["Out"], dpi=600)
+        if Opts["OutPre"]:
+            name = "%s_modes.%s" % (Opts["OutPre"], Opts["Out"])
+        else:
+            name = "modes.%s" % Opts["Out"]
+        plt.savefig(name, dpi=600)
     else:
         plt.show()
 
     plot_overlap(ovlp, color=Opts["Color"])
 
     if Opts["Out"]:
-        plt.savefig("overlap.%s" % Opts["Out"], dpi=600)
+        if Opts["OutPre"]:
+            name = "%s_ovlp.%s" % (Opts["OutPre"], Opts["Out"])
+        else:
+            name = "ovlp.%s" % Opts["Out"]
+        plt.savefig(name, dpi=600)
     else:
         plt.show()
