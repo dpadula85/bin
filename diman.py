@@ -136,12 +136,17 @@ def analyse_dimer(donor, accpt):
     rs2 = np.abs(np.dot(r, apa[:,2]))
     rs = np.min([ rs1, rs2 ])
 
-    # Displacement, r projection on long molecular axis.
-    rd1 = np.abs(np.dot(r, dpa[:,0]))
-    rd2 = np.abs(np.dot(r, apa[:,0]))
-    rd = np.min([ rd1, rd2 ])
+    # Longitudinal displacement, r projection on long molecular axis.
+    ld1 = np.abs(np.dot(r, dpa[:,0]))
+    ld2 = np.abs(np.dot(r, apa[:,0]))
+    ld = np.min([ ld1, ld2 ])
 
-    return rnorm, rs, rd, alpha, beta, gamma
+    # Side displacement, r projection on short molecular axis.
+    sd1 = np.abs(np.dot(r, dpa[:,0]))
+    sd2 = np.abs(np.dot(r, apa[:,0]))
+    sd = np.min([ sd1, sd2 ])
+
+    return rnorm, rs, rd, sd, alpha, beta, gamma
 
 
 def main():
@@ -158,7 +163,7 @@ def main():
         donor = u.select_atoms(Opts["DSel"])
         accpt = u.select_atoms(Opts["ASel"])
         r, rs, rd, alpha, beta, gamma = analyse_dimer(donor, accpt)
-        snapdata = np.array([ t, r, rs, rd, alpha, beta, gamma ])
+        snapdata = np.array([ t, r, rs, rd, sd, alpha, beta, gamma ])
         data.append(snapdata)
 
     data = np.array(data)
@@ -166,10 +171,11 @@ def main():
         "Time / ns": data[:,0] / 1000.0,
         "r / A" : data[:,1],
         "rs / A" : data[:,2],
-        "rd / A" : data[:,3],
-        "alpha / deg" : data[:,4],
-        "beta / deg" : data[:,5],
-        "gamma / deg" : data[:,6],
+        "ld / A" : data[:,3],
+        "sd / A" : data[:,4],
+        "alpha / deg" : data[:,5],
+        "beta / deg" : data[:,6],
+        "gamma / deg" : data[:,7],
         })
 
     df.to_csv("%s.csv" % Opts["OutPre"], quoting=csv.QUOTE_NONNUMERIC, index=False)
