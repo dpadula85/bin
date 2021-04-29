@@ -151,9 +151,8 @@ def analyse_dimer(donor, accpt):
     return rnorm, rs, ld, sd, alpha, beta, gamma
 
 
-def main():
+def main(**Opts):
 
-    Opts = options()
     if Opts["TrjFile"]:
         u = mda.Universe(Opts["TopFile"], Opts["TrjFile"])
     else:
@@ -186,4 +185,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    Opts = options()
+    main(**Opts)
