@@ -16,14 +16,14 @@ if __name__ == '__main__':
 
   BoxVol  = BoxDim[0]*BoxDim[1]*BoxDim[2]
 
-  print " > Ionic strenght (mol/L) : %10.4f" % IonStr
-  print " > Box Dimension (Ang)    : %10.4f %10.4f %10.4f" % tuple(BoxDim)
-  print " > Box Voulume (Ang)^3    : %10.4f"  % BoxVol
+  print(" > Ionic strenght (mol/L) : %10.4f" % IonStr)
+  print(" > Box Dimension (Ang)    : %10.4f %10.4f %10.4f" % tuple(BoxDim))
+  print(" > Box Voulume (Ang)^3    : %10.4f"  % BoxVol)
 
   NMolxL = IonStr*NA     # Particles per liter
   BoxVol = BoxVol*1E-27  # Box Volume in dm^3
   NMolxBox = NMolxL*BoxVol
 
-  print " > Numer of particles     : %d"  % round(NMolxBox)
+  print(" > Numer of particles     : %d"  % round(NMolxBox))
 
 

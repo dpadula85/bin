@@ -4,7 +4,7 @@ import sys
 import time
 import numpy as np
 import argparse as arg
-from elements import ELEMENTS
+from rdkit.Chem import GetPeriodicTable
 from functools import partial
 import multiprocessing as mp
 
@@ -167,9 +167,10 @@ def banner(text=None, ch='=', length=78):
 if __name__ == '__main__':
 
     args = options()
+    pt = GetPeriodicTable()
     struct = np.loadtxt(args.filename, skiprows=2)
     Z_atoms = map(int, struct[:,0].tolist())
-    VdWs = [ ELEMENTS[x].vdwrad for x in Z_atoms ]
+    VdWs = [ pt.GetRvdw(x) for x in Z_atoms ]
     coords = struct[:,1:]
 
     vol = calc_vol(coords, VdWs, npts=args.npts)
@@ -180,4 +181,3 @@ if __name__ == '__main__':
     print
     print("Points used for sampling: %8.2e" % args.npts)
     print(banner(ch="=", length=50))
-
