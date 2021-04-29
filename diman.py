@@ -89,8 +89,10 @@ def analyse_dimer(donor, accpt):
         Distance between the centres of mass of the two groups (in Angstroem).
     rs: float.
         Pi-Stacking distance between the two groups (in Angstroem).
-    rd: float.
-        Parallel distance between the two groups (in Angstroem).
+    ld: float.
+        Longitudinal displacement between the two groups (in Angstroem).
+    sd: float.
+        Side displacement between the two groups (in Angstroem).
     alpha: float.
         Yaw angle (between long molecular axes, in degrees).
     beta: float.
@@ -146,7 +148,7 @@ def analyse_dimer(donor, accpt):
     sd2 = np.abs(np.dot(r, apa[:,0]))
     sd = np.min([ sd1, sd2 ])
 
-    return rnorm, rs, rd, sd, alpha, beta, gamma
+    return rnorm, rs, ld, sd, alpha, beta, gamma
 
 
 def main():
@@ -162,8 +164,8 @@ def main():
         t = ts.time
         donor = u.select_atoms(Opts["DSel"])
         accpt = u.select_atoms(Opts["ASel"])
-        r, rs, rd, alpha, beta, gamma = analyse_dimer(donor, accpt)
-        snapdata = np.array([ t, r, rs, rd, sd, alpha, beta, gamma ])
+        r, rs, ld, sd, alpha, beta, gamma = analyse_dimer(donor, accpt)
+        snapdata = np.array([ t, r, rs, ld, sd, alpha, beta, gamma ])
         data.append(snapdata)
 
     data = np.array(data)
