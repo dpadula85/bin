@@ -44,31 +44,41 @@ def options():
     return Opts
 
 
-def v1v2_angle(v1, v2):
+def euler_angles_from_matrix(R):
     '''
-    Function to compute the angle between two vectors.
+    See http://www.close-range.com/docs/Computing_Euler_angles_from_a_rotation_matrix.pdf
 
     Parameters
     ----------
-    v1: np.array (N).
-        First vector.
-    v2: np.array (N).
-        Second vector.
+    R: np.array (3,3).
+        Rotation matrix.
 
     Returns
     -------
+    psi: float.
+        Roll angle (in degrees).
     theta: float.
-        Angle between the vector (in degrees).
+        Pitch angle (in degrees).
+    phi: float.
+        Yaw angle (in degrees).
     '''
 
-    try:
-        theta = np.degrees(np.arccos(
-                    np.dot(v1, v2) / ( np.linalg.norm(v1) * np.linalg.norm(v2) )
-                ))
-    except:
-        theta = 0.0
+    phi = 0.0
+    if np.isclose(R[2,0], -1.0):
+        theta = np.pi / 2.0
+        psi = np.arctan2(R[0,1], R[0,2])
 
-    return theta
+    elif np.isclose(R[2,0], 1.0):
+        theta = -np.pi / 2.0
+        psi = np.arctan2(-R[0,1], -R[0,2])
+
+    else:
+        theta = -np.arcsin(R[2,0])
+        cos_theta = np.cos(theta)
+        psi = np.arctan2(R[2,1] / cos_theta, R[2,2] / cos_theta)
+        phi = np.arctan2(R[1,0]/cos_theta, R[0,0] / cos_theta)
+
+    return np.degrees(psi), np.degrees(theta), np.degrees(phi)
 
 
 def analyse_dimer(donor, accpt):
@@ -93,62 +103,58 @@ def analyse_dimer(donor, accpt):
         Longitudinal displacement between the two groups (in Angstroem).
     sd: float.
         Side displacement between the two groups (in Angstroem).
-    alpha: float.
-        Yaw angle (between long molecular axes, in degrees).
-    beta: float.
-        Roll angle (between short molecular axes, in degrees).
-    gamma: float.
-        Pitch angle (between vectors orthogonal to the molecular plane, in
-        degrees).
+    psi: float.
+        Roll angle (in degrees).
+    theta: float.
+        Pitch angle (in degrees).
+    phi: float.
+        Yaw angle (in degrees).
     '''
 
     # Donor quantities
     # Invert order of principal axes so to have the long molecular axis first,
-    # short second and the orthogonal one last
+    # short second and the orthogonal one last, and check righthandedness.
     dcom = donor.center_of_mass()
     dpa = donor.principal_axes()[::-1].T
+    if np.linalg.det(dpa) < 0:
+        dpa[:,-1] = -dpa[:,-1]
 
     # Acceptor quantities
     # Invert order of principal axes so to have the long molecular axis first,
-    # short second and the orthogonal one last
+    # short second and the orthogonal one last, and check righthandedness.
     acom = accpt.center_of_mass()
     apa = accpt.principal_axes()[::-1].T
+    if np.linalg.det(apa) < 0:
+        apa[:,-1] = -apa[:,-1]
+
+    # Define rotation matrix between the two sets of principal axes.
+    # M transforms from the dpa frame to the apa frame.
+    M = np.dot(apa, np.linalg.inv(dpa))
+
+    # Get roll, pitch, yaw angles associated to the transformation matrix
+    psi, theta, phi = euler_angles_from_matrix(M)
+
+    # Transform between -90 and 90
+    psi = np.degrees(( np.radians(psi) + np.pi / 2 ) % np.pi - np.pi / 2)
+    theta = np.degrees(( np.radians(theta) + np.pi / 2 ) % np.pi - np.pi / 2)
+    phi = np.degrees(( np.radians(phi) + np.pi / 2 ) % np.pi - np.pi / 2)
 
     # Distance between coms
     r = acom - dcom
     rnorm = np.linalg.norm(r)
 
-    # Yaw angle, angle between long axes (helicity)
-    # reported between -90 and 90
-    alpha = v1v2_angle(dpa[:,0], apa[:,0])
-    alpha = np.degrees(( np.radians(alpha) + np.pi / 2 ) % np.pi - np.pi / 2)
+    # Project distance components onto the donor principal axes
+    rdd, rsd, rpid = np.abs(np.dot(dpa, r))
 
-    # Roll angle, angle between short axes
-    # reported between -90 and 90
-    beta = v1v2_angle(dpa[:,1], apa[:,1])
-    beta = np.degrees(( np.radians(beta) + np.pi / 2 ) % np.pi - np.pi / 2)
+    # Project distance components onto the accpt principal axes
+    rda, rsa, rpia = np.abs(np.dot(apa, r))
 
-    # Pitch angle, angle between axes orthogonal to molecular plane
-    # reported between -90 and 90
-    gamma = v1v2_angle(dpa[:,2], apa[:,2])
-    gamma = np.degrees(( np.radians(gamma) + np.pi / 2 ) % np.pi - np.pi / 2)
+    # Get the best of each pair
+    rd = np.min([ rdd, rda ])
+    rs = np.min([ rsd, rsa ])
+    rpi = np.min([ rpid, rpia ])
 
-    # Stacking distance, r projection on axis orthogonal to molecular plane
-    rs1 = np.abs(np.dot(r, dpa[:,2]))
-    rs2 = np.abs(np.dot(r, apa[:,2]))
-    rs = np.min([ rs1, rs2 ])
-
-    # Longitudinal displacement, r projection on long molecular axis.
-    ld1 = np.abs(np.dot(r, dpa[:,0]))
-    ld2 = np.abs(np.dot(r, apa[:,0]))
-    ld = np.min([ ld1, ld2 ])
-
-    # Side displacement, r projection on short molecular axis.
-    sd1 = np.abs(np.dot(r, dpa[:,0]))
-    sd2 = np.abs(np.dot(r, apa[:,0]))
-    sd = np.min([ sd1, sd2 ])
-
-    return rnorm, rs, ld, sd, alpha, beta, gamma
+    return rnorm, rd, rs, rpi, psi, theta, phi
 
 
 def main(**Opts):
@@ -163,20 +169,20 @@ def main(**Opts):
         t = ts.time
         donor = u.select_atoms(Opts["DSel"])
         accpt = u.select_atoms(Opts["ASel"])
-        r, rs, ld, sd, alpha, beta, gamma = analyse_dimer(donor, accpt)
-        snapdata = np.array([ t, r, rs, ld, sd, alpha, beta, gamma ])
+        r, rd, rs, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
+        snapdata = np.array([ t, r, rd, rs, rpi, roll, pitch, yaw ])
         data.append(snapdata)
 
     data = np.array(data)
     df = pd.DataFrame({
         "Time / ns": data[:,0] / 1000.0,
         "r / A" : data[:,1],
-        "rs / A" : data[:,2],
-        "ld / A" : data[:,3],
-        "sd / A" : data[:,4],
-        "alpha / deg" : data[:,5],
-        "beta / deg" : data[:,6],
-        "gamma / deg" : data[:,7],
+        "rd / A" : data[:,2],
+        "rs / A" : data[:,3],
+        "rpi / A" : data[:,4],
+        "roll / deg" : data[:,5],
+        "pitch / deg" : data[:,6],
+        "yaw / deg" : data[:,7],
         })
 
     df.to_csv("%s.csv" % Opts["OutPre"], quoting=csv.QUOTE_NONNUMERIC, index=False)
