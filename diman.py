@@ -143,16 +143,9 @@ def analyse_dimer(donor, accpt):
     r = acom - dcom
     rnorm = np.linalg.norm(r)
 
-    # Project distance components onto the donor principal axes
-    rdd, rsd, rpid = np.abs(np.dot(dpa, r))
-
     # Project distance components onto the accpt principal axes
-    rda, rsa, rpia = np.abs(np.dot(apa, r))
-
-    # Get the best of each pair
-    rd = np.min([ rdd, rda ])
-    rs = np.min([ rsd, rsa ])
-    rpi = np.min([ rpid, rpia ])
+    # by convention
+    rd, rs, rpi = np.abs(np.dot(apa, r))
 
     return rnorm, rd, rs, rpi, psi, theta, phi
 
