@@ -97,12 +97,12 @@ def analyse_dimer(donor, accpt):
     -------
     rnorm: float.
         Distance between the centres of mass of the two groups (in Angstroem).
-    rs: float.
-        Pi-Stacking distance between the two groups (in Angstroem).
-    ld: float.
+    rd: float.
         Longitudinal displacement between the two groups (in Angstroem).
-    sd: float.
+    rs: float.
         Side displacement between the two groups (in Angstroem).
+    rpi: float.
+        Pi-Stacking distance between the two groups (in Angstroem).
     psi: float.
         Roll angle (in degrees).
     theta: float.
