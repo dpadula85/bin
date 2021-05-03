@@ -115,8 +115,8 @@ def find_all_rings(sel):
 
     Returns
     -------
-    rings: list of MDAnalysis AtomGroups.
-        list of rings in the input selection.
+    rings: list of lists.
+        list of indices of rings in the input selection.
     '''
 
     # Handle atoms as Graph
@@ -137,10 +137,7 @@ def find_all_rings(sel):
         nx.function.add_cycle(g, cycle)
 
     # Find connected parts of the graph (manages fused rings)
-    rings_idxs = [ list(i) for i in nx.connected_components(g) ]
-
-    rings = [ sel.select_atoms("index %s" % ' '.join(map(str, i)))
-              for i in rings_idxs if len(i) > 4 ]
+    rings = [ list(i) for i in nx.connected_components(g) ]
 
     return rings
 
@@ -175,14 +172,7 @@ def analyse_dimer(donor, accpt):
         Yaw angle (in degrees).
     '''
 
-    # Donor quantities
-    donor.guess_bonds()
-    drings = find_all_rings(donor)
-    didxs = flatten([ x.indices.tolist() for x in drings ])
-    didxs = "index %s" % ' '.join(map(str, didxs))
-    donor = donor.select_atoms(didxs)
-
-    # COM
+    # donor COM
     dcom = donor.center_of_mass()
 
     # Invert order of principal axes so to have the long molecular axis first,
@@ -191,14 +181,7 @@ def analyse_dimer(donor, accpt):
     if np.linalg.det(dpa) < 0:
         dpa[:,-1] = -dpa[:,-1]
 
-    # Acceptor quantities
-    accpt.guess_bonds()
-    arings = find_all_rings(accpt)
-    aidxs = flatten([ x.indices.tolist() for x in arings ])
-    aidxs = "index %s" % ' '.join(map(str, aidxs))
-    accpt = accpt.select_atoms(aidxs)
-
-    # COM
+    # acceptor COM
     acom = accpt.center_of_mass()
 
     # Invert order of principal axes so to have the long molecular axis first,
@@ -238,13 +221,25 @@ def main(**Opts):
     else:
         u = mda.Universe(Opts["TopFile"])
 
+    # Select only atoms belonging to the donor's pi system
+    donor = u.select_atoms(Opts["DSel"])
+    donor.guess_bonds()
+    drings = find_all_rings(donor)
+    didxs = flatten(drings)
+    didxs = "index %s" % ' '.join(map(str, didxs))
+    donor = donor.select_atoms(didxs)
+
+    # Select only atoms belonging to the acceptor's pi system
+    accpt = u.select_atoms(Opts["ASel"])
+    accpt.guess_bonds()
+    arings = find_all_rings(accpt)
+    aidxs = flatten(arings)
+    aidxs = "index %s" % ' '.join(map(str, aidxs))
+    accpt = accpt.select_atoms(aidxs)
+
     data = []
     for ts in u.trajectory:
         t = ts.time
-        donor = u.select_atoms(Opts["DSel"])
-        # donor.guess_bonds()
-        accpt = u.select_atoms(Opts["ASel"])
-        # accpt.guess_bonds()
         r, rd, rs, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
         snapdata = np.array([ t, r, rd, rs, rpi, roll, pitch, yaw ])
         data.append(snapdata)
