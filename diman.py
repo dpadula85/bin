@@ -7,7 +7,6 @@ import pandas as pd
 import networkx as nx
 import argparse as arg
 import MDAnalysis as mda
-from scipy.spatial.distance import cdist
 
 
 def options():
@@ -45,6 +44,27 @@ def options():
     Opts = vars(args)
 
     return Opts
+
+
+def flatten(lst):
+    '''
+    Recursive function to flatten a nested list.
+
+    Parameters
+    ----------
+    lst: list.
+        Nested list to be flattened.
+
+    Returns
+    -------
+    flattened: list.
+        Flattened list.
+    '''
+
+    flattened = sum( ([x] if not isinstance(x, list)
+                     else flatten(x) for x in lst), [] )
+
+    return flattened
 
 
 def euler_angles_from_matrix(R):
@@ -160,6 +180,12 @@ def analyse_dimer(donor, accpt):
     '''
 
     # Donor quantities
+    donor.guess_bonds()
+    drings = find_all_rings(donor)
+    didxs = flatten([ x.indices.tolist() for x in drings ])
+    didxs = "index %s" % ' '.join(map(str, didxs))
+    donor = donor.select_atoms(didxs)
+
     # COM
     dcom = donor.center_of_mass()
 
@@ -170,6 +196,12 @@ def analyse_dimer(donor, accpt):
         dpa[:,-1] = -dpa[:,-1]
 
     # Acceptor quantities
+    accpt.guess_bonds()
+    arings = find_all_rings(accpt)
+    aidxs = flatten([ x.indices.tolist() for x in arings ])
+    aidxs = "index %s" % ' '.join(map(str, aidxs))
+    accpt = accpt.select_atoms(aidxs)
+
     # COM
     acom = accpt.center_of_mass()
 
@@ -196,7 +228,8 @@ def analyse_dimer(donor, accpt):
     rnorm = np.linalg.norm(r)
 
     # Project distance components onto the accpt principal axes
-    # by convention
+    # by convention, because acceptors are smaller, thus they
+    # are better described by a plane
     rd, rs, rpi = np.abs(np.dot(apa, r))
 
     return rnorm, rd, rs, rpi, psi, theta, phi
