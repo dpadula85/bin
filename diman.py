@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
 import csv
+import itertools
 import numpy as np
 import pandas as pd
+import networkx as nx
 import argparse as arg
 import MDAnalysis as mda
+from scipy.spatial.distance import cdist
 
 
 def options():
@@ -81,6 +84,47 @@ def euler_angles_from_matrix(R):
     return np.degrees(psi), np.degrees(theta), np.degrees(phi)
 
 
+def find_all_rings(sel):
+    '''
+    Function to find rings in a structure.
+
+    Parameters
+    ----------
+    sel: MDAnalysis AtomGroup.
+        Group selection to look for rings.
+
+    Returns
+    -------
+    rings: list of MDAnalysis AtomGroups.
+        list of rings in the input selection.
+    '''
+
+    # Handle atoms as Graph
+    g = nx.Graph()
+    g.add_edges_from(sel.bonds.to_indices())
+
+    # cycle_basis gives all rings
+    cycles = nx.cycle_basis(g)
+
+    # select rings only
+    ring_members = set(itertools.chain(*cycles))
+    idxs = "index %s" % ' '.join(map(str, ring_members))
+    ring_ag = sel.select_atoms(idxs)
+
+    # make a new graph, this time of all rings
+    g = nx.Graph()
+    for cycle in cycles:
+        nx.function.add_cycle(g, cycle)
+
+    # Find connected parts of the graph (manages fused rings)
+    rings_idxs = [ list(i) for i in nx.connected_components(g) ]
+
+    rings = [ sel.select_atoms("index %s" % ' '.join(map(str, i)))
+              for i in rings_idxs if len(i) > 4 ]
+
+    return rings
+
+
 def analyse_dimer(donor, accpt):
     '''
     Function to compute geometrical quantities for a D/A pair, based on the
@@ -109,20 +153,28 @@ def analyse_dimer(donor, accpt):
         Pitch angle (in degrees).
     phi: float.
         Yaw angle (in degrees).
+    didx: integer.
+        Index of the Pi-stacking ring of the donor.
+    aidx: integer.
+        Index of the Pi-stacking ring of the acceptor.
     '''
 
     # Donor quantities
+    # COM
+    dcom = donor.center_of_mass()
+
     # Invert order of principal axes so to have the long molecular axis first,
     # short second and the orthogonal one last, and check righthandedness.
-    dcom = donor.center_of_mass()
     dpa = donor.principal_axes()[::-1].T
     if np.linalg.det(dpa) < 0:
         dpa[:,-1] = -dpa[:,-1]
 
     # Acceptor quantities
+    # COM
+    acom = accpt.center_of_mass()
+
     # Invert order of principal axes so to have the long molecular axis first,
     # short second and the orthogonal one last, and check righthandedness.
-    acom = accpt.center_of_mass()
     apa = accpt.principal_axes()[::-1].T
     if np.linalg.det(apa) < 0:
         apa[:,-1] = -apa[:,-1]
@@ -161,7 +213,9 @@ def main(**Opts):
     for ts in u.trajectory:
         t = ts.time
         donor = u.select_atoms(Opts["DSel"])
+        # donor.guess_bonds()
         accpt = u.select_atoms(Opts["ASel"])
+        # accpt.guess_bonds()
         r, rd, rs, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
         snapdata = np.array([ t, r, rd, rs, rpi, roll, pitch, yaw ])
         data.append(snapdata)
