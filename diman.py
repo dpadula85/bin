@@ -173,10 +173,6 @@ def analyse_dimer(donor, accpt):
         Pitch angle (in degrees).
     phi: float.
         Yaw angle (in degrees).
-    didx: integer.
-        Index of the Pi-stacking ring of the donor.
-    aidx: integer.
-        Index of the Pi-stacking ring of the acceptor.
     '''
 
     # Donor quantities
