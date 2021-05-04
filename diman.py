@@ -68,6 +68,57 @@ def flatten(lst):
     return flattened
 
 
+def v1v2_angle(v1, v2):
+    '''
+    Function to compute the angle between two vectors.
+
+    Parameters
+    ----------
+    v1: np.array (N).
+        First vector.
+    v2: np.array (N).
+        Second vector.
+
+    Returns
+    -------
+    theta: float.
+        Angle between the vector (in degrees).
+    '''
+
+    try:
+        theta = np.degrees(np.arccos(
+                    np.dot(v1, v2) / ( np.linalg.norm(v1) * np.linalg.norm(v2) )
+                ))
+    except:
+        theta = 0.0
+
+    return theta
+
+
+def lstsq_fit(pts):
+    '''
+    Function to fit a set of points with least squares. The geometrical objects
+    involved depend on the number of dimensions (columns) of pts.
+
+    Parameters
+    ----------
+    pts: np.array (N,M).
+        coordinates.
+
+    Returns
+    -------
+    coeffs: np.array (M).
+        coefficients of the least squares fit.
+    '''
+
+    A = np.c_[ pts[:,:-1], np.ones(pts.shape[0]) ]
+    B = pts[:,-1]
+
+    coeffs, res, rank, singular_values = np.linalg.lstsq(A, B, rcond=None)
+
+    return coeffs
+
+
 def euler_angles_from_matrix(R):
     '''
     See http://www.close-range.com/docs/Computing_Euler_angles_from_a_rotation_matrix.pdf
@@ -157,12 +208,8 @@ def analyse_dimer(donor, accpt):
 
     Returns
     -------
-    rnorm: float.
+    rcoms: float.
         Distance between the centres of mass of the two groups (in Angstroem).
-    rd: float.
-        Longitudinal displacement between the pi stacked rings (in Angstroem).
-    rs: float.
-        Side displacement between the pi stacked rings (in Angstroem).
     rpi: float.
         Pi-stacking distance between the pi stacked rings (in Angstroem).
     psi: float.
@@ -197,38 +244,51 @@ def analyse_dimer(donor, accpt):
     M = np.dot(apa, np.linalg.inv(dpa))
 
     # Get roll, pitch, yaw angles associated to the transformation matrix
+    # Pitch will be recomputed once pi-stacking sites will be identified
     psi, theta, phi = euler_angles_from_matrix(M)
 
     # Transform between -90 and 90
     psi = np.degrees(( np.radians(psi) + np.pi / 2 ) % np.pi - np.pi / 2)
-    theta = np.degrees(( np.radians(theta) + np.pi / 2 ) % np.pi - np.pi / 2)
     phi = np.degrees(( np.radians(phi) + np.pi / 2 ) % np.pi - np.pi / 2)
 
     # Distance between coms
     r = acom - dcom
-    rnorm = np.linalg.norm(r)
+    rcoms = np.linalg.norm(r)
 
-    # Find all rings in donor and get they COMs
+    # Find all rings in donor and get their COMs
     drings = find_all_rings(donor)
-    sels = [ "index %s" % ' '.join(map(str, x)) for x in drings ]
-    drings_coms = [ donor.select_atoms(sel).center_of_mass() for sel in sels ]
+    dsels = [ "index %s" % ' '.join(map(str, x)) for x in drings ]
+    drings_coms = [ donor.select_atoms(sel).center_of_mass() for sel in dsels ]
     drings_coms = np.array(drings_coms)
 
-    # Find all rings in accpt and get they COMs
+    # Find all rings in accpt and get their COMs
     arings = find_all_rings(accpt)
-    sels = [ "index %s" % ' '.join(map(str, x)) for x in arings ]
-    arings_coms = [ accpt.select_atoms(sel).center_of_mass() for sel in sels ]
+    asels = [ "index %s" % ' '.join(map(str, x)) for x in arings ]
+    arings_coms = [ accpt.select_atoms(sel).center_of_mass() for sel in asels ]
     arings_coms = np.array(arings_coms)
 
     # Find two closest rings
     D = cdist(drings_coms, arings_coms)
     didx, aidx = np.unravel_index(D.argmin(), D.shape)
 
-    # Get pi stacking information
-    r = drings_coms[didx] - arings_coms[aidx]
-    rd, rs, rpi = np.abs(np.dot(apa, r))
+    # Get their coordinates
+    dring = donor.select_atoms(dsels[didx])
+    aring = accpt.select_atoms(asels[aidx])
 
-    return rnorm, rd, rs, rpi, psi, theta, phi
+    # Pi-stacking distance as minimum distance between atoms in the two rings
+    rpi = cdist(dring.atoms.positions, aring.atoms.positions).min()
+
+    # Fit a plane to each ring and get the unit vectors
+    ndring = lstsq_fit(dring.atoms.positions)
+    ndring /= np.linalg.norm(ndring)
+    naring = lstsq_fit(aring.atoms.positions)
+    naring /= np.linalg.norm(naring)
+
+    # Compute angle between unit vectors normal to the planes
+    theta = v1v2_angle(ndring, naring)
+    theta = np.degrees(( np.radians(theta) + np.pi / 2 ) % np.pi - np.pi / 2)
+
+    return rcoms, rpi, psi, theta, phi
 
 
 def main(**Opts):
@@ -243,20 +303,18 @@ def main(**Opts):
     data = []
     for ts in u.trajectory:
         t = ts.time
-        r, rd, rs, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
-        snapdata = np.array([ t, r, rd, rs, rpi, roll, pitch, yaw ])
+        r, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
+        snapdata = np.array([ t, r, rpi, roll, pitch, yaw ])
         data.append(snapdata)
 
     data = np.array(data)
     df = pd.DataFrame({
         "Time / ns": data[:,0] / 1000.0,
         "r / A" : data[:,1],
-        "rd / A" : data[:,2],
-        "rs / A" : data[:,3],
-        "rpi / A" : data[:,4],
-        "roll / deg" : data[:,5],
-        "pitch / deg" : data[:,6],
-        "yaw / deg" : data[:,7],
+        "rpi / A" : data[:,2],
+        "roll / deg" : data[:,3],
+        "pitch / deg" : data[:,4],
+        "yaw / deg" : data[:,5],
         })
 
     df.to_csv("%s.csv" % Opts["OutPre"], quoting=csv.QUOTE_NONNUMERIC, index=False)
