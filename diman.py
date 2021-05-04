@@ -7,6 +7,7 @@ import pandas as pd
 import networkx as nx
 import argparse as arg
 import MDAnalysis as mda
+from scipy.spatial.distance import cdist
 
 
 def options():
@@ -159,11 +160,11 @@ def analyse_dimer(donor, accpt):
     rnorm: float.
         Distance between the centres of mass of the two groups (in Angstroem).
     rd: float.
-        Longitudinal displacement between the two groups (in Angstroem).
+        Longitudinal displacement between the pi stacked rings (in Angstroem).
     rs: float.
-        Side displacement between the two groups (in Angstroem).
+        Side displacement between the pi stacked rings (in Angstroem).
     rpi: float.
-        Pi-Stacking distance between the two groups (in Angstroem).
+        Pi-stacking distance between the pi stacked rings (in Angstroem).
     psi: float.
         Roll angle (in degrees).
     theta: float.
@@ -172,20 +173,21 @@ def analyse_dimer(donor, accpt):
         Yaw angle (in degrees).
     '''
 
-    # donor COM
-    dcom = donor.center_of_mass()
+    donor.guess_bonds()
+    accpt.guess_bonds()
 
+    # donor COM and principal axes
     # Invert order of principal axes so to have the long molecular axis first,
     # short second and the orthogonal one last, and check righthandedness.
+    dcom = donor.center_of_mass()
     dpa = donor.principal_axes()[::-1].T
     if np.linalg.det(dpa) < 0:
         dpa[:,-1] = -dpa[:,-1]
 
-    # acceptor COM
-    acom = accpt.center_of_mass()
-
+    # accpt COM and principal axes
     # Invert order of principal axes so to have the long molecular axis first,
     # short second and the orthogonal one last, and check righthandedness.
+    acom = accpt.center_of_mass()
     apa = accpt.principal_axes()[::-1].T
     if np.linalg.det(apa) < 0:
         apa[:,-1] = -apa[:,-1]
@@ -206,9 +208,24 @@ def analyse_dimer(donor, accpt):
     r = acom - dcom
     rnorm = np.linalg.norm(r)
 
-    # Project distance components onto the accpt principal axes
-    # by convention, because acceptors are smaller, thus they
-    # are better described by a plane
+    # Find all rings in donor and get they COMs
+    drings = find_all_rings(donor)
+    sels = [ "index %s" % ' '.join(map(str, x)) for x in drings ]
+    drings_coms = [ donor.select_atoms(sel).center_of_mass() for sel in sels ]
+    drings_coms = np.array(drings_coms)
+
+    # Find all rings in accpt and get they COMs
+    arings = find_all_rings(accpt)
+    sels = [ "index %s" % ' '.join(map(str, x)) for x in arings ]
+    arings_coms = [ accpt.select_atoms(sel).center_of_mass() for sel in sels ]
+    arings_coms = np.array(arings_coms)
+
+    # Find two closest rings
+    D = cdist(drings_coms, arings_coms)
+    didx, aidx = np.unravel_index(D.argmin(), D.shape)
+
+    # Get pi stacking information
+    r = drings_coms[didx] - arings_coms[aidx]
     rd, rs, rpi = np.abs(np.dot(apa, r))
 
     return rnorm, rd, rs, rpi, psi, theta, phi
@@ -221,22 +238,8 @@ def main(**Opts):
     else:
         u = mda.Universe(Opts["TopFile"])
 
-    # Select only atoms belonging to the donor's pi system
     donor = u.select_atoms(Opts["DSel"])
-    donor.guess_bonds()
-    drings = find_all_rings(donor)
-    didxs = flatten(drings)
-    didxs = "index %s" % ' '.join(map(str, didxs))
-    donor = donor.select_atoms(didxs)
-
-    # Select only atoms belonging to the acceptor's pi system
     accpt = u.select_atoms(Opts["ASel"])
-    accpt.guess_bonds()
-    arings = find_all_rings(accpt)
-    aidxs = flatten(arings)
-    aidxs = "index %s" % ' '.join(map(str, aidxs))
-    accpt = accpt.select_atoms(aidxs)
-
     data = []
     for ts in u.trajectory:
         t = ts.time
