@@ -47,54 +47,6 @@ def options():
     return Opts
 
 
-def flatten(lst):
-    '''
-    Recursive function to flatten a nested list.
-
-    Parameters
-    ----------
-    lst: list.
-        Nested list to be flattened.
-
-    Returns
-    -------
-    flattened: list.
-        Flattened list.
-    '''
-
-    flattened = sum( ([x] if not isinstance(x, list)
-                     else flatten(x) for x in lst), [] )
-
-    return flattened
-
-
-def v1v2_angle(v1, v2):
-    '''
-    Function to compute the angle between two vectors.
-
-    Parameters
-    ----------
-    v1: np.array (N).
-        First vector.
-    v2: np.array (N).
-        Second vector.
-
-    Returns
-    -------
-    theta: float.
-        Angle between the vector (in degrees).
-    '''
-
-    try:
-        theta = np.degrees(np.arccos(
-                    np.dot(v1, v2) / ( np.linalg.norm(v1) * np.linalg.norm(v2) )
-                ))
-    except:
-        theta = 0.0
-
-    return theta
-
-
 def lstsq_fit(pts):
     '''
     Function to fit a set of points with least squares. The geometrical objects
@@ -210,6 +162,8 @@ def analyse_dimer(donor, accpt):
     -------
     rcoms: float.
         Distance between the centres of mass of the two groups (in Angstroem).
+    rcompi: float.
+        Distance between the centres of mass of the pi stacked rings (in Angstroem).
     rpi: float.
         Pi-stacking distance between the pi stacked rings (in Angstroem).
     psi: float.
@@ -239,18 +193,6 @@ def analyse_dimer(donor, accpt):
     if np.linalg.det(apa) < 0:
         apa[:,-1] = -apa[:,-1]
 
-    # Define rotation matrix between the two sets of principal axes.
-    # M transforms from the dpa frame to the apa frame.
-    M = np.dot(apa, np.linalg.inv(dpa))
-
-    # Get roll, pitch, yaw angles associated to the transformation matrix
-    # Pitch will be recomputed once pi-stacking sites will be identified
-    psi, theta, phi = euler_angles_from_matrix(M)
-
-    # Transform between -90 and 90
-    psi = np.degrees(( np.radians(psi) + np.pi / 2 ) % np.pi - np.pi / 2)
-    phi = np.degrees(( np.radians(phi) + np.pi / 2 ) % np.pi - np.pi / 2)
-
     # Distance between coms
     r = acom - dcom
     rcoms = np.linalg.norm(r)
@@ -269,6 +211,7 @@ def analyse_dimer(donor, accpt):
 
     # Find two closest rings
     D = cdist(drings_coms, arings_coms)
+    rcompi = D.min()
     didx, aidx = np.unravel_index(D.argmin(), D.shape)
 
     # Get their coordinates
@@ -279,16 +222,47 @@ def analyse_dimer(donor, accpt):
     rpi = cdist(dring.atoms.positions, aring.atoms.positions).min()
 
     # Fit a plane to each ring and get the unit vectors
-    ndring = lstsq_fit(dring.atoms.positions)
+    dcoeffs = lstsq_fit(dring.atoms.positions)
+    ndring = np.array([ dcoeffs[0], dcoeffs[1], -1 ])
     ndring /= np.linalg.norm(ndring)
-    naring = lstsq_fit(aring.atoms.positions)
+    acoeffs = lstsq_fit(aring.atoms.positions)
+    naring = np.array([ acoeffs[0], acoeffs[1], -1 ])
     naring /= np.linalg.norm(naring)
 
-    # Compute angle between unit vectors normal to the planes
-    theta = v1v2_angle(ndring, naring)
-    theta = np.degrees(( np.radians(theta) + np.pi / 2 ) % np.pi - np.pi / 2)
+    # Compute a local frame based on the pi-stacking ring and the
+    # principal axes.
+    # Donor
+    sdring = np.cross(ndring, dpa[:,0])
+    sdring /= np.linalg.norm(sdring)
+    ldring = np.cross(ndring, sdring)
+    ldring /= np.linalg.norm(ldring)
+    dframe = np.c_[ ldring, sdring, ndring ]
+    if np.linalg.det(dframe) < 0:
+        dframe[:,0] = -dframe[:,0]
 
-    return rcoms, rpi, psi, theta, phi
+    # Acceptor
+    saring = np.cross(naring, apa[:,0])
+    saring /= np.linalg.norm(saring)
+    laring = np.cross(naring, saring)
+    laring /= np.linalg.norm(laring)
+    aframe = np.c_[ laring, saring, naring ]
+    if np.linalg.det(aframe) < 0:
+        aframe[:,0] = -aframe[:,0]
+
+    # Define rotation matrix between the two local frames.
+    # M transforms from the donor frame to the acceptor frame.
+    M = np.dot(aframe, np.linalg.inv(dframe))
+
+    # Get roll, pitch, yaw angles associated to the transformation matrix
+    # Pitch will be recomputed once pi-stacking sites will be identified
+    psi, theta, phi = euler_angles_from_matrix(M)
+
+    # Transform between -90 and 90
+    psi = np.degrees(( np.radians(psi) + np.pi / 2 ) % np.pi - np.pi / 2)
+    theta = np.degrees(( np.radians(theta) + np.pi / 2 ) % np.pi - np.pi / 2)
+    phi = np.degrees(( np.radians(phi) + np.pi / 2 ) % np.pi - np.pi / 2)
+
+    return rcoms, rcompi, rpi, psi, theta, phi
 
 
 def main(**Opts):
