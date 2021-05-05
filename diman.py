@@ -164,6 +164,10 @@ def analyse_dimer(donor, accpt):
         Distance between the centres of mass of the two groups (in Angstroem).
     rcompi: float.
         Distance between the centres of mass of the pi stacked rings (in Angstroem).
+    rd: float.
+        Longitudinal distance between the pi stacked rings (in Angstroem).
+    rs: float.
+        Side distance between the pi stacked rings (in Angstroem).
     rpi: float.
         Pi-stacking distance between the pi stacked rings (in Angstroem).
     psi: float.
@@ -211,15 +215,12 @@ def analyse_dimer(donor, accpt):
 
     # Find two closest rings
     D = cdist(drings_coms, arings_coms)
-    rcompi = D.min()
     didx, aidx = np.unravel_index(D.argmin(), D.shape)
+    rcompi = arings_coms[aidx] - drings_coms[didx]
 
     # Get their coordinates
     dring = donor.select_atoms(dsels[didx])
     aring = accpt.select_atoms(asels[aidx])
-
-    # Pi-stacking distance as minimum distance between atoms in the two rings
-    rpi = cdist(dring.atoms.positions, aring.atoms.positions).min()
 
     # Fit a plane to each ring and get the unit vectors
     dcoeffs = lstsq_fit(dring.atoms.positions)
@@ -249,6 +250,10 @@ def analyse_dimer(donor, accpt):
     if np.linalg.det(aframe) < 0:
         aframe[:,0] = -aframe[:,0]
 
+    # Get components of stacking distance
+    rd, rs, rpi = np.abs(np.dot(aframe, rcompi))
+    rcompi = np.linalg.norm(rcompi)
+
     # Define rotation matrix between the two local frames.
     # M transforms from the donor frame to the acceptor frame.
     M = np.dot(aframe, np.linalg.inv(dframe))
@@ -262,7 +267,7 @@ def analyse_dimer(donor, accpt):
     theta = np.degrees(( np.radians(theta) + np.pi / 2 ) % np.pi - np.pi / 2)
     phi = np.degrees(( np.radians(phi) + np.pi / 2 ) % np.pi - np.pi / 2)
 
-    return rcoms, rcompi, rpi, psi, theta, phi
+    return rcoms, rcompi, rd, rs, rpi, psi, theta, phi
 
 
 def main(**Opts):
@@ -277,18 +282,21 @@ def main(**Opts):
     data = []
     for ts in u.trajectory:
         t = ts.time
-        r, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
-        snapdata = np.array([ t, r, rpi, roll, pitch, yaw ])
+        r, rcompi, rd, rs, rpi, roll, pitch, yaw = analyse_dimer(donor, accpt)
+        snapdata = np.array([ t, r, rcompi, rd, rs, rpi, roll, pitch, yaw ])
         data.append(snapdata)
 
     data = np.array(data)
     df = pd.DataFrame({
         "Time / ns": data[:,0] / 1000.0,
         "r / A" : data[:,1],
-        "rpi / A" : data[:,2],
-        "roll / deg" : data[:,3],
-        "pitch / deg" : data[:,4],
-        "yaw / deg" : data[:,5],
+        "rcompi / A" : data[:,2],
+        "rd / A" : data[:,3],
+        "rs / A" : data[:,4],
+        "rpi / A" : data[:,5],
+        "roll / deg" : data[:,6],
+        "pitch / deg" : data[:,7],
+        "yaw / deg" : data[:,8],
         })
 
     df.to_csv("%s.csv" % Opts["OutPre"], quoting=csv.QUOTE_NONNUMERIC, index=False)
