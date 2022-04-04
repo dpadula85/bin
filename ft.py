@@ -17,12 +17,14 @@ k_B = 8.6173324e-05
 # Temp in Kelvin
 T = 300.0
 
-time_units = {"s":  1,
-              "ms": 1e-3,
-              "mus": 1e-6,
-              "ns": 1e-9,
-              "ps": 1e-12,
-              "fs": 1e-15}
+time_units = {
+        "s":  1,
+        "ms": 1e-3,
+        "mus": 1e-6,
+        "ns": 1e-9,
+        "ps": 1e-12,
+        "fs": 1e-15
+        }
 
 
 def options():

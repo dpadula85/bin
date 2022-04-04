@@ -85,7 +85,7 @@ def plot(x, **kwargs):
     ax.tick_params(axis='both', which='minor', direction='in', labelsize=28, pad=10, length=2)
     # xmin = myround(x.min(), base=30)
     # xmax = myround(x.max(), base=30)
-    # ax.set_xlim(xmin, xmax)
+    # ax.set_xlim(-60, 60)
 
     return
 
