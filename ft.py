@@ -4,7 +4,33 @@ import os
 import numpy as np
 import argparse as arg
 import matplotlib.pyplot as plt
-from matplotlib import gridspec
+import matplotlib.pyplot as plt
+from matplotlib import ticker, gridspec
+from matplotlib import rc
+import matplotlib as mpl
+
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
+
+pgf_with_latex = {                      # setup matplotlib to use latex for output
+    "pgf.texsystem": "pdflatex",        # change this if using xetex or lautex
+    "text.usetex": True,                # use LaTeX to write all text
+    "font.family": "serif",
+    "font.serif": [],                   # blank entries should cause plots
+    "font.sans-serif": [],              # to inherit fonts from the document
+    "font.monospace": [],
+    "pgf.preamble": [
+            r"\usepackage[utf8x]{inputenc}",
+            r"\usepackage[T1]{fontenc}",
+            r"\usepackage{siunitx}",
+        ]
+    }
+
+mpl.rcParams.update(pgf_with_latex)
+
+
 
 eV2wn = 8065.544005
 
@@ -24,7 +50,7 @@ time_units = {
         "ns": 1e-9,
         "ps": 1e-12,
         "fs": 1e-15
-        }
+    }
 
 
 def options():
@@ -87,22 +113,6 @@ def extend_compact_list(idxs):
             extended.append(int(idx))
 
     return extended
-
-
-def acf(series):
-    '''Returns the autocorrelation function of a time series.'''
-
-    N = len(series)
-    avg = np.mean(series)
-    c0 = np.sum((series - avg)**2) / N
-
-    def r(j):
-        return np.sum((series[:N - j] - avg) * (series[j:] - avg)) / (N - j)
-
-    t = np.arange(N)
-    acf_t = np.asarray(list(map(r, t)))
-
-    return acf_t #/ c0
 
 
 def acf(series):
@@ -240,21 +250,59 @@ if __name__ == '__main__':
         #
         ax = plt.subplot(gs[0])
         ax.plot(freqs, specden, label="SpecDen")
-        ax.set_xlabel(r'$\omega$ (cm$^{-1}$)', size=22)
-        ax.set_ylabel(r'$J(\omega)$ (cm$^{-1}$)', size=22)
+        ax.set_xlabel(r'$\omega$ / cm$^{-1}$', size=22)
+        ax.set_ylabel(r'$S(\omega)$ / cm$^{-1}$', size=22)
 
-        ax0 = ax.twinx()
+        xtickmaj = ticker.MaxNLocator(5)
+        xtickmin = ticker.AutoMinorLocator(5)
+        ytickmaj = ticker.MaxNLocator(5)
+        ytickmin = ticker.AutoMinorLocator(5)
+        ax.xaxis.set_major_locator(xtickmaj)
+        ax.xaxis.set_minor_locator(xtickmin)
+        ax.yaxis.set_major_locator(ytickmaj)
+        ax.yaxis.set_minor_locator(ytickmin)
+        ax.xaxis.set_ticks_position('both')
+        ax.yaxis.set_ticks_position('both')
+        ax.tick_params(axis='both', which='major', direction='in', labelsize=22, pad=10, length=5)
+        ax.tick_params(axis='both', which='minor', direction='in', labelsize=22, pad=10, length=2)
+
+        # ax0 = ax.twinx()
         # ax0.plot(freqs, specden_ft_part, color="g", label="FT")
-        ax0.set_ylabel(r'(eV$^2$ / cm$^{-1}$)', size=22)
+        # ax0.set_ylabel(r'eV$^2$ / cm$^{-1}$', size=22)
 
+        # xtickmaj = ticker.MaxNLocator(5)
+        # xtickmin = ticker.AutoMinorLocator(5)
+        # ytickmaj = ticker.MaxNLocator(5)
+        # ytickmin = ticker.AutoMinorLocator(5)
+        # ax0.xaxis.set_major_locator(xtickmaj)
+        # ax0.xaxis.set_minor_locator(xtickmin)
+        # ax0.yaxis.set_major_locator(ytickmaj)
+        # ax0.yaxis.set_minor_locator(ytickmin)
+        # ax0.xaxis.set_ticks_position('both')
+        # ax0.yaxis.set_ticks_position('both')
+        # ax0.tick_params(axis='both', which='major', direction='in', labelsize=22, pad=10, length=5)
+        # ax0.tick_params(axis='both', which='minor', direction='in', labelsize=22, pad=10, length=2)
 
         #
         # Plot ACF
         #
         ax1 = plt.subplot(gs[1])
         ax1.plot(x, acf_y, label="ACF")
-        ax1.set_xlabel('Time (%s)' % args.timeunit, size=22)
-        ax1.set_ylabel('ACF (eV$^2$)', size=22)
+        ax1.set_xlabel('$t$ / %s' % args.timeunit, size=22)
+        ax1.set_ylabel('$R(t)$ / eV$^2$', size=22)
+
+        xtickmaj = ticker.MaxNLocator(5)
+        xtickmin = ticker.AutoMinorLocator(5)
+        ytickmaj = ticker.MultipleLocator(0.2)
+        ytickmin = ticker.AutoMinorLocator(2)
+        ax1.xaxis.set_major_locator(xtickmaj)
+        ax1.xaxis.set_minor_locator(xtickmin)
+        ax1.yaxis.set_major_locator(ytickmaj)
+        ax1.yaxis.set_minor_locator(ytickmin)
+        ax1.xaxis.set_ticks_position('both')
+        ax1.yaxis.set_ticks_position('both')
+        ax1.tick_params(axis='both', which='major', direction='in', labelsize=22, pad=10, length=5)
+        ax1.tick_params(axis='both', which='minor', direction='in', labelsize=22, pad=10, length=2)
 
         if y is not None:
 
@@ -262,9 +310,22 @@ if __name__ == '__main__':
             # Plot time series
             #
             ax2 = plt.subplot(gs[2])
-            ax2.plot(x, y)
-            ax2.set_xlabel('Time (%s)' % args.timeunit, size=22)
-            ax2.set_ylabel('E (eV)', size=22)
+            ax2.plot(x, y * 1e3)
+            ax2.set_xlabel('$t$ / %s' % args.timeunit, size=22)
+            ax2.set_ylabel('$J$ / meV', size=22)
+
+            xtickmaj = ticker.MaxNLocator(5)
+            xtickmin = ticker.AutoMinorLocator(5)
+            ytickmaj = ticker.MaxNLocator(5)
+            ytickmin = ticker.AutoMinorLocator(5)
+            ax2.xaxis.set_major_locator(xtickmaj)
+            ax2.xaxis.set_minor_locator(xtickmin)
+            ax2.yaxis.set_major_locator(ytickmaj)
+            ax2.yaxis.set_minor_locator(ytickmin)
+            ax2.xaxis.set_ticks_position('both')
+            ax2.yaxis.set_ticks_position('both')
+            ax2.tick_params(axis='both', which='major', direction='in', labelsize=22, pad=10, length=5)
+            ax2.tick_params(axis='both', which='minor', direction='in', labelsize=22, pad=10, length=2)
 
         plt.tight_layout()
         plt.show()
