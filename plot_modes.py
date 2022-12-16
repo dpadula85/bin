@@ -74,8 +74,8 @@ def plot_modes(modes, color="b"):
     ax.yaxis.set_ticks_position('both')
     ax.tick_params(axis='both', which='major', direction='in', labelsize=16, pad=10, length=5)
     ax.tick_params(axis='both', which='minor', direction='in', labelsize=16, pad=10, length=2)
-    ax.set_xlim(0, modes.max())
-    ax.set_ylim(0, modes.max())
+    ax.set_xlim(0, modes.max() + 50)
+    ax.set_ylim(0, modes.max() + 50)
 
     return
 

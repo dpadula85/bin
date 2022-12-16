@@ -100,9 +100,20 @@ def acf(series):
         return np.sum((series[:N - j] - avg) * (series[j:] - avg)) / (N - j)
 
     t = np.arange(N)
-    acf_t = map(r, t)
+    acf_t = np.asarray(list(map(r, t)))
 
     return acf_t #/ c0
+
+
+def acf(series):
+
+    mean = np.mean(series)
+    var = np.var(series)
+    ny = series - mean
+    acf = np.correlate(ny, ny, "full")[len(ny) - 1 :]
+    acf_t = acf / var / len(ny)
+
+    return acf_t
 
 
 def cos_transf(x, y, factor=1):
@@ -154,8 +165,8 @@ if __name__ == '__main__':
     data = np.loadtxt(f)
 
     if args.filetype == 'series':
-        x = data[:,c1]
-        y = data[:,c2]
+        x = data[:,0]
+        y = data[:,1]
         acf_y = acf(y)
 
     elif args.filetype == 'acf':
@@ -233,7 +244,7 @@ if __name__ == '__main__':
         ax.set_ylabel(r'$J(\omega)$ (cm$^{-1}$)', size=22)
 
         ax0 = ax.twinx()
-        ax0.plot(freqs, specden_ft_part, color="g", label="FT")
+        # ax0.plot(freqs, specden_ft_part, color="g", label="FT")
         ax0.set_ylabel(r'(eV$^2$ / cm$^{-1}$)', size=22)
 
 
