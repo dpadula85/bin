@@ -5,6 +5,13 @@ import multiprocessing as mp
 from itertools import groupby
 from scipy.spatial.distance import cdist
 
+T = 293.15 # Kelvin
+Kb = 1.380649e-23 # J / K
+e = 1.602176634e-19 # A s
+A2m = 1e-10 # angstroem to metre
+h = 4.1356678e-15 # eV s
+hbar = h / (2 * np.pi)
+
 
 def skiplines(openfile, nlines=0):
     '''
@@ -722,6 +729,134 @@ def banner(text=None, ch='=', length=78):
             suffix = ch * (suffix_len/len(ch)) + ch[:suffix_len%len(ch)]
 
         return prefix + ' ' + text + ' ' + suffix
+
+
+def compute_mobility(ks, rs, d=3):
+    """
+    Computes the mobility of a particle according to Einstein-Smoluchowski.
+    
+    Parameters
+    ----------
+    ks: list.
+        rate constants for each path (in Hz).
+    rs: list.
+        hopping distance for each path (in m).
+    
+    Returns
+    -------
+    mu: float.
+        Mobility in cm**2 / (V * s).
+    
+    The mobility is computed using the following formula:
+    mu = e / (Kb * T) / (2.0 * n) * np.sum(Rs2 * ks * Ps)
+    where e is the electron charge, Kb is the Boltzmann constant, T is the
+    temperature, and n is the dimensionality of the system.
+    The factor of 1e4 is used to convert the mobility from m2 / (V * s) to cm**2 / (V * s)
+    """
+
+    # Hopping Probability
+    Ps = ks / np.sum(ks)
+
+    # Mobility in m**2 / (V * s)
+    mu = e / (Kb * T) / (2.0 * d) * np.sum(rs**2 * ks * Ps)
+
+    # Convert to cm**2 / (V * s)
+    mu *= 1e4
+
+    return mu
+
+
+def compute_mobility_path(k, r):
+    """
+    Computes the mobility of a particle according to Einstein-Smoluchowski,
+    along a single path.
+    
+    Parameters
+    ----------
+    k: float.
+        rate constant (in Hz).
+    r: float.
+        hopping distance (in m).
+    
+    Returns
+    -------
+    mu: float.
+        Mobility in cm**2 / (V * s).
+    
+    The mobility is computed using the following formula:
+    mu = e * r**2 * k / (2 * Kb * T)
+    where e is the electron charge, Kb is the Boltzmann constant, T is the
+    temperature.
+    The factor of 1e4 is used to convert the mobility from m2 / (V * s) to cm**2 / (V * s)
+    """
+
+    mu = e * r**2 * k / (2 * Kb * T)
+    mu *= 1e4
+
+    return mu
+
+
+def marcus_rate(J, l, dG=0, dJ=0.0):
+    """
+    Computes Marcus rate for a chemical reaction.
+    
+    Parameters
+    ----------
+    J: float or np.array.
+        Electronic coupling (in eV).
+    l: float or np.array.
+        Reorganisation energy (in eV).
+    dG: float or np.array (default: 0).
+        Free energy difference between reactants and products.
+    dJ: float (default: 0).
+        Electronic coupling standard deviation (in eV).
+    
+    Returns
+    -------
+    k: float or np.array.
+        Reaction rate constant in Hz.
+    """
+
+    # Get a value of the coupling
+    J = np.random.normal(loc=J, scale=dJ)
+    k = J**2 / hbar * np.sqrt(np.pi / (l * Kb * T)) * np.exp(-(dG + l)**2 / (4 * l * Kb * T))
+
+    return k
+
+
+def fgr_rate(J, fcwd, dG=0, dJ=0.0, c=1.18e12:
+    """
+    Computes Fermi's Golden Rule rate for a chemical reaction.
+    
+    Parameters
+    ----------
+    J: float or np.array.
+        Electronic coupling (in wavenumbers).
+    fcwd: np.array.
+        Franck-Condon Weighted Density of States (in wavenumbers).
+    dG: float (default: 0).
+        Free energy difference between reactants and products (in wavenumbers).
+    dJ: float (default: 0).
+        Electronic coupling standard deviation (in wavenumbers).
+    c: float (default: 1.18e12).
+        Speed of light (in cm / s)
+    
+    Returns
+    -------
+    k: float or np.array.
+        Reaction rate constant in Hz.
+    """
+
+    # Get fcwd value closest to E
+    fcwd = fcwd[np.abs(fcwd[:,0] - dG).argmin(),1]
+
+    # Get a value of the coupling
+    J = np.random.normal(loc=J, scale=dJ)
+
+    # Compute k
+    k = c * J**2 * fcwd
+
+    return k
 
 
 if __name__ == '__main__':
