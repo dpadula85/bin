@@ -824,7 +824,7 @@ def marcus_rate(J, l, dG=0, dJ=0.0):
     return k
 
 
-def fgr_rate(J, fcwd, dG=0, dJ=0.0, c=1.18e12:
+def fgr_rate(J, fcwd, dG=0, dJ=0.0, c=1.18e12):
     """
     Computes Fermi's Golden Rule rate for a chemical reaction.
     
