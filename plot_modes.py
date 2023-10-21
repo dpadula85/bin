@@ -6,10 +6,28 @@ import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
 from matplotlib import rc
+import matplotlib as mpl
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
 #rc('font',**{'family':'serif','serif':['Palatino']})
 rc('text', usetex=True)
+
+pgf_with_latex = {                      # setup matplotlib to use latex for output
+    "pgf.texsystem": "pdflatex",        # change this if using xetex or lautex
+    "text.usetex": True,                # use LaTeX to write all text
+    "font.family": "serif",
+    "font.serif": [],                   # blank entries should cause plots
+    "font.sans-serif": [],              # to inherit fonts from the document
+    "font.monospace": [],
+    # "pgf.preamble": [
+    #         r"\usepackage[utf8x]{inputenc}",
+    #         r"\usepackage[T1]{fontenc}",
+    #         r"\usepackage{siunitx}",
+    #     ]
+    }
+
+mpl.rcParams.update(pgf_with_latex)
+
 
 
 def options():
