@@ -378,6 +378,7 @@ def guess(filename):
     #
     filetypes = {}
 
+    filetypes["This is part of the Gaussian(R) 09 program."] = "G09"
     filetypes["This is part of the Gaussian(R) 16 program."] = "G09"
     filetypes["A Quantum Leap Into The Future Of Chemistry"] = "QChem"
 
@@ -444,27 +445,29 @@ def save_visdisps(coords, disps, sel=None, filename="structure"):
         f.write(header)
         f.write("mol new equilibrium.xyz type xyz\n")
         f.write("mol new %s.xyz type xyz\n" % os.path.split(filename)[-1])
+        f.write("mol rep Licorice 0.2 30\n")
+        f.write("mol material BrushedMetal\n")
+        # f.write("mol selection index %d to %d\n" % (sel[0], sel[-1]))
+        f.write("mol addrep top\n")
 
         if sel:
-            f.write("mol rep Licorice 0.2 10\n")
             f.write("mol selection index %d to %d\n" % (sel[0], sel[-1]))
             f.write("mol addrep top\n")
 
         f.write("mol showrep 0 0 off\n")
         f.write("\n")
 
-        for N, coord in enumerate(coords[sel]):
+        for N, coord in enumerate(coords):
 
-            # disp = disps[N] * Opts['Scale']
+            disp = disps[N] * Opts['Scale']
             # if np.linalg.norm(disp) > 0.15 * Opts['Scale']:
             #     cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
             #     data = [coord[N,0], coord[N,1], coord[N,2], disp[0], disp[1], disp[2]]
             #     f.write(cmd % tuple(data))
 
-            scale = Opts['Scale'] / np.linalg.norm(disps[N])
-            disp = disps[N] * scale
+            # scale = Opts['Scale'] / np.linalg.norm(disps[N])
             cmd = "graphics 0 color green; vmd_draw_vector 0 {%8.4f %8.4f %8.4f} {%8.4f %8.4f %8.4f}\n"
-            data = [coord[N,0], coord[N,1], coord[N,2], disp[0], disp[1], disp[2]]
+            data = [coord[0], coord[1], coord[2], disp[0], disp[1], disp[2]]
             f.write(cmd % tuple(data))
 
     return
