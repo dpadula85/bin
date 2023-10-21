@@ -13,6 +13,9 @@ from pyscopus import Scopus
 
 bare_url = "http://api.crossref.org/"
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 def options():
     '''Defines the options of the script.'''
@@ -38,9 +41,9 @@ def options():
             '-k',
             '--key',
             type=str,
+            required=True
             dest='APIkey',
-            required=True,
-            help='''Scopus API key.''',
+            help='''Scopus API key.'''
         )
 
     #
@@ -86,6 +89,7 @@ def get_bib(doi):
     found: bool
     bib: str
     """
+
     url = "{}works/{}/transform/application/x-bibtex"
     url = url.format(bare_url, doi)
     r = requests.get(url)
@@ -133,6 +137,7 @@ def get_bib_from_doi(doi, abbrev_journal=True, add_abstract=False):
     bib: str
         The bibtex string
     """
+
     found, bib = get_bib(doi)
     if found and abbrev_journal:
 
@@ -166,8 +171,16 @@ def get_IF(journal):
     -------
     IF: float
     """
+
     engine = Factor()
     data = engine.search(journal)
+
+    # Fix known bugs in names
+    if len(data) == 0:
+        journal = journal.replace(" and ", " & ")
+        journal = journal.replace(" - ", "-")
+        data = engine.search(journal)
+
     try:
         IF = data[0]['factor']
     except:

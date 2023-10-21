@@ -378,7 +378,7 @@ def guess(filename):
     #
     filetypes = {}
 
-    filetypes["This is part of the Gaussian(R) 09 program."] = "G09"
+    filetypes["This is part of the Gaussian(R) 16 program."] = "G09"
     filetypes["A Quantum Leap Into The Future Of Chemistry"] = "QChem"
 
     filetype = None
