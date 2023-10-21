@@ -548,15 +548,11 @@ def acf(series):
         Autocorrelation function of the time series.
     '''
 
-    N = len(series)
-    avg = np.mean(series)
-    c0 = np.sum((series - avg)**2) / N
-
-    def r(j):
-        return np.sum((series[:N - j] - avg) * (series[j:] - avg)) / (N - j)
-
-    t = np.arange(N)
-    acf_t = np.array(list(map(r, t))) / c0
+    mean = np.mean(series)
+    var = np.var(series)
+    ny = series - mean
+    acf = np.correlate(ny, ny, "full")[len(ny) - 1 :]
+    acf_t = acf / var / len(ny)
 
     return acf_t
 
