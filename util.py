@@ -1,9 +1,18 @@
 #!/usr/bin/env python
 
+import re
+import time
+from functools import wraps
+from typing import Callable, TypeVar
+from typing_extensions import ParamSpec
+
 import numpy as np
 import multiprocessing as mp
 from itertools import groupby
 from scipy.spatial.distance import cdist
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 T = 293.15 # Kelvin
 Kb = 1.380649e-23 # J / K
@@ -11,6 +20,46 @@ e = 1.602176634e-19 # A s
 A2m = 1e-10 # angstroem to metre
 h = 4.1356678e-15 # eV s
 hbar = h / (2 * np.pi)
+
+
+def time_function(func: Callable[P, R]) -> Callable[P, R]:
+    @wraps(func)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        """Time scripts using a decorator - no global namespace pollution, proper
+        inflection of plurals, only only one decorator call,
+        all with only four imports."""
+        starting_time = time.perf_counter()
+        name = func.__name__
+        name = "main function" if name == "main" else f'function "{name}"'
+
+        print(time.strftime("%H:%M:%S", time.localtime()) + f": Starting {name}...")
+
+        result = func(*args, **kwargs)
+
+        # Formatting with proper inflection of plurals, using regular expressions
+        runtime = time.strftime(
+            "%#H hours, %#M minutes and %#S seconds",
+            time.gmtime(time.perf_counter() - starting_time),
+        )
+
+        for old, new in (
+            (r"^0 hours, ", ""),
+            (r"^1 hours", "1 hour"),
+            (r"\b0 minutes and ", ""),
+            (r"\b1 minutes", "1 minute"),
+            (r"\b1 seconds", "1 second"),
+            (r"(?: and|,) 0 seconds", ""),
+            (r"^0 seconds", "less than a second"),
+        ):
+            runtime = re.sub(old, new, runtime)
+        # Make the 0-second or 0-minute situation sound more natural
+        if ("second" in runtime) != ("minute" in runtime):
+            runtime = runtime.replace(", ", " and ")
+        print(f"{name} took {runtime} to run.".capitalize())
+
+        return result
+
+    return wrapper
 
 
 def skiplines(openfile, nlines=0):
