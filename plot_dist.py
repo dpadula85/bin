@@ -6,11 +6,27 @@ import argparse as arg
 import matplotlib.pyplot as plt
 from matplotlib import ticker, gridspec
 from matplotlib import rc
+import matplotlib as mpl
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 ## for Palatino and other serif fonts use:
 #rc('font',**{'family':'serif','serif':['Palatino']})
 rc('text', usetex=True)
 
+pgf_with_latex = {                      # setup matplotlib to use latex for output
+    "pgf.texsystem": "pdflatex",        # change this if using xetex or lautex
+    "text.usetex": True,                # use LaTeX to write all text
+    "font.family": "serif",
+    "font.serif": [],                   # blank entries should cause plots
+    "font.sans-serif": [],              # to inherit fonts from the document
+    "font.monospace": [],
+    # "pgf.preamble": [
+    #         r"\usepackage[utf8x]{inputenc}",
+    #         r"\usepackage[T1]{fontenc}",
+    #         r"\usepackage{siunitx}",
+    #     ]
+    }
+
+mpl.rcParams.update(pgf_with_latex)
 
 def options():
     '''Defines the options of the script.'''
@@ -68,11 +84,11 @@ def plot(x, **kwargs):
                                edgecolor=color)
 
     # Fancy stuff
-    ax.set_xlabel(r"$\%s_{%s}$ / deg" % tuple(label.split("_")), size=30, labelpad=5)
-    ax.set_ylabel(u"Count", size=30)
+    ax.set_xlabel(r"$\%s_{%s}$ / deg" % tuple(label.split("_")), size=42, labelpad=5)
+    ax.set_ylabel(u"Count", size=42)
 
     xtickmaj = ticker.MultipleLocator(60)
-    xtickmin = ticker.AutoMinorLocator(2)
+    xtickmin = ticker.AutoMinorLocator(4)
     ytickmaj = ticker.MaxNLocator(5)
     ytickmin = ticker.AutoMinorLocator(5)
     ax.xaxis.set_major_locator(xtickmaj)
@@ -81,11 +97,11 @@ def plot(x, **kwargs):
     ax.yaxis.set_minor_locator(ytickmin)
     ax.xaxis.set_ticks_position('both')
     ax.yaxis.set_ticks_position('both')
-    ax.tick_params(axis='both', which='major', direction='in', labelsize=28, pad=10, length=5)
-    ax.tick_params(axis='both', which='minor', direction='in', labelsize=28, pad=10, length=2)
+    ax.tick_params(axis='both', which='major', direction='in', labelsize=38, pad=10, length=5)
+    ax.tick_params(axis='both', which='minor', direction='in', labelsize=38, pad=10, length=2)
     # xmin = myround(x.min(), base=30)
     # xmax = myround(x.max(), base=30)
-    # ax.set_xlim(-60, 60)
+    ax.set_xlim(-180, 180)
 
     return
 
@@ -107,6 +123,7 @@ if __name__ == '__main__':
                                       Opts["Label"].split("_")[1],
                                       Opts["Out"])
 
+        plt.subplots_adjust(bottom=0.15, top=0.9, left=0.175)
         plt.savefig(name, dpi=600)
     else:
         plt.show()

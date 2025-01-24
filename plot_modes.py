@@ -77,8 +77,8 @@ def plot_modes(modes, color="b"):
     ax.plot(x, y, color="k", ls="--")
     ax.scatter(np.sort(modes[:,0]), np.sort(modes[:,1]), color=color)
 
-    ax.set_xlabel(r"$\nu^{QM}$ / cm$^{-1}$", size=18, labelpad=5)
-    ax.set_ylabel(r"$\nu^{MM}$ / cm$^{-1}$", size=18, labelpad=5)
+    ax.set_xlabel(r"$\nu^{QM}$ / cm$^{-1}$", size=32, labelpad=5)
+    ax.set_ylabel(r"$\nu^{MM}$ / cm$^{-1}$", size=32, labelpad=5)
 
     xtickmaj = ticker.MultipleLocator(500)
     xtickmin = ticker.AutoMinorLocator(5)
@@ -90,8 +90,8 @@ def plot_modes(modes, color="b"):
     ax.yaxis.set_minor_locator(ytickmin)
     ax.xaxis.set_ticks_position('both')
     ax.yaxis.set_ticks_position('both')
-    ax.tick_params(axis='both', which='major', direction='in', labelsize=16, pad=10, length=5)
-    ax.tick_params(axis='both', which='minor', direction='in', labelsize=16, pad=10, length=2)
+    ax.tick_params(axis='both', which='major', direction='in', labelsize=28, pad=10, length=5)
+    ax.tick_params(axis='both', which='minor', direction='in', labelsize=28, pad=10, length=2)
     ax.set_xlim(0, modes.max() + 50)
     ax.set_ylim(0, modes.max() + 50)
 
@@ -111,9 +111,9 @@ def plot_overlap(overlap, color="b"):
 
     ax.bar(overlap[:,0], overlap[:,1], color=color, width=1.0)
 
-    ax.set_xlabel(r"Normal Mode", size=18, labelpad=5)
+    ax.set_xlabel(r"Normal Mode", size=32, labelpad=5)
     # ax.set_ylabel(r"overlap", size=18, labelpad=5)
-    ax.set_ylabel(r"$\langle Q_i^{MM} \vert Q_i^{QM} \rangle$", size=18, labelpad=5)
+    ax.set_ylabel(r"$\langle Q_i^{MM} \vert Q_i^{QM} \rangle$", size=32, labelpad=5)
     ax.xaxis.set_label_position('top')
 
     xtickmaj = ticker.MultipleLocator(20)
@@ -126,8 +126,8 @@ def plot_overlap(overlap, color="b"):
     ax.yaxis.set_minor_locator(ytickmin)
     ax.xaxis.set_ticks_position('both')
     ax.yaxis.set_ticks_position('both')
-    ax.tick_params(axis='both', which='major', direction='in', labelsize=16, pad=10, length=5, labeltop=True, labelbottom=False)
-    ax.tick_params(axis='both', which='minor', direction='in', labelsize=16, pad=10, length=2)
+    ax.tick_params(axis='both', which='major', direction='in', labelsize=28, pad=10, length=5, labeltop=True, labelbottom=False)
+    ax.tick_params(axis='both', which='minor', direction='in', labelsize=28, pad=10, length=2)
     ax.set_xlim(0, overlap[:,0].max())
     ax.set_ylim(0, 1)
 
@@ -147,6 +147,7 @@ if __name__ == '__main__':
             name = "%s_modes.%s" % (Opts["OutPre"], Opts["Out"])
         else:
             name = "modes.%s" % Opts["Out"]
+        plt.subplots_adjust(bottom=0.2, top=0.9)
         plt.savefig(name, dpi=600)
     else:
         plt.show()
@@ -158,6 +159,7 @@ if __name__ == '__main__':
             name = "%s_ovlp.%s" % (Opts["OutPre"], Opts["Out"])
         else:
             name = "ovlp.%s" % Opts["Out"]
+        plt.subplots_adjust(bottom=0.1, top=0.8)
         plt.savefig(name, dpi=600)
     else:
         plt.show()
