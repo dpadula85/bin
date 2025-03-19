@@ -606,6 +606,27 @@ def acf(series):
     return acf_t
 
 
+def kth_moment(data, k=1, central=True):
+    """
+    Compute the k-th moment of a distribution.
+
+    Parameters:
+        data (array-like): Input data.
+        k (int): The order of the moment to compute.
+        central (bool): If True, compute the central moment (around the mean).
+                        If False, compute the raw moment (around zero).
+
+    Returns:
+        float: The computed k-th moment.
+    """
+    data = np.asarray(data)
+    if central:
+        mean = np.mean(data)
+        return np.mean((data - mean) ** k)
+    else:
+        return np.mean(data ** k)
+
+
 def build_neigh_matrix(conn):
     '''
     Function to build a 1-2, 1-3, 1-4 neighbours matrix given the connectivity.
