@@ -10,6 +10,7 @@ import numpy as np
 import multiprocessing as mp
 from itertools import groupby
 from scipy.spatial.distance import cdist
+from scipy.stats import moment, skew, kurtosis
 
 P = ParamSpec("P")
 R = TypeVar("R")
@@ -84,6 +85,26 @@ def skiplines(openfile, nlines=0):
         line = next(openfile)
 
     return line
+
+
+def natural_sort(lst):
+    """
+    Sort a list of strings using natural order (numeric values are sorted as numbers).
+
+    Args:
+        lst (list): List of strings to be sorted.
+
+    Returns:
+        list: A new list sorted in natural order.
+    """
+
+    def convert(text):
+        return int(text) if text.isdigit() else text.lower()
+
+    def alphanum_key(key):
+        return [convert(c) for c in re.split(r'(\d+)', key)]
+
+    return sorted(lst, key=alphanum_key)
 
 
 def parallel_fn(fn, iterable, nproc=None):
@@ -606,25 +627,34 @@ def acf(series):
     return acf_t
 
 
-def kth_moment(data, k=1, central=True):
+def kth_moment(data, k, central=True, standardized=False):
     """
     Compute the k-th moment of a distribution.
 
     Parameters:
         data (array-like): Input data.
         k (int): The order of the moment to compute.
-        central (bool): If True, compute the central moment (around the mean).
-                        If False, compute the raw moment (around zero).
+        central (bool): If True, computes the central moment (around the mean).
+                        If False, computes the raw moment (around zero).
+        standardized (bool): If True and k=3 or k=4, computes skewness or kurtosis.
 
     Returns:
-        float: The computed k-th moment.
+        float: The computed k-th moment, skewness, or kurtosis.
     """
-    data = np.asarray(data)
+    data = np.asarray(data)  # Convert input to NumPy array
+
+    if standardized:
+        if k == 3:
+            return skew(data)  # Skewness
+        elif k == 4:
+            return kurtosis(data)  # Kurtosis (excess by default)
+        else:
+            raise ValueError("Standardized moments are only defined for k=3 (skewness) and k=4 (kurtosis).")
+
     if central:
-        mean = np.mean(data)
-        return np.mean((data - mean) ** k)
+        return moment(data, moment=k)  # SciPy's built-in moment function (central by default)
     else:
-        return np.mean(data ** k)
+        return np.mean(data**k)  # Raw moment around zero
 
 
 def build_neigh_matrix(conn):
