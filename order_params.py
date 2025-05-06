@@ -9,21 +9,38 @@ import argparse as arg
 import MDAnalysis as mda
 
 
-def parse_args():
-    """
-    Parse command-line arguments.
+def options():
+    '''Defines the options of the script.'''
 
-    Returns
-    -------
-    dict
-        Dictionary of parsed arguments with keys 'topology', 'trajectory', 'outdir', and optional 'core_selection'.
-    """
-    parser = arg.ArgumentParser(description="Compute molecular order parameters from trajectory.")
-    parser.add_argument("topology", help="Topology file (e.g., .tpr, .psf, etc.)")
-    parser.add_argument("trajectory", help="Trajectory file (e.g., .xtc, .dcd, etc.)")
-    parser.add_argument("--outdir", default=".", help="Directory to write output CSVs")
-    parser.add_argument("--core-selection", default=None, help="Atom selection string for computing core axes")
-    return vars(parser.parse_args())
+    parser = arg.ArgumentParser(
+                formatter_class=arg.ArgumentDefaultsHelpFormatter)
+
+    #
+    # Input Options
+    #
+    inp = parser.add_argument_group("Input Data")
+
+    inp.add_argument('--top', type=str, dest='TopFile',
+                     help='''Topology.''')
+
+    inp.add_argument('--traj', type=str, dest='TrajFile',
+                     help='''Trajectory.''')
+
+    inp.add_argument('-s', '--sel', type=str, default=None, dest='Sel',
+                     help='''Atom selection.''')
+
+    #
+    # Output Options
+    #
+    out = parser.add_argument_group("Output Options")
+
+    out.add_argument('-o', '--outdir', default='.', type=str, dest='OutDir',
+                     help='''Output File Format.''')
+
+    args = parser.parse_args()
+    Opts = vars(args)
+
+    return Opts
 
 
 def compute_order_params(u):
@@ -89,8 +106,8 @@ def main():
     df : pd.DataFrame
         DataFrame containing P1, P2, P4 for full and core selections at each timestep.
     """
-    args = parse_args()
-    u = mda.Universe(args['topology'], args['trajectory'])
+    args = options()
+    u = mda.Universe(args['TopFile'], args['TrajFile'])
 
     if len(u.residues) == 0:
         raise ValueError("No residues found in the provided topology.")
@@ -102,7 +119,7 @@ def main():
     us = np.zeros((n_frames, n_residues, 3))
 
     # Only allocate ucores if core selection was provided
-    compute_core = args['core_selection'] is not None
+    compute_core = args['Sel'] is not None
     ucores = np.zeros_like(us) if compute_core else None
 
     for i, ts in enumerate(tqdm(u.trajectory, desc="Processing frames")):
@@ -114,7 +131,7 @@ def main():
             us[i, j] = pa[:, 0]
 
             if compute_core:
-                core = res.atoms.select_atoms(args['core_selection'])
+                core = res.atoms.select_atoms(args['Sel'])
                 pacore = core.principal_axes()[::-1].T
                 if np.linalg.det(pacore) < 0:
                     pacore[:, -1] = -pacore[:, -1]
@@ -130,7 +147,7 @@ def main():
 
     df_alpha = pd.DataFrame(columns=["t"] + [f"resid_{i}" for i in range(1, n_residues + 1)],
                              data=np.c_[times, alpha])
-    df_alpha.to_csv(f"{args['outdir']}/alpha.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
+    df_alpha.to_csv(f"{args['OutDir']}/alpha.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
 
     if compute_core:
         P1c, P2c, P4c, alphac, nc = compute_order_params(ucores)
@@ -141,12 +158,13 @@ def main():
         })
         df_alpha_core = pd.DataFrame(columns=["t"] + [f"resid_{i}" for i in range(1, n_residues + 1)],
                                      data=np.c_[times, alphac])
-        df_alpha_core.to_csv(f"{args['outdir']}/alpha_core.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
+        df_alpha_core.to_csv(f"{args['OutDir']}/alpha_core.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
 
     df = pd.DataFrame(df_data)
-    df.to_csv(f"{args['outdir']}/order.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
+    df.to_csv(f"{args['OutDir']}/order.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
 
     return df
+
 
 if __name__ == "__main__":
     main()
